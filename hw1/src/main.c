@@ -17,10 +17,15 @@
 
 int main(int argc, char **argv)
 {
-    if(!validargs(argc, argv))
+    recode(argv);
+    if(!validargs(argc, argv)){
+        global_options = 0;
+        printf("%lx\n", global_options);
         USAGE(*argv, EXIT_FAILURE);
+    }
+
     debug("Options: 0x%lX", global_options);
-    if(global_options & 0x1) {
+    if(global_options & 1UL<<63) {
         USAGE(*argv, EXIT_SUCCESS);
     }
 
