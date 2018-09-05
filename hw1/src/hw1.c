@@ -288,7 +288,6 @@ int recode(char **argv) {
         }
         printf("%x\n",j );
         printf("address of value:%p\n",header_start+j );
-        printf("int:%i\n",(header_start+j) );
         *(header_start+j) = intValue;
 
     }
