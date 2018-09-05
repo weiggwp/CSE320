@@ -36,7 +36,21 @@ int checkChar(char **argv, int row, int col, char charToMatch){
     if(*(*(argv+row)+col)==charToMatch)
         return 1;
     else
-        return 0;
+       return 0;
+}
+
+int myA2I(const char *str){
+    int i=0;
+    int myInt=0;
+    int intInASCII;
+    while( *(str+i)!=0){
+        intInASCII = *(str+i);
+        myInt *=10;
+        myInt += (intInASCII - '0');
+        i++;
+    }
+    printf("%i\n",myInt );
+    return myInt;
 }
 /**
  * @brief Validates command line arguments passed to the program.
@@ -97,7 +111,7 @@ int validargs(int argc, char **argv)
                     return 0;
                 }
                 //the next input must be a int, atoi takes a char pointer and convert to int, return 0 if not int
-                unsigned long factor = atoi(((*(argv+currentArgPosition))));
+                unsigned long factor = myA2I(((*(argv+currentArgPosition))));
                 // printf("%d\n",atoi(((*(argv+currentArgPosition))) ));
 
                 if(factor <1 || factor>1024){
@@ -229,8 +243,8 @@ int validargs(int argc, char **argv)
 
     printf("The value of i is %d, and its address is %p\n", i, &i);
     */
-    printf("successful\n");
-    printf("%016lx\n", global_options);
+    // printf("successful\n");
+    // printf("%016lx\n", global_options);
     return 1;
 }
 
@@ -264,39 +278,47 @@ int charToHex(char c){
  * @return 1 if the recoding completed successfully, 0 otherwise.
  */
 int recode(char **argv) {
+    AUDIO_HEADER header;
+
+    AUDIO_HEADER *hp = &header;
+    // = malloc(sizeof(AUDIO_HEADER));
+    if(read_header(hp) ==1){
+
+        write_header(hp);
+    }
     // AUDIO_HEADER header = {0x2e736e64,80,3,3,2,1} ;
     // AUDIO_HEADER *noob = &header;
 
-    AUDIO_HEADER header;
-    //reading
-    unsigned int intValue = 0;
-    unsigned int inputChar ;
+//     AUDIO_HEADER header;
+//     //reading
+//     unsigned int intValue = 0;
+//     unsigned int inputChar ;
 
-// outer for loop 0->6, 6 if statement ex. if(i=0): magic number...
-    unsigned int *header_start = &(header.magic_number);
+// // outer for loop 0->6, 6 if statement ex. if(i=0): magic number...
+//     unsigned int *header_start = &(header.magic_number);
 
-    // for(int i = 0;i<24;i++){
-    //     inputChar = getchar();
-    //     *(header_start+i) = inputChar;
-    // }
+//     // for(int i = 0;i<24;i++){
+//     //     inputChar = getchar();
+//     //     *(header_start+i) = inputChar;
+//     // }
 
-    for(int j = 0;j<6;j++){
-        for(int i = 0;i<4;i++){
-            inputChar = getchar();
-            intValue <<= 8;
-            intValue |= inputChar;
-        }
-        printf("%x\n",j );
-        printf("address of value:%p\n",header_start+j );
-        *(header_start+j) = intValue;
+//     for(int j = 0;j<6;j++){
+//         for(int i = 0;i<4;i++){
+//             inputChar = getchar();
+//             intValue <<= 8;
+//             intValue |= inputChar;
+//         }
+//         printf("%x\n",j );
+//         printf("address of value:%p\n",header_start+j );
+//         *(header_start+j) = intValue;
 
-    }
-    printf("%08x\n",header.magic_number);
-    printf("%08x\n",header.data_offset);
-    printf("%08x\n",header.data_size);
-    printf("%08x\n",header.encoding );
-    printf("%08x\n",header.sample_rate );
-    printf("%08x\n",header.channels );
+//     }
+//     printf("%08x\n",header.magic_number);
+//     printf("%08x\n",header.data_offset);
+//     printf("%08x\n",header.data_size);
+//     printf("%08x\n",header.encoding );
+//     printf("%08x\n",header.sample_rate );
+//     printf("%08x\n",header.channels );
 
     // // outer for loop 0->6, 6 if statement ex. if(i=0): magic number...
     // for(int i = 0;i<4;i++){
@@ -351,7 +373,38 @@ int recode(char **argv) {
  * @return  1 if a valid header was read, otherwise 0.
  */
 int read_header(AUDIO_HEADER *hp){
-    printf("%s\n","reading header" );
+    // printf("%s\n","reading file" );
+
+    // AUDIO_HEADER header = *hp;
+    unsigned int intValue ;
+    unsigned int inputChar ;
+
+// outer for loop 0->6, 6 if statement ex. if(i=0): magic number...
+    unsigned int *header_start = &(hp->magic_number);
+
+    // for(int i = 0;i<24;i++){
+    //     inputChar = getchar();
+    //     *(header_start+i) = inputChar;
+    // }
+
+    for(int j = 0;j<6;j++){
+        for(int i = 0;i<4;i++){
+            inputChar = getchar();
+            intValue <<= 8;
+            intValue |= inputChar;
+        }
+        // printf("%x\n",j );
+        // printf("address of value:%p\n",header_start+j );
+        *(header_start+j) = intValue;
+
+    }
+    // printf("%08x\n",hp->magic_number);
+    // printf("%d\n",header.data_offset);
+    // printf("%d\n",header.data_size);
+    // printf("%d\n",header.encoding );
+    // printf("%08x\n",header.sample_rate );
+    // printf("%d\n",header.channels );
+
     unsigned int magic_number;//must be 0x2e736e64
     unsigned int data_offset;
     unsigned int data_size;
@@ -366,7 +419,10 @@ int read_header(AUDIO_HEADER *hp){
     // sample_rate = (*hp).sample_rate;
     channels = (*hp).channels;
 
+
+    // printf("%08x\n",hp->magic_number);
     if(magic_number !=  0x2e736e64){
+        // printf("%s\n","number not magic" );
         return 0;
     }
     if (data_offset % 8 != 0){
@@ -396,6 +452,28 @@ int read_header(AUDIO_HEADER *hp){
  */
 int write_header(AUDIO_HEADER *hp){
     // printf("%s\n","writing header" );
+
+    AUDIO_HEADER header = *hp;
+    //reading
+    unsigned int intValue;
+    unsigned int outChar;
+    unsigned int *header_start = &(header.magic_number);
+
+    //for each members in the struct
+    for(int j = 0;j<6;j++){
+        //incredment pointer to next member and get value
+
+        // printf("address of value:%p\n",header_start+j );
+        intValue = *(header_start+j);
+        // printf("%08x\n", intValue );
+        // printf("%x\n",header.magic_number );
+        for(int i = 0;i<4;i++){
+            outChar =  intValue >> (8*(3-i));
+            printf("%c",outChar );
+        }
+        // printf("%x\n",j );
+        // printf("address of value:%p\n",header_start+j );
+    }
     // unsigned int magic_number;//must be 0x2e736e64
     // unsigned int data_offset;
     // unsigned int data_size;
@@ -409,7 +487,7 @@ int write_header(AUDIO_HEADER *hp){
     // encoding = (*hp).encoding;
     // sample_rate = (*hp).sample_rate;
     // channels = (*hp).channels;
-    return 0;
+    return 1;
 }
 
 /**
