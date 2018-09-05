@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "debug.h"
 #include "hw1.h"
@@ -233,6 +234,23 @@ int validargs(int argc, char **argv)
     return 1;
 }
 
+int charToHex(char c){
+    int hexVal;
+    if((c>='0' && c<='9'))
+                    {
+                        hexVal = c-'0';
+                    }
+                    else if((c>='a' && c<='f')){
+                        hexVal = c-'a'+10;
+                    }
+                     else if((c>='A' && c<='F')){
+                        hexVal = c-'A'+10;
+                    }
+                    else{
+                        return 0;
+                    }
+    return hexVal;
+}
 /**
  * @brief  Recodes a Sun audio (.au) format audio stream, reading the stream
  * from standard input and writing the recoded stream to standard output.
@@ -246,8 +264,61 @@ int validargs(int argc, char **argv)
  * @return 1 if the recoding completed successfully, 0 otherwise.
  */
 int recode(char **argv) {
-    AUDIO_HEADER header = {0x2e736e64,80,3,3,2,1} ;
-    AUDIO_HEADER *noob = &header;
+    // AUDIO_HEADER header = {0x2e736e64,80,3,3,2,1} ;
+    // AUDIO_HEADER *noob = &header;
+
+    AUDIO_HEADER header;
+    //reading
+    unsigned int intValue = 0;
+    unsigned int inputChar ;
+
+// outer for loop 0->6, 6 if statement ex. if(i=0): magic number...
+    unsigned int *header_start = &(header.magic_number);
+
+    // for(int i = 0;i<24;i++){
+    //     inputChar = getchar();
+    //     *(header_start+i) = inputChar;
+    // }
+
+    for(int j = 0;j<6;j++){
+        for(int i = 0;i<4;i++){
+            inputChar = getchar();
+            intValue <<= 8;
+            intValue |= inputChar;
+        }
+        printf("%x\n",j );
+        printf("address of value:%p\n",header_start+j );
+        printf("int:%i\n",(header_start+j) );
+        *(header_start+j) = intValue;
+
+    }
+    printf("%08x\n",header.magic_number);
+    printf("%08x\n",header.data_offset);
+    printf("%08x\n",header.data_size);
+    printf("%08x\n",header.encoding );
+    printf("%08x\n",header.sample_rate );
+    printf("%08x\n",header.channels );
+
+    // // outer for loop 0->6, 6 if statement ex. if(i=0): magic number...
+    // for(int i = 0;i<4;i++){
+    //     inputChar = getchar();
+    //     intValue <<= 8;
+    //     intValue |= inputChar;
+    // }
+
+    // // header.magic_number = intValue;
+    // // printf("%x\n",header.magic_number);
+
+    // unsigned int *value = &(header.magic_number);
+    // *value = intValue;
+    // printf("%x\n",*value );
+
+    // printf("%x\n",header.magic_number);
+
+    // while( (inputChar = getchar()) != EOF){
+    //      intValue <<= 8;
+    //      intValue |= inputChar;
+    // }
 
 
     // header.magic_number = **argv;
@@ -257,9 +328,9 @@ int recode(char **argv) {
     // header.sample_rate = *(*argv)+16;
     // header.channels = *(*argv)+20;
 
-    int answer = read_header(noob);
+    // int answer = read_header(noob);
 
-    printf("audio header is %d\n",answer);
+    // printf("audio header is %d\n",answer);
     return 0;
 }
 
@@ -325,20 +396,20 @@ int read_header(AUDIO_HEADER *hp){
  * @return  1 if the function is successful at writing the data; otherwise 0.
  */
 int write_header(AUDIO_HEADER *hp){
-    printf("%s\n","writing header" );
-    unsigned int magic_number;//must be 0x2e736e64
-    unsigned int data_offset;
-    unsigned int data_size;
-    unsigned int encoding;
-    unsigned int sample_rate;
-    unsigned int channels;
+    // printf("%s\n","writing header" );
+    // unsigned int magic_number;//must be 0x2e736e64
+    // unsigned int data_offset;
+    // unsigned int data_size;
+    // unsigned int encoding;
+    // unsigned int sample_rate;
+    // unsigned int channels;
 
-    magic_number = (*hp).magic_number;
-    data_offset = (*hp).data_offset;
-    data_size = (*hp).data_size;
-    encoding = (*hp).encoding;
-    sample_rate = (*hp).sample_rate;
-    channels = (*hp).channels;
+    // magic_number = (*hp).magic_number;
+    // data_offset = (*hp).data_offset;
+    // data_size = (*hp).data_size;
+    // encoding = (*hp).encoding;
+    // sample_rate = (*hp).sample_rate;
+    // channels = (*hp).channels;
     return 0;
 }
 
