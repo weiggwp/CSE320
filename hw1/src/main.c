@@ -30,6 +30,7 @@ int main(int argc, char **argv)
     if(global_options & 1UL<<63) {
         USAGE(*argv, EXIT_SUCCESS);
     }
+    // printf("EXIT_SUCCESS:%d\n", EXIT_FAILURE);
 
     return EXIT_SUCCESS;
 }

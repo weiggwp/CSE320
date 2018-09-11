@@ -49,7 +49,7 @@ int myA2I(const char *str){
         myInt += (intInASCII - '0');
         i++;
     }
-    printf("%i\n",myInt );
+    //print/f("%i\n",myInt );
     return myInt;
 }
 /**
@@ -68,8 +68,7 @@ int myA2I(const char *str){
  * @modifies global variable "global_options" to contain a bitmap representing
  * the selected options.
  */
-int validargs(int argc, char **argv)
-{
+int validargs(int argc, char **argv){
     int currentArgPosition = 1;
     global_options = 0;
 
@@ -127,7 +126,8 @@ int validargs(int argc, char **argv)
                 && checkChar(argv,currentArgPosition,1,'p')
                 && checkChar(argv,currentArgPosition,2,'\0')){
                 global_options = global_options | 1ul<<59;
-                printf("%s\n","it's 'p'" );
+                // printf("%s\n","it's 'p'" )
+
             }
             else{
                 return 0;
@@ -162,7 +162,8 @@ int validargs(int argc, char **argv)
             if(checkChar(argv,currentArgPosition,0,'-')
                 && checkChar(argv,currentArgPosition,1,'k')
                 && checkChar(argv,currentArgPosition,2,'\0')){
-                printf("%s\n","it's 'k'" );
+                // printf("%s\n","it's 'k'" );
+
                 currentArgPosition++;
                 if(currentArgPosition>=argc){
                     return 0;
@@ -214,7 +215,7 @@ int validargs(int argc, char **argv)
                 // printf("%lx\n", key );
                 global_options |= key;
 
-                printf("%s\n","is alnum" );
+                // printf("%s\n","is alnum" );
 
             }
             //if it is 'p'
@@ -241,9 +242,9 @@ int validargs(int argc, char **argv)
     printf("a float uses %lu bytes of memory\n", sizeof(float));
     int i = 10;
 
-    printf("The value of i is %d, and its address is %p\n", i, &i);
+    ("The value of i is %d, and its address is %p\n", i, &i);
     */
-    // printf("successful\n");
+    // ("successful\n");
     // printf("%016lx\n", global_options);
     return 1;
 }
@@ -278,82 +279,190 @@ int charToHex(char c){
  * @return 1 if the recoding completed successfully, 0 otherwise.
  */
 int recode(char **argv) {
-    AUDIO_HEADER header;
 
+    static AUDIO_HEADER header;
     AUDIO_HEADER *hp = &header;
+
     // = malloc(sizeof(AUDIO_HEADER));
-    if(read_header(hp) ==1){
+
+    // if reead header or read annotation return 0, return 0
+    if(read_header(hp)){
 
         write_header(hp);
     }
-    // AUDIO_HEADER header = {0x2e736e64,80,3,3,2,1} ;
-    // AUDIO_HEADER *noob = &header;
+    else{
+        return 0;
+    }
 
-//     AUDIO_HEADER header;
-//     //reading
-//     unsigned int intValue = 0;
-//     unsigned int inputChar ;
+    int annotation_size = (hp->data_offset)-24;
+    if (read_annotation(input_annotation,annotation_size))
+    {
 
-// // outer for loop 0->6, 6 if statement ex. if(i=0): magic number...
-//     unsigned int *header_start = &(header.magic_number);
+        //if has annotation, write  ' ' seperated audible line with \n then audible command line wiht \0 terminator.
+        int output_annotation_pos = 0;
+        if(annotation_size!=0){
+            int argPos =0;
+            char currentChar;
 
-//     // for(int i = 0;i<24;i++){
-//     //     inputChar = getchar();
-//     //     *(header_start+i) = inputChar;
-//     // }
+            while(*(argv+argPos)!=NULL){
+            int charPos = 0;
+                //iterate through each string
+                while( ( currentChar =*(*(argv+argPos)+charPos))  != '\0'){
+                    *(output_annotation+output_annotation_pos) = currentChar;
+                    output_annotation_pos++;
+                }
+                //add ' '
+                *(output_annotation+output_annotation_pos) = ' ';
+                output_annotation_pos++;
+                argPos++;
+            }
+            // add '\n'
+            *(output_annotation+output_annotation_pos) = '\n';
+                output_annotation_pos++;
+            write_annotation(output_annotation,output_annotation_pos);
+        }
+        //if annoatation size is 0,write audible command line wiht \0 terminator.
+        write_annotation(input_annotation,annotation_size);
+        hp->data_offset = 24 +annotation_size+output_annotation_pos;
+    }
+    else{
+        return 0;
+    }
 
-//     for(int j = 0;j<6;j++){
-//         for(int i = 0;i<4;i++){
-//             inputChar = getchar();
-//             intValue <<= 8;
-//             intValue |= inputChar;
-//         }
-//         printf("%x\n",j );
-//         printf("address of value:%p\n",header_start+j );
-//         *(header_start+j) = intValue;
+    /**
+    (bit 62) is 1 if -u
+    (i.e. the user wants speed-up mode).
+    (bit 61) is 1 if -d
+    (i.e. the user wants slow-down mode).
+     (bit 60) is 1 if -c
+    (i.e. the user wants crypt mode).
+    (bit 59) is 1 if -p
+    (i.e. the user wants annotations left unmodified).
+    -f  then the factor (minus one) is recorded (bits 57 - 48)
+    the secret key is recorded  (bits 31 - 0).
+    If the -k option was not specified, then these bits of global_options
+    should all be zero.
+    */
 
-//     }
-//     printf("%08x\n",header.magic_number);
-//     printf("%08x\n",header.data_offset);
-//     printf("%08x\n",header.data_size);
-//     printf("%08x\n",header.encoding );
-//     printf("%08x\n",header.sample_rate );
-//     printf("%08x\n",header.channels );
+    //factor to speed up | slow down
+    unsigned int factor = ((global_options>>48) & 0x3ff )+1;;
 
-    // // outer for loop 0->6, 6 if statement ex. if(i=0): magic number...
-    // for(int i = 0;i<4;i++){
-    //     inputChar = getchar();
-    //     intValue <<= 8;
-    //     intValue |= inputChar;
+    int encoding_bytes =  ((hp->encoding)-1);
+    int channels = hp -> channels;
+    int index = 0;
+    int * previous_frame_int = ((int*)previous_frame);
+    int * input_frame_int = ((int*)input_frame);
+    int * output_frame_int = ((int*)output_frame);
+
+    // printf("%d\n",factor );
+
+    //read frame by frame,exit loop when read frame return 0, aka end of file
+    // printf("%s\n","read_frame" );
+    while(read_frame(input_frame_int,channels,encoding_bytes)){
+        // printf("%s\n","calc ing offset" );
+        // offset = index* ((int)hp->channels);
+        // printf("%s\n", "clac ing current_frame_p");
+        // current_frame_p = ((int*)input_frame)+offset;
+
+        // if '-u',speed up, by change the factor
+        if(global_options & 1ul<<62){
+            // printf("%s\n","is -u" );
+            // writing by multiple of factor
+            if (index++%factor==0)
+            {
+                // printf("%s\n","write_frame" );
+                write_frame(input_frame_int,channels,encoding_bytes);
+            }
+        }
+        // if '-d',slow down, by inserting N-1 frame in between every two frames.
+        //@detail: store the previous frame, write frame (N-1) times before write current frame,
+        //store new frame into output frame and write it
+        else if(global_options & 1ul<<61){
+            //slow down
+            if(index++!=0){
+                for (int i = 0; i < factor-1; i++)
+                {
+                    for (int channel = 0; channel < channels; ++channel)
+                    {
+                        //make new frame using S + (T - S)*k/N, depends on # of cannals
+                        int new_sample = *(previous_frame_int+channel)+
+                                         (*(input_frame_int+channel) - *(previous_frame_int+channel)) * i / factor;
+                        *(output_frame_int + channel) = new_sample;
+                    }
+                    write_frame(output_frame_int,channels,encoding_bytes );
+                }
+            }
+            write_frame(input_frame_int,channels,encoding_bytes);
+
+            for (int channel = 0; channel < channels; ++channel)
+            {
+                //make new frame using S + (T - S)*k/N, depends on # of cannals
+                int new_sample = *(input_frame_int+channel);
+                *(previous_frame_int + channel) = new_sample;
+            }
+        }
+        //crpt
+        else if(global_options & 1ul<<60){
+            unsigned int seed = global_options & 0xFFFFFFFF;
+            mysrand(seed);
+            for (int channel = 0; channel < channels; ++channel)
+            {
+                //make new frame using S + (T - S)*k/N, depends on # of cannals
+                int new_sample = (*(input_frame_int+channel));
+                *(output_frame_int + channel) = new_sample ^ myrand32();
+            }
+            write_frame(output_frame_int,channels,encoding_bytes );
+        }
+
+        // if(global_options & 1ul<<62){
+        //     //speed up
+        // }
+
+    }
+
+
+    // int frame = 0 ;
+    // int *fp = &frame;
+
+    // int bytes_per_sample =  ((hp->encoding)-1);
+    // // printf("%i\n", bytes_per_sample );
+    // if(read_frame(fp,hp->channels,bytes_per_sample)){
+    //     write_frame(fp,hp->channels,((hp->encoding)-1));
     // }
 
-    // // header.magic_number = intValue;
-    // // printf("%x\n",header.magic_number);
 
-    // unsigned int *value = &(header.magic_number);
-    // *value = intValue;
-    // printf("%x\n",*value );
-
-    // printf("%x\n",header.magic_number);
-
-    // while( (inputChar = getchar()) != EOF){
-    //      intValue <<= 8;
-    //      intValue |= inputChar;
-    // }
-
-
-    // header.magic_number = **argv;
-    // header.data_offset = *(*argv)+4;
-    // header.data_size =  *(*argv)+8;
-    // header.encoding = *(*argv)+12;
-    // header.sample_rate = *(*argv)+16;
-    // header.channels = *(*argv)+20;
-
-    // int answer = read_header(noob);
-
-    // printf("audio header is %d\n",answer);
-    return 0;
+    return 1;
 }
+
+// int recode(char **argv) {
+
+//     static AUDIO_HEADER header;
+//     AUDIO_HEADER *hp = &header;
+
+//     // = malloc(sizeof(AUDIO_HEADER));
+//     if(read_header(hp)){
+
+//         write_header(hp);
+//     }
+
+//     if (read_annotation(input_annotation,(hp->data_offset)-24))
+//     {
+//         // printf("%s\n", "1");
+//         write_annotation(input_annotation,(hp->data_offset)-24);
+//     }
+
+//     int frame = 0 ;
+//     int *fp = &frame;
+
+//     int bytes_per_sample =  ((hp->encoding)-1);
+//     // printf("%i\n", bytes_per_sample );
+//     if(read_frame(fp,hp->channels,bytes_per_sample)){
+//         write_frame(fp,hp->channels,((hp->encoding)-1));
+//     }
+
+
+//     return 1;
+// }
 
 /**
  * @brief Read the header of a Sun audio file and check it for validity.
@@ -375,18 +484,25 @@ int recode(char **argv) {
 int read_header(AUDIO_HEADER *hp){
     // printf("%s\n","reading file" );
 
-    // AUDIO_HEADER header = *hp;
     unsigned int intValue ;
     unsigned int inputChar ;
 
-// outer for loop 0->6, 6 if statement ex. if(i=0): magic number...
-    unsigned int *header_start = &(hp->magic_number);
+     /*
+    store byte by byte
+    does not work, header_start+i adds 4*i not i
+    */
+
+    // char *header_start = (char*)&(hp->magic_number);
+
 
     // for(int i = 0;i<24;i++){
     //     inputChar = getchar();
     //     *(header_start+i) = inputChar;
     // }
 
+    /* store int by int */
+
+    unsigned int *header_start = &(hp->magic_number);
     for(int j = 0;j<6;j++){
         for(int i = 0;i<4;i++){
             inputChar = getchar();
@@ -394,22 +510,23 @@ int read_header(AUDIO_HEADER *hp){
             intValue |= inputChar;
         }
         // printf("%x\n",j );
-        // printf("address of value:%p\n",header_start+j );
+        // printf("address of value:%p\n",header_start+(j) );
         *(header_start+j) = intValue;
 
     }
+
     // printf("%08x\n",hp->magic_number);
-    // printf("%d\n",header.data_offset);
-    // printf("%d\n",header.data_size);
-    // printf("%d\n",header.encoding );
-    // printf("%08x\n",header.sample_rate );
-    // printf("%d\n",header.channels );
+    // printf("%d\n",hp->data_offset);
+    // printf("%d\n",hp->data_size);
+    // printf("%d\n",hp->encoding );
+    // printf("%08x\n",hp->sample_rate );
+    // printf("%d\n",hp->channels );
 
     unsigned int magic_number;//must be 0x2e736e64
     unsigned int data_offset;
-    unsigned int data_size;
+    // unsigned int data_size;
     unsigned int encoding;
-    unsigned int sample_rate;
+    // unsigned int sample_rate;
     unsigned int channels;
 
     magic_number = (*hp).magic_number;
@@ -421,22 +538,20 @@ int read_header(AUDIO_HEADER *hp){
 
 
     // printf("%08x\n",hp->magic_number);
-    if(magic_number !=  0x2e736e64){
+    if(magic_number != AUDIO_MAGIC){
         // printf("%s\n","number not magic" );
         return 0;
     }
+
     if (data_offset % 8 != 0){
         return 0;
     }
-    if(encoding<2 || encoding>5){
+    if(encoding<PCM8_ENCODING || encoding>PCM32_ENCODING){
         return 0;
     }
-    if(channels<1 || channels>2){
+    if(channels<1 || channels>CHANNELS_MAX){
         return 0;
     }
-
-
-    // printf("%d\n",headerFragment );
 
     return 1;
 
@@ -474,12 +589,6 @@ int write_header(AUDIO_HEADER *hp){
         // printf("%x\n",j );
         // printf("address of value:%p\n",header_start+j );
     }
-    // unsigned int magic_number;//must be 0x2e736e64
-    // unsigned int data_offset;
-    // unsigned int data_size;
-    // unsigned int encoding;
-    // unsigned int sample_rate;
-    // unsigned int channels;
 
     // magic_number = (*hp).magic_number;
     // data_offset = (*hp).data_offset;
@@ -503,7 +612,33 @@ int write_header(AUDIO_HEADER *hp){
  * @return  1 if 'size' bytes of valid annotation data were successfully read;
  * otherwise 0.
  */
-int read_annotation(char *ap, unsigned int size);
+int read_annotation(char *ap, unsigned int size){
+    // printf("%s\n","reading annotation" );
+    // if size is 0, no annotation provided, true by default
+    if(size==0){
+        return 1;
+
+    }
+    //size cannot exceed ANNOTATION_MAX
+    if(size> ANNOTATION_MAX)
+        return 0;
+
+
+    unsigned int inputChar ;
+    /*
+    store byte by byte
+    does not work, header_start+i adds 4*i not i
+    */
+    for(int i = 0;i<size;i++){
+        inputChar = getchar();
+        *(ap+i) = inputChar;
+        if(i==(size-1) && inputChar==0)
+            return 1;
+    }
+
+    return 0;
+
+}
 
 /**
  * @brief  Write annotation data for a Sun audio file to the standard output.
@@ -516,7 +651,18 @@ int read_annotation(char *ap, unsigned int size);
  * @param  size  The number of bytes of data to be written.
  * @return  1 if 'size' bytes of data were successfully written; otherwise 0.
  */
-int write_annotation(char *ap, unsigned int size);
+int write_annotation(char *ap, unsigned int size){
+
+    unsigned int outChar;
+
+    //print byte by byte
+    for(int i = 0;i<size;i++){
+        outChar = *(ap+i);
+        printf("%c", outChar);
+    }
+
+    return 1;
+}
 
 /**
  * @brief Read, from the standard input, a single frame of audio data having
@@ -534,7 +680,42 @@ int write_annotation(char *ap, unsigned int size);
  * @param  bytes_per_sample  The number of bytes per sample.
  * @return  1 if a complete frame was read without error; otherwise 0.
  */
-int read_frame(int *fp, int channels, int bytes_per_sample);
+int read_frame(int *fp, int channels, int bytes_per_sample){
+
+    // printf("%s\n","read_frame" );
+
+    int inputChar ;
+    int intValue  ;
+    /*
+    store byte by byte
+    does not work, header_start+i adds 4*i not i
+    */
+    // for(int i=0;i < channels*bytes_per_sample;i++){
+    //         inputChar = getchar();
+    //         *(fp+i) = inputChar;
+    //  }
+    // printf("%i\n", channels);
+    // printf("%i\n",bytes_per_sample );
+    for(int j = 0;j<channels;j++){
+        intValue = 0;
+        for(int i = 0;i<bytes_per_sample;i++){
+            inputChar = getchar();
+            if(inputChar==EOF)
+                return 0;
+            // printf("gotchar:%x\n",inputChar );
+            intValue <<= 8;
+            intValue |= inputChar;
+        }
+            // printf("intValue:%x\n",intValue );
+        // printf("%x\n",j );
+        // printf("address of value:%p\n",header_start+(j) );
+        *(fp+j) = intValue;
+        // printf("%i\n",*(fp+j) );
+
+    }
+
+    return 1;
+}
 
 /**
  * @brief  Write, to the standard output, a single frame of audio data having
@@ -550,4 +731,38 @@ int read_frame(int *fp, int channels, int bytes_per_sample);
  * @param  bytes_per_sample  The number of bytes per sample.
  * @return  1 if the complete frame was written without error; otherwise 0.
  */
-int write_frame(int *fp, int channels, int bytes_per_sample);
+int write_frame(int *fp, int channels, int bytes_per_sample){
+    int outChar ;
+    int intValue ;
+    /*
+    store byte by byte
+    does not work, header_start+i adds 4*i not i
+    */
+    // for(int i=0;i < channels*bytes_per_sample;i++){
+    //         outChar = *(fp+i);
+    //         printf("%c\n", outChar );
+
+    //  }
+
+    // printf("%i\n", channels);
+    // printf("%i\n",bytes_per_sample );
+
+    for(int j = 0;j<channels;j++){
+
+        // printf("address of value:%p\n",header_start+j );
+        intValue = *(fp+j);
+        // printf("intValue:%08x\n", intValue );
+        // printf("%x\n",header.magic_number );
+        for(int i = 0;i < bytes_per_sample;i++){
+            outChar =  intValue >> (8*(bytes_per_sample-1-i));
+            // printf("%d\n",i );
+
+            printf("%c",outChar);
+            // printf("outChar:%x\n",outChar);
+        }
+        // printf("%x\n",j );
+        // printf("address of value:%p\n",header_start+j );
+    }
+
+    return 1;
+}
