@@ -350,7 +350,9 @@ int recode(char **argv) {
         if(annotation_size+output_annotation_pos>=ANNOTATION_MAX){
             return 0;
         }
-        hp->data_offset = 24 + annotation_size+output_annotation_pos;
+        if((global_options & 1ul<<59) ==0){
+            hp->data_offset = 24 + annotation_size+output_annotation_pos;
+        }
     }
     //return 0 if failed to read annoatation
     else{
@@ -360,7 +362,7 @@ int recode(char **argv) {
     /* modify data_size based on speed up/down*/
 
     //factor to speed up | slow down
-    unsigned int factor = ((global_options>>48) & 0x3ff )+1;
+    int factor = ((global_options>>48) & 0x3ff )+1;
     //byte per sample
     int encoding_bytes =  ((hp->encoding)-1);
     //num of sample per frame
@@ -378,7 +380,7 @@ int recode(char **argv) {
         else{
             // printf("data_size %i\n",hp->data_size );
             // printf("num_frame %i\n",num_frame );
-            hp->data_size = (num_frame/2 +1)* encoding_bytes*channels;
+            hp->data_size = (num_frame/factor +1)* encoding_bytes*channels;
 
         }
 
@@ -392,8 +394,10 @@ int recode(char **argv) {
 
     }
     write_header(hp);
-    write_annotation(output_annotation,output_annotation_pos);
-    write_annotation(input_annotation,annotation_size);
+    if((global_options & 1ul<<59) ==0){
+        write_annotation(output_annotation,output_annotation_pos);
+        write_annotation(input_annotation,annotation_size);
+    }
 
     /**
     (bit 62) is 1 if -u
@@ -450,10 +454,16 @@ int recode(char **argv) {
                     for (int channel = 0; channel < channels; ++channel)
                     {
                         //make new frame using S + (T - S)*k/N, depends on # of cannals
-                        int new_sample =
-                            *(previous_frame_int+channel)+
-                            (*(input_frame_int+channel) - *(previous_frame_int+channel)) * i / factor;
+                        int previous_sample = *(previous_frame_int+channel);
+                        int current_sample = *(input_frame_int+channel);
+
+                        int new_sample = previous_sample+ (current_sample - previous_sample )* i/factor;
+                            // *(previous_frame_int+channel)+
+                            // (*(input_frame_int+channel) - *(previous_frame_int+channel)) * i / factor;
                         *(output_frame_int + channel) = new_sample;
+                        // fprintf(stderr,"i: %d, pre: %d(%x), cur: %d(%x), new: %d(%x)\n"
+                        //     ,i,previous_sample,previous_sample,current_sample, current_sample, new_sample, new_sample );
+
                     }
                     write_frame(output_frame_int,channels,encoding_bytes );
                 }
@@ -743,6 +753,16 @@ int read_frame(int *fp, int channels, int bytes_per_sample){
             intValue <<= 8;
             intValue |= inputChar;
         }
+
+        int num_bits = bytes_per_sample * 8;
+        int sign_bit = (intValue & 1<< (num_bits-1))>=1;
+
+        for (int bit = 31; bit >= num_bits; --bit)
+        {
+            /* code */
+            intValue |= sign_bit<<bit;
+        }
+
         // printf("intValue:%x\n",intValue );
         // printf("%x\n",j );
         // printf("address of value:%p\n",header_start+(j) );
