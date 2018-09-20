@@ -340,13 +340,13 @@ int recode(char **argv) {
         if(annotation_size==0){
             *(output_annotation+output_annotation_pos) = '\0';
             output_annotation_pos++;
+            //offset must divisible by 8,append \0 to annotation until that's true
+            while(output_annotation_pos%8 != 0){
+
+                *(output_annotation+ (++output_annotation_pos)) = '\0';
+            }
         }
 
-        //offset must divisible by 8,append \0 to annotation until that's true
-        while(output_annotation_pos%8 != 0){
-
-            *(output_annotation+ (++output_annotation_pos)) = '\0';
-        }
         if(annotation_size+output_annotation_pos>=ANNOTATION_MAX){
             return 0;
         }
@@ -393,11 +393,28 @@ int recode(char **argv) {
         hp->data_size += encoding_bytes*channels;
 
     }
+    // find first \0 in original anntation and return the true annotation size.
+    int true_annotation_size = 0;
+    while(*(input_annotation+true_annotation_size)!='\0'){
+        true_annotation_size++;
+    }
+    // include the \0 char
+    true_annotation_size++;
+
     write_header(hp);
+    // if -p flag
     if((global_options & 1ul<<59) ==0){
         write_annotation(output_annotation,output_annotation_pos);
-        write_annotation(input_annotation,annotation_size);
+        // make the annotation size bigger to %8
+        while(true_annotation_size%8 != 0){
+
+                *(input_annotation+ (++true_annotation_size)) = '\0';
+            }
+        write_annotation(input_annotation,true_annotation_size);
+
     }
+
+
 
     /**
     (bit 62) is 1 if -u
@@ -631,7 +648,9 @@ int write_header(AUDIO_HEADER *hp){
         // printf("%x\n",header.magic_number );
         for(int i = 0;i<4;i++){
             outChar =  intValue >> (8*(3-i));
-            printf("%c",outChar );
+            if(putchar(outChar)==EOF){
+                return 0;
+            }
         }
         // printf("%x\n",j );
         // printf("address of value:%p\n",header_start+j );
@@ -705,7 +724,10 @@ int write_annotation(char *ap, unsigned int size){
     //print byte by byte
     for(int i = 0;i<size;i++){
         outChar = *(ap+i);
-        printf("%c", outChar);
+
+        if(putchar(outChar)==EOF){
+            return 0;
+        }
     }
 
     return 1;
@@ -814,7 +836,9 @@ int write_frame(int *fp, int channels, int bytes_per_sample){
             outChar =  intValue >> (8*(bytes_per_sample-1-i));
             // printf("%d\n",i );
 
-            printf("%c",outChar);
+            if(putchar(outChar)==EOF){
+                return 0;
+            }
             // printf("outChar:%x\n",outChar);
         }
         // printf("%x\n",j );
