@@ -393,25 +393,29 @@ int recode(char **argv) {
         hp->data_size += encoding_bytes*channels;
 
     }
-    // find first \0 in original anntation and return the true annotation size.
-    int true_annotation_size = 0;
-    while(*(input_annotation+true_annotation_size)!='\0'){
-        true_annotation_size++;
-    }
-    // include the \0 char
-    true_annotation_size++;
+    //find first \0 in original anntation and return the true annotation size.
+    // int true_annotation_size = 0;
+    // while(*(input_annotation+true_annotation_size)!='\0'){
+    //     true_annotation_size++;
+    // }
 
     write_header(hp);
     // if -p flag
     if((global_options & 1ul<<59) ==0){
         write_annotation(output_annotation,output_annotation_pos);
         // make the annotation size bigger to %8
-        while(true_annotation_size%8 != 0){
+        // while(output_annotation_pos%8 != 0){
 
-                *(input_annotation+ (++true_annotation_size)) = '\0';
-            }
-        write_annotation(input_annotation,true_annotation_size);
+        //         *(output_annotation+ (++output_annotation_pos)) = '\0';
+        //     }
 
+
+    }
+    write_annotation(input_annotation,annotation_size);
+    while(hp->data_offset%8!=0)
+    {
+        putchar('\0');
+        hp->data_offset++;
     }
 
 

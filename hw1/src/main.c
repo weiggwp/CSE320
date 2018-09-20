@@ -24,12 +24,14 @@ int main(int argc, char **argv)
         USAGE(*argv, EXIT_FAILURE);
     }
 
-    recode(argv);
+
 
     debug("Options: 0x%lX", global_options);
     if(global_options & 1UL<<63) {
         USAGE(*argv, EXIT_SUCCESS);
     }
+
+    recode(argv);
     // printf("EXIT_SUCCESS:%d\n", EXIT_FAILURE);
 
     return EXIT_SUCCESS;
