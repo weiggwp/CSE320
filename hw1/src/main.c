@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 
 
     debug("Options: 0x%lX", global_options);
-    if(global_options & 1UL<<63) {
+    if(global_options & 0x1L<<63) {//0x1L
         USAGE(*argv, EXIT_SUCCESS);
     }
 
