@@ -20,7 +20,7 @@ int main(int argc, char **argv)
 
     if(!validargs(argc, argv)){
         global_options = 0;
-        printf("%lx\n", global_options);
+        // printf("%lx\n", global_options);
         USAGE(*argv, EXIT_FAILURE);
     }
 
