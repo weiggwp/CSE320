@@ -84,7 +84,7 @@ int validargs(int argc, char **argv){
     {
           // printf("starts with '-h'\n");
           global_options |=((unsigned long)1)<<63;
-          printf("%lx\n",global_options );
+          // printf("%lx\n",global_options );
           return 1;
     }
     //too many args
@@ -279,13 +279,12 @@ int charToHex(char c){
  * @return 1 if the recoding completed successfully, 0 otherwise.
  */
 int recode(char **argv) {
-
-    static AUDIO_HEADER header;
+    //memory allocation
+    AUDIO_HEADER header;
+    // header pointer
     AUDIO_HEADER *hp = &header;
 
-    // = malloc(sizeof(AUDIO_HEADER));
-
-    // if read header or read annotation return 0, return 0
+    // check if header is valid
     if(!read_header(hp)){
         return 0;
     }
@@ -295,35 +294,40 @@ int recode(char **argv) {
     //output_annotation_pos, aka output annotation size
     int output_annotation_pos = 0;
 
-    //read annoatation from input file and store at array input_annotation
-    if (read_annotation(input_annotation,annotation_size)){
+    /*
+    Annotation
+    read annoatation from input file and store at array input_annotation
+    create new anotation from arguments and store at array output_annotation
+    if -p: annotation doesn't change, output_annotation not used
+    else: annotation = new annotation +\n+ old annottation
+    */
 
-        //if has annotation, write  ' ' seperated audible line with \n
-        //then audible command line wiht \0 terminator.
+    //read annoatation from input file and store at array input_annotation
+    //check if annotation is valid
+    if (read_annotation(input_annotation,annotation_size)){
 
         //position of arg in argv
         int argPos =0;
         //current char traversed
         char currentChar;
 
-        //loop through argv
-        while(*(argv+argPos)!=NULL){
-            // printf("outerLoop:%d\n",argPos );
+        //if has annotation, write  ' ' seperated audible line with \n
+        //then audible command line wiht \0 terminator.
 
-            // position of char in arg
+        //loop through args
+        while(*(argv+argPos)!=NULL){
+            // position of char in current arg
             int charPos = 0;
 
             //add ' ' between args,
             //this is done by skipping the first arg then append ' ' in front of each arg
             if(argPos!= 0){
-            *(output_annotation+output_annotation_pos) = ' ';
-            output_annotation_pos++;
+                *(output_annotation+output_annotation_pos) = ' ';
+                output_annotation_pos++;
             }
 
-            //iterate through each arg string
+            //iterate through each char in arg string
             while( ( currentChar =*(*(argv+argPos)+charPos))  != '\0'){
-                // printf("inner loop:%d\n",charPos );
-
                 //store char read to output_annotation array
                 *(output_annotation+output_annotation_pos) = currentChar;
                 charPos++;
@@ -347,14 +351,20 @@ int recode(char **argv) {
             }
         }
 
-        if(annotation_size+output_annotation_pos>=ANNOTATION_MAX){
+        //annotation size cannot exceed ANNOTATION_MAX
+        if(annotation_size + output_annotation_pos >= ANNOTATION_MAX){
             return 0;
         }
+        // if ! -p flag
         if((global_options & 1ul<<59) ==0){
-            hp->data_offset = 24 + annotation_size+output_annotation_pos;
+            while((output_annotation_pos+annotation_size) % 8 != 0){
+
+                *(input_annotation + (annotation_size++)) = '\0';
+            }
+            hp->data_offset = 24 + output_annotation_pos+annotation_size;
         }
     }
-    //return 0 if failed to read annoatation
+    //if failed to read annoatation
     else{
         return 0;
     }
@@ -393,6 +403,7 @@ int recode(char **argv) {
         hp->data_size += encoding_bytes*channels;
 
     }
+
     //find first \0 in original anntation and return the true annotation size.
     // int true_annotation_size = 0;
     // while(*(input_annotation+true_annotation_size)!='\0'){
@@ -412,13 +423,6 @@ int recode(char **argv) {
 
     }
     write_annotation(input_annotation,annotation_size);
-    while(hp->data_offset%8!=0)
-    {
-        putchar('\0');
-        hp->data_offset++;
-    }
-
-
 
     /**
     (bit 62) is 1 if -u
@@ -447,19 +451,15 @@ int recode(char **argv) {
     mysrand(seed);
     //read frame by frame,exit loop when read frame return 0, aka end of file
     // printf("%s\n","read_frame" );
-    while(read_frame(input_frame_int,channels,encoding_bytes)){
-        // printf("%s\n","calc ing offset" );
-        // offset = index* ((int)hp->channels);
-        // printf("%s\n", "clac ing current_frame_p");
-        // current_frame_p = ((int*)input_frame)+offset;
+
+    for(int i_frame = 0;i_frame<num_frame;i_frame++){
+        read_frame(input_frame_int,channels,encoding_bytes);
 
         // if '-u',speed up, by change the factor
         if(global_options & 1ul<<62){
-            // printf("%s\n","is -u" );
             // writing by multiple of factor
             if (index++%factor==0)
             {
-                // printf("%s\n","write_frame" );
                 write_frame(input_frame_int,channels,encoding_bytes);
             }
 
@@ -510,22 +510,7 @@ int recode(char **argv) {
             write_frame(input_frame_int,channels,encoding_bytes );
         }
 
-        // if(global_options & 1ul<<62){
-        //     //speed up
-        // }
-
     }
-
-
-    // int frame = 0 ;
-    // int *fp = &frame;
-
-    // int bytes_per_sample =  ((hp->encoding)-1);
-    // // printf("%i\n", bytes_per_sample );
-    // if(read_frame(fp,hp->channels,bytes_per_sample)){
-    //     write_frame(fp,hp->channels,((hp->encoding)-1));
-    // }
-
 
     return 1;
 }
@@ -574,6 +559,9 @@ int read_header(AUDIO_HEADER *hp){
     for(int j = 0;j<6;j++){
         for(int i = 0;i<4;i++){
             inputChar = getchar();
+
+            if(inputChar==EOF) return 0;
+
             intValue <<= 8;
             intValue |= inputChar;
         }
@@ -660,12 +648,6 @@ int write_header(AUDIO_HEADER *hp){
         // printf("address of value:%p\n",header_start+j );
     }
 
-    // magic_number = (*hp).magic_number;
-    // data_offset = (*hp).data_offset;
-    // data_size = (*hp).data_size;
-    // encoding = (*hp).encoding;
-    // sample_rate = (*hp).sample_rate;
-    // channels = (*hp).channels;
     return 1;
 }
 
@@ -701,6 +683,7 @@ int read_annotation(char *ap, unsigned int size){
     */
     for(int i = 0;i<size;i++){
         inputChar = getchar();
+        if(inputChar==EOF) return 0;
         *(ap+i) = inputChar;
         if(i==(size-1) && inputChar==0)
             return 1;
@@ -755,8 +738,6 @@ int write_annotation(char *ap, unsigned int size){
  */
 int read_frame(int *fp, int channels, int bytes_per_sample){
 
-    // printf("%s\n","read_frame" );
-
     int inputChar ;
     int intValue  ;
     /*
@@ -775,7 +756,6 @@ int read_frame(int *fp, int channels, int bytes_per_sample){
             inputChar = getchar();
             if(inputChar==EOF)
                 return 0;
-            // printf("gotchar:%x\n",inputChar );
             intValue <<= 8;
             intValue |= inputChar;
         }
