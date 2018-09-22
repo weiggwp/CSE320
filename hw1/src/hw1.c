@@ -76,17 +76,12 @@ int validargs(int argc, char **argv){
     if(argc<=1)
         return 0;
 
-    // printf("%c\n",*(*(argv+1)));
-    // printf("%c\n",*(*(argv+1)+1));
-
     //true if starts with '-h'
     if(checkChar(argv,currentArgPosition,0,'-')
         && checkChar(argv,currentArgPosition,1,'h')
         && checkChar(argv,currentArgPosition,2,'\0'))
     {
-          // printf("starts with '-h'\n");
           global_options |=((unsigned long)1)<<63;
-          // printf("%lx\n",global_options );
           return 1;
     }
     //too many args
@@ -102,7 +97,6 @@ int validargs(int argc, char **argv){
         currentArgPosition++;
         //check the rest of the args
         while(currentArgPosition<argc){
-            // printf("%d\n",currentArgPosition );
             //if it is 'f', then must followed by a int
             if(checkChar(argv,currentArgPosition,0,'-')
                 && checkChar(argv,currentArgPosition,1,'f')
@@ -113,14 +107,12 @@ int validargs(int argc, char **argv){
                 }
                 //the next input must be a int, atoi takes a char pointer and convert to int, return 0 if not int
                 unsigned long factor = myA2I(((*(argv+currentArgPosition))));
-                // printf("%d\n",atoi(((*(argv+currentArgPosition))) ));
 
                 if(factor <1 || factor>1024){
                     return 0;
                 }
                 global_options = global_options | ((factor-1)<<48);
                 // unsigned int factorHex =  (unsigned int)(*(argv+currentArgPosition));
-                // printf("hex value: %lx\n", factor);
 
             }
             //if it is 'p'
@@ -128,7 +120,6 @@ int validargs(int argc, char **argv){
                 && checkChar(argv,currentArgPosition,1,'p')
                 && checkChar(argv,currentArgPosition,2,'\0')){
                 global_options = global_options | 1ul<<59;
-                // printf("%s\n","it's 'p'" )
 
             }
             else{
@@ -136,17 +127,14 @@ int validargs(int argc, char **argv){
             }
 
             currentArgPosition++;
-            // printf("end with %d\n",currentArgPosition );
         }
 
         if(checkChar(argv,1,1,'u')){
             global_options |= 1ul<<62;
         }
         else{
-            // printf("%lx\n",global_options );
             global_options |= 1ul<<61;
         }
-        // printf("%lx\n",global_options );
     }
 
     //if starts with '-c'
@@ -159,12 +147,10 @@ int validargs(int argc, char **argv){
 
         //check the rest of the args
         while(currentArgPosition<argc){
-            // printf("%d\n",currentArgPosition );
             //if it is '-k', then must followed by a alphaNum
             if(checkChar(argv,currentArgPosition,0,'-')
                 && checkChar(argv,currentArgPosition,1,'k')
                 && checkChar(argv,currentArgPosition,2,'\0')){
-                // printf("%s\n","it's 'k'" );
 
                 currentArgPosition++;
                 if(currentArgPosition>=argc){
@@ -177,22 +163,11 @@ int validargs(int argc, char **argv){
                 unsigned long  keyFragment ;
                 do{
                     currentChar = *(*(argv+currentArgPosition)+i);
-                    // printf("char:%c\n",currentChar );
                     if(currentChar == '\0'){
                         break;
                     }
 
-                    // key=key <<4;
-                    // int keyFragment = (int)strtol(*(argv+currentArgPosition), NULL, 16);
-                    // printf("int:%d\n",keyFragment );
-                    // key|=keyFragment;
-                    // printf("%c\n",currentChar );
-                    //return 0 if is not alphaNum
-                    // if( !((currentChar>='0' && currentChar<='9')
-                    //     || (currentChar>='a' && currentChar<='f')
-                    //     || (currentChar>='A' && currentChar<='F')) ){
-                    //     return 0;
-                    // }
+
                     if((currentChar>='0' && currentChar<='9'))
                     {
                         keyFragment = currentChar-'0';
@@ -214,10 +189,8 @@ int validargs(int argc, char **argv){
                     }
                 }while(currentChar != '\0');
                 // key = (int)strtol(*(argv+currentArgPosition), NULL, 16);
-                // printf("%lx\n", key );
                 global_options |= key;
 
-                // printf("%s\n","is alnum" );
 
             }
             //if it is 'p'
@@ -225,7 +198,6 @@ int validargs(int argc, char **argv){
                 && checkChar(argv,currentArgPosition,1,'p')
                 && checkChar(argv,currentArgPosition,2,'\0')){
                 global_options = global_options | 1ul<<59;
-                // printf("%s\n","it's 'p'" );
             }
             else{
                 return 0;
@@ -238,16 +210,7 @@ int validargs(int argc, char **argv){
         return 0;
     }
 
-    /*printf("a long uses %lu bytes of memory\n", sizeof(long));
-    printf("a char uses %lu bytes of memory\n", sizeof(char));
-    printf("a int uses %lu bytes of memory\n", sizeof(int));
-    printf("a float uses %lu bytes of memory\n", sizeof(float));
-    int i = 10;
 
-    ("The value of i is %d, and its address is %p\n", i, &i);
-    */
-    // ("successful\n");
-    // printf("%016lx\n", global_options);
     return 1;
 }
 
@@ -390,8 +353,6 @@ int recode(char **argv) {
         }
         // if num of frame is not multiple of factor, then there's an extra frame
         else{
-            // printf("data_size %i\n",hp->data_size );
-            // printf("num_frame %i\n",num_frame );
             hp->data_size = (num_frame/factor +1)* encoding_bytes*channels;
 
         }
@@ -446,13 +407,11 @@ int recode(char **argv) {
     int * input_frame_int = ((int*)input_frame);
     int * output_frame_int = ((int*)output_frame);
 
-    // printf("%d\n",factor );
 
     //initialize my rand generator
     unsigned int seed = global_options & 0xFFFFFFFF;
     mysrand(seed);
     //read frame by frame,exit loop when read frame return 0, aka end of file
-    // printf("%s\n","read_frame" );
 
     for(int i_frame = 0;i_frame<num_frame;i_frame++){
         read_frame(input_frame_int,channels,encoding_bytes);
@@ -624,7 +583,6 @@ int read_header(AUDIO_HEADER *hp){
  * @return  1 if the function is successful at writing the data; otherwise 0.
  */
 int write_header(AUDIO_HEADER *hp){
-    // printf("%s\n","writing header" );
 
     AUDIO_HEADER header = *hp;
     //reading
@@ -636,18 +594,13 @@ int write_header(AUDIO_HEADER *hp){
     for(int j = 0;j<6;j++){
         //incredment pointer to next member and get value
 
-        // printf("address of value:%p\n",header_start+j );
         intValue = *(header_start+j);
-        // printf("%08x\n", intValue );
-        // printf("%x\n",header.magic_number );
         for(int i = 0;i<4;i++){
             outChar =  intValue >> (8*(3-i));
             if(putchar(outChar)==EOF){
                 return 0;
             }
         }
-        // printf("%x\n",j );
-        // printf("address of value:%p\n",header_start+j );
     }
 
     return 1;
@@ -667,7 +620,6 @@ int write_header(AUDIO_HEADER *hp){
  * otherwise 0.
  */
 int read_annotation(char *ap, unsigned int size){
-    // printf("%s\n","reading annotation" );
     // if size is 0, no annotation provided, true by default
     if(size==0){
         return 1;
@@ -750,8 +702,6 @@ int read_frame(int *fp, int channels, int bytes_per_sample){
     //         inputChar = getchar();
     //         *(fp+i) = inputChar;
     //  }
-    // printf("%i\n", channels);
-    // printf("%i\n",bytes_per_sample );
     for(int j = 0;j<channels;j++){
         intValue = 0;
         for(int i = 0;i<bytes_per_sample;i++){
@@ -771,11 +721,7 @@ int read_frame(int *fp, int channels, int bytes_per_sample){
             intValue |= sign_bit<<bit;
         }
 
-        // printf("intValue:%x\n",intValue );
-        // printf("%x\n",j );
-        // printf("address of value:%p\n",header_start+(j) );
         *(fp+j) = intValue;
-        // printf("%i\n",*(fp+j) );
 
     }
 
@@ -805,30 +751,20 @@ int write_frame(int *fp, int channels, int bytes_per_sample){
     */
     // for(int i=0;i < channels*bytes_per_sample;i++){
     //         outChar = *(fp+i);
-    //         printf("%c\n", outChar );
 
     //  }
 
-    // printf("%i\n", channels);
-    // printf("%i\n",bytes_per_sample );
 
     for(int j = 0;j<channels;j++){
 
-        // printf("address of value:%p\n",header_start+j );
         intValue = *(fp+j);
-        // printf("intValue:%08x\n", intValue );
-        // printf("%x\n",header.magic_number );
         for(int i = 0;i < bytes_per_sample;i++){
             outChar =  intValue >> (8*(bytes_per_sample-1-i));
-            // printf("%d\n",i );
 
             if(putchar(outChar)==EOF){
                 return 0;
             }
-            // printf("outChar:%x\n",outChar);
         }
-        // printf("%x\n",j );
-        // printf("address of value:%p\n",header_start+j );
     }
 
     return 1;
