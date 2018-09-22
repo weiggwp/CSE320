@@ -31,7 +31,8 @@ int main(int argc, char **argv)
         USAGE(*argv, EXIT_SUCCESS);
     }
 
-    recode(argv);
+    if(!recode(argv))
+        return EXIT_FAILURE;
     // printf("EXIT_SUCCESS:%d\n", EXIT_FAILURE);
 
     return EXIT_SUCCESS;
