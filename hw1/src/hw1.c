@@ -80,7 +80,9 @@ int validargs(int argc, char **argv){
     // printf("%c\n",*(*(argv+1)+1));
 
     //true if starts with '-h'
-    if(checkChar(argv,currentArgPosition,0,'-') && checkChar(argv,currentArgPosition,1,'h') && checkChar(argv,currentArgPosition,2,'\0'))
+    if(checkChar(argv,currentArgPosition,0,'-')
+        && checkChar(argv,currentArgPosition,1,'h')
+        && checkChar(argv,currentArgPosition,2,'\0'))
     {
           // printf("starts with '-h'\n");
           global_options |=((unsigned long)1)<<63;
