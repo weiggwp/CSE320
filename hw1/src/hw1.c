@@ -343,28 +343,32 @@ int recode(char **argv) {
     //num of sample per frame
     int channels = hp -> channels;
 
-    // frame size = byte per sample * num of sample
     unsigned int num_frame = hp->data_size / (encoding_bytes*channels);
 
-    //data size changes depends on -u -d factor
-    if(global_options & 1ul<<62){
-        if(num_frame % factor==0){
-            hp->data_size /= factor;
-        }
-        // if num of frame is not multiple of factor, then there's an extra frame
-        else{
-            hp->data_size = (num_frame/factor +1)* encoding_bytes*channels;
+    //modify data size if it's known, otherwise leave it
+    if(hp->data_size !=EOF){
+        // frame size = byte per sample * num of sample
+
+        //data size changes depends on -u -d factor
+        if(global_options & 1ul<<62){
+            if(num_frame % factor==0){
+                hp->data_size /= factor;
+            }
+            // if num of frame is not multiple of factor, then there's an extra frame
+            else{
+                hp->data_size = (num_frame/factor +1)* encoding_bytes*channels;
+
+            }
 
         }
+        //slow down, size increase,((frame#-1)*factor+1)*frame size
+        else if(global_options & 1ul<<61){
 
-    }
-    //slow down, size increase,((frame#-1)*factor+1)*frame size
-    else if(global_options & 1ul<<61){
+            hp->data_size -= encoding_bytes*channels;
+            hp->data_size *=factor;
+            hp->data_size += encoding_bytes*channels;
 
-        hp->data_size -= encoding_bytes*channels;
-        hp->data_size *=factor;
-        hp->data_size += encoding_bytes*channels;
-
+        }
     }
 
     //find first \0 in original anntation and return the true annotation size.
@@ -413,8 +417,9 @@ int recode(char **argv) {
     mysrand(seed);
     //read frame by frame,exit loop when read frame return 0, aka end of file
 
-    for(int i_frame = 0;i_frame<num_frame;i_frame++){
-        read_frame(input_frame_int,channels,encoding_bytes);
+    for(int i_frame = 0;i_frame < num_frame;i_frame++){
+        if(read_frame(input_frame_int,channels,encoding_bytes)==0)
+            break;
 
         // if '-u',speed up, by change the factor
         if(global_options & 1ul<<62){
@@ -526,18 +531,9 @@ int read_header(AUDIO_HEADER *hp){
             intValue <<= 8;
             intValue |= inputChar;
         }
-        // printf("%x\n",j );
-        // printf("address of value:%p\n",header_start+(j) );
         *(header_start+j) = intValue;
 
     }
-
-    // printf("%08x\n",hp->magic_number);
-    // printf("%d\n",hp->data_offset);
-    // printf("%d\n",hp->data_size);
-    // printf("%d\n",hp->encoding );
-    // printf("%08x\n",hp->sample_rate );
-    // printf("%d\n",hp->channels );
 
     unsigned int magic_number;//must be 0x2e736e64
     unsigned int data_offset;
@@ -554,9 +550,7 @@ int read_header(AUDIO_HEADER *hp){
     channels = (*hp).channels;
 
 
-    // printf("%08x\n",hp->magic_number);
     if(magic_number != AUDIO_MAGIC){
-        // printf("%s\n","number not magic" );
         return 0;
     }
 
