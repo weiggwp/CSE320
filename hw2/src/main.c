@@ -11,6 +11,8 @@
 #include "write.h"
 #include "normal.h"
 #include "sort.h"
+#include "report.h"
+#include "error.h"
 
 /*
  * Course grade computation program
@@ -71,14 +73,16 @@ static struct option_info {
 static char *short_options = "";
 static struct option long_options[NUM_OPTIONS];
 
+//initialize long_option using the option table
 static void init_options() {
     for(unsigned int i = 0; i < NUM_OPTIONS; i++) {
-        struct option_info *oip = &option_table[i];
+        //option info = address of current option from option table
+        struct option_info *option_info_p = &option_table[i];
         struct option *op = &long_options[i];
-        op->name = oip->name;
-        op->has_arg = oip->has_arg;
+        op->name = option_info_p->name;
+        op->has_arg = option_info_p->has_arg;
         op->flag = NULL;
-        op->val = oip->val;
+        op->val = option_info_p->val;
     }
 }
 
@@ -94,7 +98,7 @@ char *argv[];
         Course *c;
         Stats *s;
         extern int errors, warnings;
-        char optval;
+        char optval;    //option value
         int (*compare)() = comparename;
 
         fprintf(stderr, BANNER);
@@ -164,7 +168,7 @@ char *argv[];
         fprintf(stderr, "Calculating statistics...\n");
         s = statistics(c);
         if(s == NULL) fatal("There is no data from which to generate reports.");
-        normalize(c, s);
+        normalize(c);
         composites(c);
         sortrosters(c, comparename);
         checkfordups(c->roster);
@@ -184,7 +188,7 @@ char *argv[];
         if(summaries) reportquantilesummaries(stdout, s);
         if(histograms) reporthistos(stdout, c, s);
         if(scores) reportscores(stdout, c, nonames);
-        if(tabsep) reporttabs(stdout, c, nonames);
+        if(tabsep) reporttabs(stdout, c);
 
         fprintf(stderr, "\nProcessing complete.\n");
         printf("%d warning%s issued.\n", warnings+errors,

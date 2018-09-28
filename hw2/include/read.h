@@ -18,6 +18,10 @@ Surname readsurname();
 Name readname();
 Atype readatype();
 Id readid();
+int checktoken(char *c);
+int tokensize();
+int istoken();
+
 #ifdef MSDOS
 int iswhitespace(char c);       /* Correct for buggy ANSI implementation */
 #else
