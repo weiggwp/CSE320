@@ -636,5 +636,6 @@ void pushfile()
         ifile = nfile;
         fprintf(stderr, " [ %s", n);
         gobbleblanklines();
+        free(n);//leak fix 2
 }
 

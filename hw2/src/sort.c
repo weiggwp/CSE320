@@ -42,6 +42,7 @@ int compare();
         c->roster = sortroster(c->roster, getcnext, setcnext, compare);
         for(s = c->sections; s != NULL; s = s->next)
                 s->roster = sortroster(s->roster, getnext, setnext, compare);
+        return;
 }
 
 Student *sortroster(s, gtnxt, stnxt, compare)
@@ -53,15 +54,16 @@ int compare();
         int count, i;
         Student *sp, **stab;
 
-        sp = s;
+        sp = s;//first student
         count = 0;
         while(sp != NULL) {     /* Count students */
                 count++;
                 sp = gtnxt(sp);
         }
         if(count == 0) return(NULL);
-        if((stab = (Student **)malloc(count*sizeof(Student))) == NULL)
+        if((stab = (Student **)malloc(count*sizeof(Student))) == NULL){
                 warning("Not enough memory to perform sorting.");
+        }
         sp = s;
         i = count;
         while(i--) {            /* Put students in table */
@@ -76,6 +78,7 @@ int compare();
         }
         stnxt(sp, NULL);
         sp = stab[0];
+        free(stab);//leak 1: stab** but why does freed stab still let sp access memo
         return(sp);
 }
 
