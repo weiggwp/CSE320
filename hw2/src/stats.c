@@ -92,8 +92,8 @@ Stats *s;
 {
         Assignment *ap;
         Section *sep;
-        Student *stp, *rp;
-        Score *scp;
+        Student *studentp, *rp;
+        Score *scorep;
 
         Classstats *csp;
         Sectionstats *ssp;
@@ -103,20 +103,20 @@ Stats *s;
         for(ap = c->assignments; ap != NULL; ap = ap->next, csp = csp->next) {
            ssp = csp->sstats;
            for(sep = c->sections; sep != NULL; sep = sep->next, ssp = ssp->next) {
-              for(stp = sep->roster; stp != NULL; stp = stp->next) {
+              for(studentp = sep->roster; studentp != NULL; studentp = studentp->next) {
                  if(rp == NULL) {       /* Link students into course roster */
-                        c->roster = stp;
-                        stp->cnext = NULL;
-                        rp = stp;
+                        c->roster = studentp;
+                        studentp->cnext = NULL;
+                        rp = studentp;
                  } else {
-                        rp->cnext = stp;
-                        stp->cnext = NULL;
-                        rp = stp;
+                        rp->cnext = studentp;
+                        studentp->cnext = NULL;
+                        rp = studentp;
                  }
-                 for(scp = stp->rawscores; scp != NULL; scp = scp->next) {
-                    if(scp->asgt == ap) {
-                       scp->cstats = csp; /* link scores to statistics for */
-                       scp->sstats = ssp; /* later use in normalization */
+                 for(scorep = studentp->rawscores; scorep != NULL; scorep = scorep->next) {
+                    if(scorep->asgt == ap) {
+                       scorep->cstats = csp; /* link scores to statistics for */
+                       scorep->sstats = ssp; /* later use in normalization */
                     }
                  }
               }
@@ -137,16 +137,16 @@ Stats *s;
 void do_freqs(c)
 Course *c;
 {
-        Student *stp;
-        Score *scp;
+        Student *studentp;
+        Score *scorep;
 
-        for(stp = c->roster; stp != NULL; stp = stp->cnext) {
-           for(scp = stp->rawscores; scp != NULL; scp = scp->next) {
-               if(scp->flag == VALID || scp->subst == USERAW) {
-                  scp->cstats->freqs = count_score(scp, scp->cstats->freqs);
-                  scp->cstats->tallied++;
-                  scp->sstats->freqs = count_score(scp, scp->sstats->freqs);
-                  scp->sstats->tallied++;
+        for(studentp = c->roster; studentp != NULL; studentp = studentp->cnext) {
+           for(scorep = studentp->rawscores; scorep != NULL; scorep = scorep->next) {
+               if(scorep->flag == VALID || scorep->subst == USERAW) {
+                  scorep->cstats->freqs = count_score(scorep, scorep->cstats->freqs);
+                  scorep->cstats->tallied++;
+                  scorep->sstats->freqs = count_score(scorep, scorep->sstats->freqs);
+                  scorep->sstats->tallied++;
                }
            }
         }
@@ -158,45 +158,47 @@ Course *c;
  * The head of the new list is returned.
  */
 
-Freqs *count_score(scp, afp)
-Score *scp;
-Freqs *afp;
+Freqs *count_score(scorep, infreqp)
+Score *scorep;
+Freqs *infreqp;
 {
-        Freqs *fp, *sfp;
+        Freqs *fp, *sfp = NULL; /*fp = current freqp, sfp = previous or second pointer*/
 
-        for(fp = afp; fp != NULL; sfp = fp, fp = fp->next) {
-                if(fp->score == scp->grade) {
+        for(fp = infreqp; fp != NULL; sfp = fp, fp = fp->next) {
+                if(fp->score == scorep->grade) {
                         fp->count++;
-                        return(afp);
-                } else if(fp->score > scp->grade) {
+                        return(infreqp);
+                } else if(fp->score > scorep->grade) {
                         if(sfp == NULL) {       /* insertion at head */
                                 sfp = newfreqs();
                                 sfp->next = fp;
-                                sfp->score = scp->grade;
+                                sfp->score = scorep->grade;
                                 sfp->count = 1;
                                 return(sfp);    /* return new head */
                         } else {                /* insertion in middle */
                                 sfp->next = newfreqs();
                                 sfp = sfp->next;
                                 sfp->next = fp;
-                                sfp->score = scp->grade;
+                                sfp->score = scorep->grade;
                                 sfp->count = 1;
-                                return(afp);    /* return old head */
+                                return(infreqp);    /* return old head */
                         }
                 } else continue;
         }
+        //using sfp becuase fp must be NULL after the for loop, and we don't want to  step in unles it's all NUll
         if(sfp == NULL) {       /* insertion into empty list */
+                sfp = newfreqs();
                 sfp->next = NULL;
-                sfp->score = scp->grade;
+                sfp->score = scorep->grade;
                 sfp->count = 1;
                 return(sfp);    /* return new head */
         } else {                /* insertion at end of list */
                 sfp->next = newfreqs();
                 sfp = sfp->next;
                 sfp->next = NULL;
-                sfp->score = scp->grade;
+                sfp->score = scorep->grade;
                 sfp->count = 1;
-                return(afp);
+                return(infreqp);
         }
 }
 
@@ -244,18 +246,18 @@ Stats *s;
 void do_sums(c)
 Course *c;
 {
-        Student *stp;
-        Score *scp;
+        Student *studentp;
+        Score *scorep;
         Classstats *csp;
         Sectionstats *ssp;
         double g;
 
-        for(stp = c->roster; stp != NULL; stp = stp->cnext) {
-           for(scp = stp->rawscores; scp != NULL; scp = scp->next) {
-              if(scp->flag == VALID || scp->subst == USERAW) {
-                csp = scp->cstats;
-                ssp = scp->sstats;
-                g = scp->grade;
+        for(studentp = c->roster; studentp != NULL; studentp = studentp->cnext) {
+           for(scorep = studentp->rawscores; scorep != NULL; scorep = scorep->next) {
+              if(scorep->flag == VALID || scorep->subst == USERAW) {
+                csp = scorep->cstats;
+                ssp = scorep->sstats;
+                g = scorep->grade;
                 if(csp->valid++ == 0) csp->min = csp->max = g;
                 else {
                         if(g < csp->min) csp->min = g;

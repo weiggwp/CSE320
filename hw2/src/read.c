@@ -24,7 +24,7 @@ Ifile *ifile;
  * Token readahead buffer
  */
 
-char tokenbuf[32];
+char tokenbuf[256];/*******BUG2:allocate space for the buff******/
 char *tokenptr = tokenbuf;
 char *tokenend = tokenbuf;
 
@@ -382,12 +382,15 @@ Name readname()
 Id readid()
 {
         Id i;
+        //advance token is there's no token
         if(!istoken()) advancetoken();
+        //i = token
         if(istoken()) i = newstring(tokenptr, tokensize());
         else {
                 error("(%s:%d) Expected an ID.", ifile->name, ifile->line);
                 i = newstring("", 0);
         }
+        //remove token from instream
         flushtoken();
         return(i);
 }
@@ -463,11 +466,11 @@ void gobbleblanklines()
             ifile->line++;
             continue;
           }
-          ungetc(c, ifile->fd);
+          ungetc(c, ifile->fd);// return char to input file stream
           while((c = getc(ifile->fd)) == '\n') {
             ifile->line++;
             gobblewhitespace();
-            break;
+            break;//FIXME: ***********what is this single loop**********************
           }
           if(c == '\n') continue;
           ungetc(c, ifile->fd);
@@ -604,8 +607,8 @@ void previousfile()
         Ifile *prev;
         if((prev = ifile->prev) == NULL)
                 fatal("(%s:%d) No previous file.", ifile->name, ifile->line);
-        free(ifile);
         fclose(ifile->fd);
+        free(ifile); /* BUG3: free before fclose  */
         ifile = prev;
         fprintf(stderr, " ]");
 }

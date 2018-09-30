@@ -65,10 +65,13 @@ static struct option_info {
  {NONAMES,        "nonames",   'n',      no_argument, NULL,
                   "Suppress printing of students' names."},
  {SORTBY,         "sortby",    'k',      required_argument, "key",
-                  "Sort by {name, id, score}."}
+                  "Sort by {name, id, score}."},
+ {0,NULL, 0, 0, NULL, NULL}
+ /*real BUG1: need Null termination so getopt_long knows when to stop when invalid args */
+
 };
 
-#define NUM_OPTIONS (14)
+#define NUM_OPTIONS (14) /*Not BUG1 wrong counts*/
 
 static char *short_options = "";
 static struct option long_options[NUM_OPTIONS];
