@@ -31,6 +31,7 @@
 #define ALLOUTPUT      10
 #define SORTBY         11
 #define NONAMES        12
+#define OUTPUT         13   //added feature
 
 static struct option_info {
         unsigned int val;
@@ -66,19 +67,22 @@ static struct option_info {
                   "Suppress printing of students' names."},
  {SORTBY,         "sortby",    'k',      required_argument, "key",
                   "Sort by {name, id, score}."},
+ {OUTPUT,         "output",    'o',      required_argument, "outfile",
+                  "File to print output."},//added feature
  {0,NULL, 0, 0, NULL, NULL}
  /*real BUG1: need Null termination so getopt_long knows when to stop when invalid args */
 
 };
 
-#define NUM_OPTIONS (14) /*Not BUG1 wrong counts*/
+#define NUM_OPTIONS (15) /*Not BUG1 wrong counts*/ //added feature
 
-static char *short_options = "";
+static char short_options[NUM_OPTIONS];
 static struct option long_options[NUM_OPTIONS];
 
 //initialize long_option using the option table
 static void init_options() {
-    for(unsigned int i = 0; i < NUM_OPTIONS; i++) {
+    unsigned int i = 0,j=0;
+    for(i = 0; i < NUM_OPTIONS; i++) {
         //option info = address of current option from option table
         struct option_info *option_info_p = &option_table[i];
         struct option *op = &long_options[i];
@@ -86,11 +90,24 @@ static void init_options() {
         op->has_arg = option_info_p->has_arg;
         op->flag = NULL;
         op->val = option_info_p->val;
+
+        if(option_info_p->chr!=0){
+            *(short_options+j) = option_info_p->chr;
+
+            if(option_info_p->has_arg == required_argument){
+                j++;
+                *(short_options+j) = ':';
+            }
+            j++;
+        }
+
+
+
     }
 }
 
 static int report, collate, freqs, quantiles, summaries, moments,
-           scores, composite, histograms, tabsep, nonames;
+           scores, composite, histograms, tabsep, nonames;//added feature
 
 static void usage();
 
@@ -104,16 +121,28 @@ char *argv[];
         char optval;    //option value
         int (*compare)() = comparename;
 
+
+        //added feature
+        FILE* outfile = stdout;
+
         fprintf(stderr, BANNER);
         init_options();
         if(argc <= 1) usage(argv[0]);
         while(optind < argc) {
             if((optval = getopt_long(argc, argv, short_options, long_options, NULL)) != -1) {
                 switch(optval) {
+                case 'o':
+                case OUTPUT:
+                    outfile = fopen(optarg, "w");
+                    break;//added feature
+                case 'r':
                 case REPORT: report++; break;
+                case 'c':
                 case COLLATE: collate++; break;
                 case TABSEP: tabsep++; break;
+                case 'n':
                 case NONAMES: nonames++; break;
+                case 'k':
                 case SORTBY:
                     if(!strcmp(optarg, "name"))
                         compare = comparename;
@@ -135,6 +164,7 @@ char *argv[];
                 case COMPOSITES: composite++; break;
                 case INDIVIDUALS: scores++; break;
                 case HISTOGRAMS: histograms++; break;
+                case 'a':
                 case ALLOUTPUT:
                     freqs++; quantiles++; summaries++; moments++;
                     composite++; scores++; histograms++; tabsep++;
@@ -177,21 +207,22 @@ char *argv[];
         checkfordups(c->roster);
         if(collate) {
                 fprintf(stderr, "Dumping collated data...\n");
-                writecourse(stdout, c);
+                writecourse(outfile, c);
                 exit(errors ? EXIT_FAILURE : EXIT_SUCCESS);
         }
         sortrosters(c, compare);
 
         fprintf(stderr, "Producing reports...\n");
-        reportparams(stdout, ifile, c);
-        if(moments) reportmoments(stdout, s);
-        if(composite) reportcomposites(stdout, c, nonames);
-        if(freqs) reportfreqs(stdout, s);
-        if(quantiles) reportquantiles(stdout, s);
-        if(summaries) reportquantilesummaries(stdout, s);
-        if(histograms) reporthistos(stdout, c, s);
-        if(scores) reportscores(stdout, c, nonames);
-        if(tabsep) reporttabs(stdout, c);
+
+        reportparams(outfile, ifile, c);
+        if(moments) reportmoments(outfile, s);
+        if(composite) reportcomposites(outfile, c, nonames);
+        if(freqs) reportfreqs(outfile, s);
+        if(quantiles) reportquantiles(outfile, s);
+        if(summaries) reportquantilesummaries(outfile, s);
+        if(histograms) reporthistos(outfile, c, s);
+        if(scores) reportscores(outfile, c, nonames);
+        if(tabsep) reporttabs(outfile, c);
 
         fprintf(stderr, "\nProcessing complete.\n");
         printf("%d warning%s issued.\n", warnings+errors,

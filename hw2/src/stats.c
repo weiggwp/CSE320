@@ -162,7 +162,8 @@ Freqs *count_score(scorep, infreqp)
 Score *scorep;
 Freqs *infreqp;
 {
-        Freqs *fp, *sfp = NULL; /*fp = current freqp, sfp = previous or second pointer*/
+        /*fp = current freqp, sfp = previous or second pointer*/
+        Freqs *fp, *sfp = NULL; //BUG5: sfp not initialized to 0
 
         for(fp = infreqp; fp != NULL; sfp = fp, fp = fp->next) {
                 if(fp->score == scorep->grade) {
@@ -187,7 +188,7 @@ Freqs *infreqp;
         }
         //using sfp becuase fp must be NULL after the for loop, and we don't want to  step in unles it's all NUll
         if(sfp == NULL) {       /* insertion into empty list */
-                sfp = newfreqs();
+                sfp = newfreqs();//BUG4?: sfp not allocated if not going in the loop
                 sfp->next = NULL;
                 sfp->score = scorep->grade;
                 sfp->count = 1;
