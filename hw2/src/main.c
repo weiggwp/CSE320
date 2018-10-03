@@ -237,7 +237,7 @@ char *name;
 
         fprintf(stderr, "Usage: %s [options] <data file>\n", name);
         fprintf(stderr, "Valid options are:\n");
-        for(unsigned int i = 0; i < NUM_OPTIONS; i++) {
+        for(unsigned int i = 0; i < NUM_OPTIONS-1; i++) {
                 opt = &option_table[i];
                 char optchr[5] = {' ', ' ', ' ', ' ', '\0'};
                 if(opt->chr)

@@ -159,7 +159,7 @@ Sectionstats *sectionstats_p;
                         return((float)fp->numless*100.0/n);
                 }
         }
-  return s;
+  return 0;
 }
 
 /*

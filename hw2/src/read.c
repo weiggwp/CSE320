@@ -24,13 +24,30 @@ Ifile *ifile;
  * Token readahead buffer
  */
 
-char tokenbuf[256];/*******BUG2:allocate space for the buff******/
-char *tokenptr = tokenbuf;
-char *tokenend = tokenbuf;
+// char tokenbuf[256];/*******BUG2:allocate space for the buff******/
+int  tokenbufsizeMax = 2;
+char *tokenbuf ;
+char *tokenptr ;
+char *tokenend ;
 
+void init_tokenbuf(){
+    tokenbuf = (char *) malloc(sizeof(char)*tokenbufsizeMax);
+    tokenptr = tokenbuf;
+    tokenend = tokenbuf;
+}
+void check_realloc_tokenbuf(){
+    if( tokensize() >= tokenbufsizeMax){
+        tokenbufsizeMax*=2;
+        tokenbuf = (char *) realloc(tokenbuf,sizeof(char) * tokenbufsizeMax);
+
+        tokenend = tokenbuf + tokensize();
+        tokenptr = tokenbuf;
+    }
+}
 Course *readfile(root)
 char *root;
 {
+    init_tokenbuf();
         Course *c;
 
         ifile = newifile();
@@ -509,9 +526,13 @@ void advancetoken()
                         ungetc(c, ifile->fd);
                         break;
                 }
+                check_realloc_tokenbuf();
                 *tokenend++ = c;
         }
-        if(tokenend != tokenptr) *tokenend++ = '\0';
+        if(tokenend != tokenptr){
+            check_realloc_tokenbuf();
+            *tokenend++ = '\0';
+        }
 }
 
 /*
@@ -530,10 +551,12 @@ void advanceeol()
                         ungetc(c, ifile->fd);
                         break;
                 }
+                check_realloc_tokenbuf();
                 *tokenend++ = c;
         }
         if(c == EOF)
                 fatal("(%s:%d) Incomplete line at end of file.", ifile->name, ifile->line);
+        check_realloc_tokenbuf();
         *tokenend++ = '\0';
 }
 
