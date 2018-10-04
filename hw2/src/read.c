@@ -25,7 +25,7 @@ Ifile *ifile;
  */
 
 // char tokenbuf[256];/*******BUG2:allocate space for the buff******/
-int  tokenbufsizeMax = 2;
+int  tokenbufsizeMax = 32;
 char *tokenbuf ;
 char *tokenptr ;
 char *tokenend ;

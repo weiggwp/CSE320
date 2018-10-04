@@ -63,10 +63,10 @@ static struct option_info {
                   "Print tab-separated table of student scores."},
  {ALLOUTPUT,      "all",       'a',      no_argument, NULL,
                   "Print all reports."},
- {NONAMES,        "nonames",   'n',      no_argument, NULL,
-                  "Suppress printing of students' names."},
  {SORTBY,         "sortby",    'k',      required_argument, "key",
                   "Sort by {name, id, score}."},
+ {NONAMES,        "nonames",   'n',      no_argument, NULL,
+                  "Suppress printing of students' names."},
  {OUTPUT,         "output",    'o',      required_argument, "outfile",
                   "File to print output."},//added feature
  {0,NULL, 0, 0, NULL, NULL}
@@ -76,7 +76,7 @@ static struct option_info {
 
 #define NUM_OPTIONS (15) /*Not BUG1 wrong counts*/ //added feature
 
-static char short_options[NUM_OPTIONS];
+static char short_options[NUM_OPTIONS*3];
 static struct option long_options[NUM_OPTIONS];
 
 //initialize long_option using the option table
@@ -130,13 +130,21 @@ char *argv[];
         if(argc <= 1) usage(argv[0]);
         while(optind < argc) {
             if((optval = getopt_long(argc, argv, short_options, long_options, NULL)) != -1) {
+
                 switch(optval) {
                 case 'o':
                 case OUTPUT:
+                    if((strstr( optarg, "-") == optarg)){
+                        fprintf(stderr,
+                                "Option '%s' requires argument filename.\n\n",
+                                option_table[OUTPUT].name);
+                        usage(argv[0]);
+                    }
                     outfile = fopen(optarg, "w");
                     break;//added feature
                 case 'r':
-                case REPORT: report++; break;
+                case REPORT:
+                     report++; break;
                 case 'c':
                 case COLLATE: collate++; break;
                 case TABSEP: tabsep++; break;
@@ -153,7 +161,7 @@ char *argv[];
                     else {
                         fprintf(stderr,
                                 "Option '%s' requires argument from {name, id, score}.\n\n",
-                                option_table[(int)optval].name);
+                                option_table[SORTBY].name);
                         usage(argv[0]);
                     }
                     break;
@@ -176,7 +184,16 @@ char *argv[];
                     break;
                 }
             } else {
+                if(optind!=argc-1){
+                    fprintf(stderr, "%s is not valid option\n\n", argv[optind]);
+                    usage(argv[0]);
+                }
                 break;
+            }
+            if(optind>1 && report==collate){
+                fprintf(stderr, "Exactly one of '%s' or '%s' is required as first argument.\n\n",
+                        option_table[REPORT].name, option_table[COLLATE].name);
+                usage(argv[0]);
             }
         }
         if(optind == argc) {
@@ -184,6 +201,7 @@ char *argv[];
                 usage(argv[0]);
         }
         char *ifile = argv[optind];
+
         if(report == collate) {
                 fprintf(stderr, "Exactly one of '%s' or '%s' is required.\n\n",
                         option_table[REPORT].name, option_table[COLLATE].name);
@@ -214,7 +232,7 @@ char *argv[];
 
         fprintf(stderr, "Producing reports...\n");
 
-        reportparams(outfile, ifile, c);
+        reportparams(stdout, ifile, c);
         if(moments) reportmoments(outfile, s);
         if(composite) reportcomposites(outfile, c, nonames);
         if(freqs) reportfreqs(outfile, s);
