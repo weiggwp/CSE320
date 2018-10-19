@@ -4,11 +4,11 @@
 int main(int argc, char const *argv[]) {
     sf_mem_init();
 
-    double* ptr = sf_malloc(sizeof(double));
+    double* ptr = sf_malloc(3 * PAGE_SZ - sizeof(sf_prologue) - sizeof(sf_epilogue) - 32);
 
-    *ptr = 320320320e-320;
+    sf_show_heap();
 
-    printf("%f\n", *ptr);
+    // printf("%fMallocReturned\n", *ptr);
 
     sf_free(ptr);
 
