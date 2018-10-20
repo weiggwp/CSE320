@@ -50,22 +50,22 @@ void assert_free_block_count(int count) {
     cr_assert_eq(n, count, "Wrong number of free blocks (exp=%d, found=%d)", count, n);
 }
 
-// Test(sf_memsuite_student, malloc_an_Integer_check_freelist, .init = sf_mem_init, .fini = sf_mem_fini) {
-// 	sf_errno = 0;
-// 	int *x = sf_malloc(sizeof(int));
+Test(sf_memsuite_student, malloc_an_Integer_check_freelist, .init = sf_mem_init, .fini = sf_mem_fini) {
+	sf_errno = 0;
+	int *x = sf_malloc(sizeof(int));
 
-// 	cr_assert_not_null(x, "x is NULL!");
+	cr_assert_not_null(x, "x is NULL!");
 
-// 	*x = 4;
+	*x = 4;
 
-// 	cr_assert(*x == 4, "sf_malloc failed to give proper space for an int!");
+	cr_assert(*x == 4, "sf_malloc failed to give proper space for an int!");
 
-// 	assert_free_block_count(1);
-// 	assert_free_list_count(PAGE_SZ - sizeof(sf_prologue) - sizeof(sf_epilogue) - MIN_BLOCK_SIZE, 1);
+	assert_free_block_count(1);
+	assert_free_list_count(PAGE_SZ - sizeof(sf_prologue) - sizeof(sf_epilogue) - MIN_BLOCK_SIZE, 1);
 
-// 	cr_assert(sf_errno == 0, "sf_errno is not zero!");
-// 	cr_assert(sf_mem_start() + PAGE_SZ == sf_mem_end(), "Allocated more than necessary!");
-// }
+	cr_assert(sf_errno == 0, "sf_errno is not zero!");
+	cr_assert(sf_mem_start() + PAGE_SZ == sf_mem_end(), "Allocated more than necessary!");
+}
 
 Test(sf_memsuite_student, malloc_three_pages, .init = sf_mem_init, .fini = sf_mem_fini) {
 	sf_errno = 0;
