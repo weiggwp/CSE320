@@ -38,7 +38,7 @@ void *sf_malloc(size_t size) {
     //split the block into two
     //givesize = ((requestedsize-1)/16+1)*16 b/c allignment
     size_t blocksize = freeBlockHeaderPtr->info.block_size <<4;
-    size_t givensize = ((size-1)/16+1)*16;
+    size_t givensize = ((size+sizeof(sf_block_info)-1)/16+1)*16;
     if(givensize<32) givensize = 32;
     //if blocksize - givensize >=32: split
     if(blocksize-givensize >=32){

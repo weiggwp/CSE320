@@ -5,7 +5,11 @@
 #include "sfmm.h"
 #include "helper.h"
 
+#define ALLOCATED 1
+#define FREE 0
 
+#define ALIGNMENT_SZ 16
+#define MIN_BLOCK_SZ 32
 /*
    It acquires uninitialized memory that
  * is aligned and padded properly for the underlying system.
@@ -18,7 +22,7 @@
  * NULL is returned and sf_errno is set to ENOMEM.
  */
 void initPrologue(sf_prologue* prologue){
-    prologue -> padding =0x0;
+    prologue -> padding =0;
 
     //init header
     size_t blocksize = sizeof(sf_header)+sizeof(sf_footer);
@@ -54,7 +58,7 @@ void initEpilogue(sf_epilogue* epilogue){
 
 sf_free_list_node* getCorrespondListNode(size_t blocksize){
     //block must be multiple of 16
-    if(blocksize%16!=0){
+    if(blocksize%ALIGNMENT_SZ!=0){
         return NULL;
     }
     //search through the olist, if ilist for blocksize exist: insert at that list,
@@ -100,11 +104,12 @@ param: blockHeaderPtr: ptr to the header of the block
 */
 void* buildFreeBlock(sf_header* blockHeaderPtr,size_t blocksize,int new){
     //block must be multiple of 16
-    if(blocksize%16!=0){
+    if(blocksize % ALIGNMENT_SZ != 0){
         return NULL;
     }
+
     if(new) updateFreeBlockInfo(blockHeaderPtr, (sf_block_info){0,0,0,blocksize>>4,0});
-    else updateInfo(blockHeaderPtr, (sf_block_info){0,-1,0,blocksize>>4,0});
+    else updateFreeBlockInfo(blockHeaderPtr, (sf_block_info){0,-1,0,blocksize>>4,0});
 
     //tell next block this is free block
     informNextBlock(blockHeaderPtr,0);
@@ -116,9 +121,8 @@ void* buildFreeBlock(sf_header* blockHeaderPtr,size_t blocksize,int new){
 
 
     return spacePtr;
-
-
 }
+
 void initHeap(){
     //initialize prologue
     sf_prologue* prologue = (sf_prologue*)sf_mem_grow();//return pointer to start of additional page
@@ -132,16 +136,13 @@ void initHeap(){
     // sf_free_list_node* listNodePtr =
     sf_add_free_list(blocksize, &sf_free_list_head);
 
-    // is head in listNodePtr set already for me ? debug line 77 sfmm.c
-
     //increment prologue by its size to get to the free space
-
     // treat the reminding as one block
-    sf_header* blockHeaderPtr = (sf_header*) (prologue+1);
+    sf_header* blockPtr = (sf_header*) (prologue+1);
 
     // void* spacePtr =
-    buildFreeBlock(blockHeaderPtr,blocksize,1);
-    blockHeaderPtr->info.prev_allocated = 1;
+    buildFreeBlock(blockPtr,blocksize,1);
+    blockPtr->info.prev_allocated = 1;
 
 }
 /*
@@ -231,6 +232,30 @@ void split(sf_header* headerPtr,size_t firstBlocksize){
     //can return first block ptr, not needed rn
 }
 /*
+set the allocated bit of given block's info to given value
+param: headerPtr: ptr of block to be updated
+    allocated: info bit to be set, if 0 set 0, othsewize set 1
+*/
+void setBlockAllocBit(sf_header* headerPtr,int allocated){
+    if(allocated)
+        headerPtr->info.allocated = ALLOCATED;
+    else
+        headerPtr->info.allocated = FREE;
+}
+void setBlockPrevAllocBit(sf_header* headerPtr,int allocated){
+    if(allocated)
+        headerPtr->info.prev_allocated = ALLOCATED;
+    else
+        headerPtr->info.prev_allocated = FREE;
+}
+
+void setBlockSize(sf_header* headerPtr,size_t size){
+        headerPtr->info.block_size = size;
+}
+void setBlockRequestedSize(sf_header* headerPtr,size_t size){
+        headerPtr->info.requested_size = size;
+}
+/*
 update info struct of given header or footer
 param: headerPtr: ptr to update info
        newInfo: info struct, if skip elements with value -1
@@ -247,9 +272,13 @@ void updateInfo(sf_header* headerPtr, sf_block_info newInfo){
 }
 /*
 return ptr to the footer given header ptr
+return NULL if blocksize is 0
 */
 sf_footer* getFooterPtr(sf_header* hp){
     size_t blocksize = hp->info.block_size<<4;
+    if(blocksize==0){
+        fprintf(stderr,"getFooterPtr:blocksize=0");
+        return NULL;}
     sf_footer* footp = (void*)hp + blocksize - sizeof(sf_footer);
     return footp;
 }
@@ -283,10 +312,10 @@ void allocateBlock(sf_header* headerPtr,size_t size){
     // todo: remove from the ilist, also set the requestsize and allocated bit
     removeBlockFromList(headerPtr);
     //update header
-    updateInfo(headerPtr,(sf_block_info){0,-1,-1,-1,size});
+    updateInfo(headerPtr,(sf_block_info){1,-1,-1,-1,size>>4});
 
     // size_t blocksize = headerPtr->info.block_size <<4;
     //set prev alloc of next block to 1
-   informNextBlock(headerPtr,1);
+    informNextBlock(headerPtr,1);
 }
 

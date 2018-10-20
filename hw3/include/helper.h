@@ -2,7 +2,15 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-
+/*
+set the allocated bit of given block's info to given value
+param: headerPtr: ptr of block to be updated
+    allocated: info bit to be set, if 0 set 0, othsewize set 1
+*/
+void setBlockAllocBit(sf_header* headerPtr,int allocated);
+void setBlockPrevAllocBit(sf_header* headerPtr,int allocated);
+void setBlockSize(sf_header* headerPtr,size_t size);
+void setBlockRequestedSize(sf_header* headerPtr,size_t size);
 /*
 initialize given prologue: allocated =1, others = 0
 both header and footer
