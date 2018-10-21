@@ -34,7 +34,8 @@ void *sf_malloc(size_t size) {
 
     //get ptr of a block that fits the payload
     sf_header* freeBlockHeaderPtr =  getFittingBlock(size);
-
+    if(freeBlockHeaderPtr ==NULL)
+        return NULL;
     //split the block into two
     //givesize = ((requestedsize-1)/16+1)*16 b/c allignment
     size_t blocksize = freeBlockHeaderPtr->info.block_size <<4;
@@ -48,7 +49,7 @@ void *sf_malloc(size_t size) {
     //else: dont
 
     // ready to return allocated space, update allocated status
-    allocateBlock(freeBlockHeaderPtr,size);
+    updateAllocatedBlock(freeBlockHeaderPtr,size);
 
 
     // printf("%p\n", sf_mem_start() );
@@ -57,8 +58,34 @@ void *sf_malloc(size_t size) {
     void* freespacePtr = ((void*) freeBlockHeaderPtr)+sizeof(sf_block_info);
     return freespacePtr;
 }
+/*
+free an allocated block given pointer to the block
+Invalid pointer:
+    The pointer is NULL.
+    The header of the block is before the end of the prologue, or after the
+    beginning of the epilogue.
+    The allocated bit in the header or footer is 0
+    The block_size field is not a multiple of 16 or is less than the
+    minimum block size of 32 bytes.
+    NOTE: It is always a multiple of 16
 
+    The requested_size field, plus the size required for the block header,
+    is greater than the block_size field.
+    If the prev_alloc field is 0, indicating that the previous block is free,
+    then the alloc fields of the previous block header and footer should also be 0.
+
+*/
 void sf_free(void *pp) {
+    void * blockP = pp-sizeof(sf_block_info);
+    // if blockPtr is not valid, exit program by calling abort
+    if(!validateBlockPtr(blockP))
+        abort();
+    sf_header* headerPtr = pp;
+    //update block to free status
+    updateFreeBlock(headerPtr, headerPtr->info.block_size);
+    //coalesce if possible
+    headerPtr = coalesce(pp);
+
     return;
 }
 

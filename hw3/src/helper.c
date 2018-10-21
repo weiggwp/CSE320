@@ -10,6 +10,9 @@
 
 #define ALIGNMENT_SZ 16
 #define MIN_BLOCK_SZ 32
+
+#define VALID 1
+#define INVALID 0
 /*
    It acquires uninitialized memory that
  * is aligned and padded properly for the underlying system.
@@ -25,22 +28,21 @@ void initPrologue(sf_prologue* prologue){
     prologue -> padding =0;
 
     //init header
-    size_t blocksize = sizeof(sf_header)+sizeof(sf_footer);
     sf_header* header = & prologue->header;
     sf_block_info* info= &header->info;
-    info->allocated = 1;
+    info->allocated = ALLOCATED;
     info->prev_allocated = 0;
     info->two_zeroes = 0;
-    info->block_size = blocksize;
+    info->block_size = 0;
     info->requested_size = 0;
 
     //init footer
     sf_footer* footer = &prologue->footer;
     info= &footer->info;
-    info->allocated = 1;
+    info->allocated = ALLOCATED;
     info->prev_allocated = 0;
     info->two_zeroes = 0;
-    info->block_size = blocksize;
+    info->block_size = 0;
     info->requested_size = 0;
 
 }
@@ -48,8 +50,8 @@ void initEpilogue(sf_epilogue* epilogue){
     //init footer
     sf_footer* footer = &epilogue->footer;
     sf_block_info* info= &footer->info;
-    info->allocated = 1;
-    info->prev_allocated = 0;
+    info->allocated = ALLOCATED;
+    info->prev_allocated = FREE;
     info->two_zeroes = 0;
     info->block_size = 0;
     info->requested_size = 0;
@@ -58,7 +60,7 @@ void initEpilogue(sf_epilogue* epilogue){
 
 sf_free_list_node* getCorrespondListNode(size_t blocksize){
     //block must be multiple of 16
-    if(blocksize%ALIGNMENT_SZ!=0){
+    if(blocksize%ALIGNMENT_SZ != 0){
         return NULL;
     }
     //search through the olist, if ilist for blocksize exist: insert at that list,
@@ -96,23 +98,58 @@ void insertBlockAtHead(sf_header* blockPtr,sf_header* head){
 
 }
 
+void initHeaderAndFooter(sf_header* headerPtr,size_t blocksize){
+    headerPtr->info = (sf_block_info){FREE,FREE,0,blocksize>>4,0};
+    sf_footer* footPtr = getFooterPtr(headerPtr);
+    footPtr->info = (sf_block_info){FREE,FREE,0,blocksize>>4,0};
+}
 /*
 precondition: blocksize|16
 param: blockHeaderPtr: ptr to the header of the block
     blocksize: size of block
     new : if this is a new block to be built
 */
-void* buildFreeBlock(sf_header* blockHeaderPtr,size_t blocksize,int new){
+void* buildFreeBlock(sf_header* blockHeaderPtr,size_t blocksize){
     //block must be multiple of 16
     if(blocksize % ALIGNMENT_SZ != 0){
         return NULL;
     }
+    initHeaderAndFooter(blockHeaderPtr,blocksize);
+    return updateFreeBlock(blockHeaderPtr, blocksize);
+}
+/*
+update info struct of given block, in both header and footer
+param: headerPtr: ptr to update info
+   newInfo: info struct, if skip elements with value -1
+*/
 
-    if(new) updateFreeBlockInfo(blockHeaderPtr, (sf_block_info){0,0,0,blocksize>>4,0});
-    else updateFreeBlockInfo(blockHeaderPtr, (sf_block_info){0,-1,0,blocksize>>4,0});
+void updateFreeBlockInfo(sf_header* headerPtr,size_t blocksize){
+    sf_block_info* infop = & headerPtr->info;
+    infop->allocated = FREE;
+    infop->block_size = blocksize>>4;
+    infop->requested_size = 0;
 
+    sf_footer* footPtr = getFooterPtr(headerPtr);
+    sf_block_info* infop_f = & footPtr->info;
+    infop_f->allocated = FREE;
+    infop_f->block_size = blocksize>>4;
+    infop_f->requested_size = 0;
+    infop_f->prev_allocated = infop->prev_allocated;
+}
+/*
+precondition: blocksize|16
+param: blockHeaderPtr: ptr to the header of the block
+    blocksize: size of block
+*/
+void* updateFreeBlock(sf_header* blockHeaderPtr,size_t blocksize){
+     //block must be multiple of 16
+    if(blocksize % ALIGNMENT_SZ != 0){
+        fprintf(stderr, "Alignment error: blocksize mod %d != 0\n",ALIGNMENT_SZ );
+        return NULL;
+    }
+    updateFreeBlockInfo(blockHeaderPtr,blocksize);
     //tell next block this is free block
-    informNextBlock(blockHeaderPtr,0);
+    informNextBlock(blockHeaderPtr,FREE);
     //get listNode corresponds to the size of the block
     sf_free_list_node* correspondListNode = getCorrespondListNode(blocksize);
     //insert block to the head of the listNode
@@ -141,8 +178,8 @@ void initHeap(){
     sf_header* blockPtr = (sf_header*) (prologue+1);
 
     // void* spacePtr =
-    buildFreeBlock(blockPtr,blocksize,1);
-    blockPtr->info.prev_allocated = 1;
+    buildFreeBlock(blockPtr,blocksize);
+    blockPtr->info.prev_allocated = ALLOCATED;
 
 }
 /*
@@ -153,7 +190,7 @@ sf_free_list_node* getListNodeAtLeastSize(size_t datasize){
     sf_free_list_node* correspondListNode = NULL;
     sf_free_list_node *listNodePtr = sf_free_list_head.next;
     while(listNodePtr != &sf_free_list_head){
-        if(listNodePtr->size-8 >= datasize){
+        if(listNodePtr->size-sizeof(sf_block_info)>= datasize){
             correspondListNode = listNodePtr;
             break;
         }
@@ -168,32 +205,81 @@ void removeBlockFromList(sf_header* header){
     prev->links.next = next;
     next->links.prev = prev;
 }
-void addNewPageBlock(){
-    //sf_mem_grow changes mem begin to mem end, and increment mem end by 0x1000
-    void* pageBegin =  sf_mem_grow();
-    //old epilogue is now header
-    sf_header* headerPtr = (pageBegin-sizeof(sf_footer));
-    //move epilogue to the end of page
-    sf_epilogue* newEpilogue = sf_mem_end() - sizeof(sf_epilogue);
-    newEpilogue ->footer = ((sf_epilogue*) headerPtr) ->footer;
-
-    //coalese with previous block if free(check old footer, if prev allocated is 0 then free)
-    sf_footer* oldEpi = ((sf_footer*)headerPtr);
-
+sf_header* getNextBlock(sf_header* headerPtr){
+    return ((void*)headerPtr+(headerPtr->info.block_size <<4));
+}
+/*
+check prev and next block
+if at least one of them  is free coalesce and return pointer to new block
+else return orginal pointer
+*/
+sf_header* coalesce(sf_header* headerPtr){
+    int removed = 0;
     //if prev block is free,coaless: old header is new header, remove itself from ilist, change block size, insert into olist
-    if(! oldEpi->info.prev_allocated){
-        //previous footer is right before epilogue
-        sf_footer* previousFooter = oldEpi-1;
+    if(!headerPtr->info.prev_allocated){
+        //getBlocksize before moving ptr, note block_size is un shifted
+        size_t block_size = headerPtr->info.block_size;
+        //remove current block from its lsit
+        removeBlockFromList(headerPtr);
+        removed =1;
+        //previous footer is right before the header
+        sf_footer* previousFooter = (sf_footer*)headerPtr-1;
         //old header is new header
         headerPtr = (void*)headerPtr - ((previousFooter->info.block_size)<<4);
         //removeitslef from ilist
         removeBlockFromList(headerPtr);
         //change block size
-        headerPtr->info.block_size += PAGE_SZ >>4;
+        headerPtr->info.block_size += block_size;
         //insert into ilist
         // void* spacePtr =
-        buildFreeBlock(headerPtr,headerPtr->info.block_size <<4,0);
     }
+    //if next block is free,
+    sf_header* nextBlockp = getNextBlock(headerPtr);
+    if(!nextBlockp->info.allocated){
+        //remove current block from its list if havent doen so
+        if(!removed)
+            removeBlockFromList(headerPtr);
+        headerPtr->info.block_size+= nextBlockp->info.block_size;
+        removeBlockFromList(nextBlockp);
+    }
+        updateFreeBlock(headerPtr,headerPtr->info.block_size <<4);
+    return headerPtr;
+}
+void* addNewPageBlock(){
+    //sf_mem_grow changes mem begin to mem end, and increment mem end by 0x1000
+    void* pageBegin =  sf_mem_grow();
+    if(pageBegin ==NULL){
+        // sf_errno = ENOMEM;
+        return NULL;
+    }
+    //old epilogue is now header
+    sf_header* headerPtr = (pageBegin-sizeof(sf_footer));
+    //move epilogue to the end of page
+    sf_epilogue* newEpilogue = sf_mem_end() - sizeof(sf_epilogue);
+    newEpilogue ->footer = ((sf_epilogue*) headerPtr) ->footer;//epilogue set
+
+    //build the block
+
+
+    // newPageBlock has size PAGE_SZ
+    updateFreeBlock(headerPtr,PAGE_SZ);
+    //coalesce if possible
+    headerPtr = coalesce(headerPtr);
+    // if prev block is free,coaless: old header is new header, remove itself from ilist, change block size, insert into olist
+    // if(! oldEpi->info.prev_allocated){
+    //     //previous footer is right before epilogue
+    //     sf_footer* previousFooter = oldEpi-1;
+    //     //old header is new header
+    //     headerPtr = (void*)headerPtr - ((previousFooter->info.block_size)<<4);
+    //     //removeitslef from ilist
+    //     removeBlockFromList(headerPtr);
+    //     //change block size
+    //     headerPtr->info.block_size += PAGE_SZ >>4;
+    //     //insert into ilist
+    //     // void* spacePtr =
+    //     buildFreeBlock(headerPtr,headerPtr->info.block_size <<4);
+    // }
+    return headerPtr;
 
 }
 void* getFittingBlock(size_t datasize){
@@ -201,14 +287,16 @@ void* getFittingBlock(size_t datasize){
     //datasize too big
     if(listNodePtr == NULL){
         //addBlock
-        addNewPageBlock();
+        if(addNewPageBlock() == NULL)
+                return NULL;
         return getFittingBlock(datasize);
     }
     //current ilist does not have blocks
     while(&(listNodePtr->head) == listNodePtr->head.links.next){
         listNodePtr = listNodePtr->next;
         if(listNodePtr == listNodePtr->next){
-            addNewPageBlock();
+            if(addNewPageBlock() == NULL)
+                return NULL;
             return getFittingBlock(datasize);
         }
     }
@@ -223,11 +311,11 @@ void split(sf_header* headerPtr,size_t firstBlocksize){
     //remove self from old list
     removeBlockFromList(headerPtr);
     //first block
-    buildFreeBlock(headerPtr,firstBlocksize,0);
+    updateFreeBlock(headerPtr,firstBlocksize);
     //second block
     size_t secondBlockSize = blocksize - firstBlocksize;
     sf_header* secondBlockPtr =((void*)headerPtr)+firstBlocksize;
-    buildFreeBlock(secondBlockPtr,secondBlockSize,1);
+    buildFreeBlock(secondBlockPtr,secondBlockSize);
 
     //can return first block ptr, not needed rn
 }
@@ -260,16 +348,16 @@ update info struct of given header or footer
 param: headerPtr: ptr to update info
        newInfo: info struct, if skip elements with value -1
 */
-void updateInfo(sf_header* headerPtr, sf_block_info newInfo){
-    sf_block_info* infop = & (headerPtr->info);
+// void updateInfo(sf_header* headerPtr, sf_block_info newInfo){
+//     headerPtr->info = newInfo;
 
-    if(newInfo.allocated!=-1) infop->allocated = newInfo.allocated;
-    if(newInfo.prev_allocated!=-1) infop->prev_allocated = newInfo.prev_allocated;
-    if(newInfo.two_zeroes!=-1) infop->two_zeroes = newInfo.two_zeroes;
-    if(newInfo.block_size!=-1) infop->block_size = newInfo.block_size;
-    if(newInfo.requested_size!=-1) infop->requested_size = newInfo.requested_size;
+//     if(newInfo.allocated!=-1) infop->allocated = newInfo.allocated;
+//     if(newInfo.prev_allocated!=-1) infop->prev_allocated = newInfo.prev_allocated;
+//     if(newInfo.two_zeroes!=-1) infop->two_zeroes = newInfo.two_zeroes;
+//     if(newInfo.block_size!=-1) infop->block_size = newInfo.block_size;
+//     if(newInfo.requested_size!=-1) infop->requested_size = newInfo.requested_size;
 
-}
+// }
 /*
 return ptr to the footer given header ptr
 return NULL if blocksize is 0
@@ -283,17 +371,6 @@ sf_footer* getFooterPtr(sf_header* hp){
     return footp;
 }
 /*
-update info struct of given block, in both header and footer
-param: headerPtr: ptr to update info
-   newInfo: info struct, if skip elements with value -1
-*/
-void updateFreeBlockInfo(sf_header* headerPtr, sf_block_info newInfo){
-    updateInfo(headerPtr,newInfo);
-
-    sf_footer* footp = getFooterPtr(headerPtr);
-    updateInfo((sf_header*)footp,newInfo);
-}
-/*
 Update the bit in next block's prev_allocated to given allocated value
 */
 void informNextBlock(sf_header* headerPtr,int allocated){
@@ -301,21 +378,104 @@ void informNextBlock(sf_header* headerPtr,int allocated){
     if(nextBlock->info.allocated)
     nextBlock->info.prev_allocated = allocated;
     else
-        updateFreeBlockInfo(nextBlock,(sf_block_info){-1,allocated,-1,-1,-1});
+        setBlockPrevAllocBit(nextBlock,allocated);
+}
+void updateAllocBlockInfo(sf_header* headerPtr,size_t requestedSize){
+    sf_block_info* infop = & headerPtr->info;
+    infop->allocated = ALLOCATED;
+    infop->requested_size = requestedSize;
 }
 /*
 allocate given block for usage,
 update block info to allocated status
 updage prev allocated bit in next block
 */
-void allocateBlock(sf_header* headerPtr,size_t size){
+void updateAllocatedBlock(sf_header* headerPtr,size_t size){
     // todo: remove from the ilist, also set the requestsize and allocated bit
     removeBlockFromList(headerPtr);
     //update header
-    updateInfo(headerPtr,(sf_block_info){1,-1,-1,-1,size>>4});
-
-    // size_t blocksize = headerPtr->info.block_size <<4;
+    updateAllocBlockInfo(headerPtr,size);
     //set prev alloc of next block to 1
-    informNextBlock(headerPtr,1);
+    informNextBlock(headerPtr,ALLOCATED);
 }
 
+
+/*************** sf_free functions *******************/
+/*
+check is given blockPtr is valid
+return: 1 if Valid 0 otherwise
+Invalid pointer:
+    The pointer is NULL.
+    The header of the block is before the end of the prologue, or after the
+    beginning of the epilogue.
+    The allocated bit in the header or footer is 0
+    The block_size field is not a multiple of 16 or is less than the
+    minimum block size of 32 bytes.
+    NOTE: It is always a multiple of 16
+
+    The requested_size field, plus the size required for the block header,
+    is greater than the block_size field.
+    If the prev_alloc field is 0, indicating that the previous block is free,
+    then the alloc fields of the previous block header and footer should also be 0.
+
+*/
+int validateBlockPtr(sf_header* headerPtr){
+
+    // The pointer is NULL.
+    if(headerPtr==NULL)
+        return INVALID;
+    // The header of the block is before the end of the prologue, or after the
+    // beginning of the epilogue.
+
+    //prologue ends at mem start + sizeof(prologue)
+    if((void*)headerPtr< sf_mem_start()+sizeof(sf_prologue))
+        return INVALID;
+    //the epologue start at mem end -size of epilogue
+    void* endOfBlock = (void*) (getFooterPtr+sizeof(sf_footer));
+    if(endOfBlock > (void*)(sf_mem_end-sizeof(sf_epilogue)))
+        return INVALID;
+
+    sf_block_info headerInfo = headerPtr->info;
+    sf_block_info footerInfo = getFooterPtr(headerPtr)->info;
+
+    // The allocated bit in the header or footer is 0
+    if (headerInfo.allocated==0 ||footerInfo.allocated==0)
+        return INVALID;
+    // The block_size field is not a multiple of 16 or is less than the
+    // minimum block size of 32 bytes.
+    if(!validateBlocksize(headerInfo.block_size) || !validateBlocksize(footerInfo.block_size))
+        return INVALID;
+    // NOTE: It is always a multiple of 16
+    // The requested_size field, plus the size required for the block header,
+    // is greater than the block_size field.
+    if(headerInfo.requested_size+sizeof(sf_block_info)>headerInfo.block_size ||
+        footerInfo.requested_size+sizeof(sf_block_info)>footerInfo.block_size)
+        return INVALID;
+    // If the prev_alloc field is 0, indicating that the previous block is free,
+    // then the alloc fields of the previous block header and footer should also be 0.
+    if(headerInfo.prev_allocated !=footerInfo.prev_allocated)
+        return INVALID;
+    if(!headerInfo.prev_allocated){
+        sf_block_info* prevFootInfoPtr = &headerInfo - 1;
+        if(prevFootInfoPtr->allocated !=FREE)
+            return INVALID;
+        sf_block_info* prevHeaderInfoPtr =
+        (void*)prevFootInfoPtr -prevFootInfoPtr->block_size+sizeof(sf_block_info);
+        if(prevHeaderInfoPtr->allocated!=FREE)
+            return INVALID;
+    }
+    return VALID;
+
+}
+int validateBlocksize(size_t blocksize){
+    if(blocksize % ALIGNMENT_SZ != 0){
+        fprintf(stderr, "Alignment error: blocksize mod %d != 0\n",ALIGNMENT_SZ );
+        return INVALID;
+    }
+    if(blocksize<32){
+        fprintf(stderr, "MIN_BLOCK_SZ error: blocksize < %d\n",MIN_BLOCK_SZ );
+        return INVALID;
+    }
+    return VALID;
+
+}

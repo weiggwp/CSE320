@@ -76,21 +76,21 @@ Test(sf_memsuite_student, malloc_three_pages, .init = sf_mem_init, .fini = sf_me
 	cr_assert(sf_errno == 0, "sf_errno is not 0!");
 }
 
-// Test(sf_memsuite_student, malloc_over_four_pages, .init = sf_mem_init, .fini = sf_mem_fini) {
-// 	sf_errno = 0;
-// 	void *x = sf_malloc(PAGE_SZ << 2);
+Test(sf_memsuite_student, malloc_over_four_pages, .init = sf_mem_init, .fini = sf_mem_fini) {
+	sf_errno = 0;
+	void *x = sf_malloc(PAGE_SZ << 2);
 
-// 	cr_assert_null(x, "x is not NULL!");
-// 	assert_free_block_count(1);
-// 	cr_assert(sf_errno == ENOMEM, "sf_errno is not ENOMEM!");
-// }
+	cr_assert_null(x, "x is not NULL!");
+	assert_free_block_count(1);
+	cr_assert(sf_errno == ENOMEM, "sf_errno is not ENOMEM!");
+}
 
-// Test(sf_memsuite_student, free_double_free, .init = sf_mem_init, .fini = sf_mem_fini, .signal = SIGABRT) {
-// 	sf_errno = 0;
-// 	void *x = sf_malloc(sizeof(int));
-// 	sf_free(x);
-// 	sf_free(x);
-// }
+Test(sf_memsuite_student, free_double_free, .init = sf_mem_init, .fini = sf_mem_fini, .signal = SIGABRT) {
+	sf_errno = 0;
+	void *x = sf_malloc(sizeof(int));
+	sf_free(x);
+	sf_free(x);
+}
 
 // Test(sf_memsuite_student, free_no_coalesce, .init = sf_mem_init, .fini = sf_mem_fini) {
 // 	sf_errno = 0;
@@ -195,8 +195,8 @@ Test(sf_memsuite_student, malloc_three_pages, .init = sf_mem_init, .fini = sf_me
 // 	assert_free_list_count(4016, 1);
 // }
 
-// //############################################
-// //STUDENT UNIT TESTS SHOULD BE WRITTEN BELOW
-// //DO NOT DELETE THESE COMMENTS
-// //############################################
+//############################################
+//STUDENT UNIT TESTS SHOULD BE WRITTEN BELOW
+//DO NOT DELETE THESE COMMENTS
+//############################################
 

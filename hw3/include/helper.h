@@ -47,7 +47,7 @@ initialize header and footer,
 insert into correspondind list
 might need addFreeBlock too
 */
-void* buildFreeBlock(sf_header* blockHeaderPtr,size_t blocksize,int new);
+void* buildFreeBlock(sf_header* blockHeaderPtr,size_t blocksize);
 
 /*
 get ilist with at least size that being asked
@@ -66,7 +66,7 @@ void removeBlockFromList(sf_header* header);
 allocate a new page of mem and make it into a block
 coalcse to get bigger block than a page
 */
-void addNewPageBlock();
+void* addNewPageBlock();
 
 /*
 return a block that fits the given payload
@@ -97,7 +97,7 @@ allocate given block for usage,
 update block info to allocated status
 updage prev allocated bit in next block
 */
-void allocateBlock(sf_header* headerPtr,size_t size);
+void updateAllocatedBlock(sf_header* headerPtr,size_t size);
 
 /*
 return ptr to the footer given header ptr
@@ -107,8 +107,47 @@ sf_footer* getFooterPtr(sf_header* hp);
 /*
 update info struct of given block, in both header and footer
 param: headerPtr: ptr to update info
-       newInfo: info struct, if skip elements with value -1
 */
-void updateFreeBlockInfo(sf_header* headerPtr, sf_block_info newInfo);
+void updateFreeBlockInfo(sf_header* headerPtr, size_t blocksize);
+
+/*
+precondition: blocksize|16
+param: blockHeaderPtr: ptr to the header of the block
+    blocksize: size of block
+*/
+void* updateFreeBlock(sf_header* blockHeaderPtr,size_t blocksize);
 
 
+/*************** sf_free functions *******************/
+/*
+check is given blockPtr is valid
+return: 1 if Valid 0 otherwise
+Invalid pointer:
+    The pointer is NULL.
+    The header of the block is before the end of the prologue, or after the
+    beginning of the epilogue.
+    The allocated bit in the header or footer is 0
+    The block_size field is not a multiple of 16 or is less than the
+    minimum block size of 32 bytes.
+    NOTE: It is always a multiple of 16
+
+    The requested_size field, plus the size required for the block header,
+    is greater than the block_size field.
+    If the prev_alloc field is 0, indicating that the previous block is free,
+    then the alloc fields of the previous block header and footer should also be 0.
+
+*/
+int validateBlockPtr(sf_header* headerPtr);
+
+/*
+If the block_size field is not a multiple of 16 or is less than the
+minimum block size of 32 bytes, then INVALID is returned.
+*/
+int validateBlocksize(size_t blocksize);
+
+/*
+check prev and next block
+if at least one of them  is free coalesce and return pointer to new block
+else return orginal pointer
+*/
+sf_header* coalesce(sf_header* headerPtr);
