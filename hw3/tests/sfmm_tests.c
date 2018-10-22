@@ -16,9 +16,13 @@ sf_free_list_node *find_free_list_for_size(size_t size) {
 }
 
 int free_list_count(sf_header *ahp) {
+	// fprintf(stderr, "%s\n","entered free_list_count" );
     int count = 0;
     sf_header *hp = ahp->links.next;
+
+    	// fprintf(stderr, "%p\n", ahp);
     while(hp != ahp) {
+    	// fprintf(stderr, "%p\n", hp);
 	count++;
 	hp = hp->links.next;
     }
@@ -41,12 +45,16 @@ void assert_free_list_count(size_t size, int count) {
 }
 
 void assert_free_block_count(int count) {
+	// fprintf(stderr, "%s\n", "entered assert_free_block_count");
     int n = 0;
     sf_free_list_node *fnp = sf_free_list_head.next;
     while(fnp != &sf_free_list_head) {
 	n += free_list_count(&fnp->head);
+	// fprintf(stderr, "%s\n", "inside loop 1");
 	fnp = fnp->next;
     }
+
+
     cr_assert_eq(n, count, "Wrong number of free blocks (exp=%d, found=%d)", count, n);
 }
 
@@ -92,108 +100,111 @@ Test(sf_memsuite_student, free_double_free, .init = sf_mem_init, .fini = sf_mem_
 	sf_free(x);
 }
 
-// Test(sf_memsuite_student, free_no_coalesce, .init = sf_mem_init, .fini = sf_mem_fini) {
-// 	sf_errno = 0;
-// 	/* void *x = */ sf_malloc(sizeof(long));
-// 	void *y = sf_malloc(sizeof(double) * 10);
-// 	/* void *z = */ sf_malloc(sizeof(char));
+Test(sf_memsuite_student, free_no_coalesce, .init = sf_mem_init, .fini = sf_mem_fini) {
+	sf_errno = 0;
+	/* void *x = */ sf_malloc(sizeof(long));
+	void *y = sf_malloc(sizeof(double) * 10);
+	/* void *z = */ sf_malloc(sizeof(char));
 
-// 	sf_free(y);
+	sf_free(y);
+	// fprintf(stderr, "\n%s\n","freed" );
+	assert_free_block_count(2);
+	// fprintf(stderr, "%s\n", "done");
 
-// 	assert_free_block_count(2);
-// 	assert_free_list_count(96, 1);
-// 	assert_free_list_count(3888, 1);
-// 	cr_assert(sf_errno == 0, "sf_errno is not zero!");
-// }
+	assert_free_list_count(96, 1);
+	assert_free_list_count(3888, 1);
 
-// Test(sf_memsuite_student, free_coalesce, .init = sf_mem_init, .fini = sf_mem_fini) {
-// 	sf_errno = 0;
-// 	/* void *w = */ sf_malloc(sizeof(long));
-// 	void *x = sf_malloc(sizeof(double) * 11);
-// 	void *y = sf_malloc(sizeof(char));
-// 	/* void *z = */ sf_malloc(sizeof(int));
+	cr_assert(sf_errno == 0, "sf_errno is not zero!");
+}
 
-// 	sf_free(y);
-// 	sf_free(x);
+Test(sf_memsuite_student, free_coalesce, .init = sf_mem_init, .fini = sf_mem_fini) {
+	sf_errno = 0;
+	/* void *w = */ sf_malloc(sizeof(long));
+	void *x = sf_malloc(sizeof(double) * 11);
+	void *y = sf_malloc(sizeof(char));
+	/* void *z = */ sf_malloc(sizeof(int));
 
-// 	assert_free_block_count(2);
-// 	assert_free_list_count(128, 1);
-// 	assert_free_list_count(3856, 1);
-// 	cr_assert(sf_errno == 0, "sf_errno is not zero!");
-// }
+	sf_free(y);
+	sf_free(x);
 
-// Test(sf_memsuite_student, freelist, .init = sf_mem_init, .fini = sf_mem_fini) {
-// 	void *u = sf_malloc(1); //32
-// 	/* void *v = */ sf_malloc(40); //48
-// 	void *w = sf_malloc(152); //160
-// 	/* void *x = */ sf_malloc(536); //544
-// 	void *y = sf_malloc(1); // 32
-// 	/* void *z = */ sf_malloc(2072); //2080
+	assert_free_block_count(2);
+	assert_free_list_count(128, 1);
+	assert_free_list_count(3856, 1);
+	cr_assert(sf_errno == 0, "sf_errno is not zero!");
+}
 
-// 	sf_free(u);
-// 	sf_free(w);
-// 	sf_free(y);
+Test(sf_memsuite_student, freelist, .init = sf_mem_init, .fini = sf_mem_fini) {
+	void *u = sf_malloc(1); //32
+	/* void *v = */ sf_malloc(40); //48
+	void *w = sf_malloc(152); //160
+	/* void *x = */ sf_malloc(536); //544
+	void *y = sf_malloc(1); // 32
+	/* void *z = */ sf_malloc(2072); //2080
 
-// 	assert_free_block_count(4);
-// 	assert_free_list_count(32, 2);
-// 	assert_free_list_count(160, 1);
-// 	assert_free_list_count(1152, 1);
+	sf_free(u);
+	sf_free(w);
+	sf_free(y);
 
-// 	// First block in list should be the most recently freed block.
-// 	sf_free_list_node *fnp = find_free_list_for_size(32);
-// 	cr_assert_eq(fnp->head.links.next, (sf_header *)((char *)y - sizeof(sf_footer)),
-// 		     "Wrong first block in free list (32): (found=%p, exp=%p)",
-//                      fnp->head.links.next, (sf_header *)((char *)y - sizeof(sf_footer)));
-// }
+	assert_free_block_count(4);
+	assert_free_list_count(32, 2);
+	assert_free_list_count(160, 1);
+	assert_free_list_count(1152, 1);
 
-// Test(sf_memsuite_student, realloc_larger_block, .init = sf_mem_init, .fini = sf_mem_fini) {
-// 	void *x = sf_malloc(sizeof(int));
-// 	/* void *y = */ sf_malloc(10);
-// 	x = sf_realloc(x, sizeof(int) * 10);
+	// First block in list should be the most recently freed block.
+	sf_free_list_node *fnp = find_free_list_for_size(32);
+	cr_assert_eq(fnp->head.links.next, (sf_header *)((char *)y - sizeof(sf_footer)),
+		     "Wrong first block in free list (32): (found=%p, exp=%p)",
+                     fnp->head.links.next, (sf_header *)((char *)y - sizeof(sf_footer)));
+}
 
-// 	cr_assert_not_null(x, "x is NULL!");
-// 	sf_header *hp = (sf_header *)((char *)x - sizeof(sf_footer));
-// 	cr_assert(hp->info.allocated == 1, "Allocated bit is not set!");
-// 	cr_assert(hp->info.block_size << 4 == 48, "Realloc'ed block size not what was expected!");
+Test(sf_memsuite_student, realloc_larger_block, .init = sf_mem_init, .fini = sf_mem_fini) {
+	void *x = sf_malloc(sizeof(int));
+	/* void *y = */ sf_malloc(10);
+	x = sf_realloc(x, sizeof(int) * 10);
 
-// 	assert_free_block_count(2);
-// 	assert_free_list_count(32, 1);
-// 	assert_free_list_count(3936, 1);
-// }
+	cr_assert_not_null(x, "x is NULL!");
+	sf_header *hp = (sf_header *)((char *)x - sizeof(sf_footer));
+	cr_assert(hp->info.allocated == 1, "Allocated bit is not set!");
+	cr_assert(hp->info.block_size << 4 == 48, "Realloc'ed block size not what was expected!");
 
-// Test(sf_memsuite_student, realloc_smaller_block_splinter, .init = sf_mem_init, .fini = sf_mem_fini) {
-// 	void *x = sf_malloc(sizeof(int) * 8);
-// 	void *y = sf_realloc(x, sizeof(char));
+	assert_free_block_count(2);
+	assert_free_list_count(32, 1);
+	assert_free_list_count(3936, 1);
+}
 
-// 	cr_assert_not_null(y, "y is NULL!");
-// 	cr_assert(x == y, "Payload addresses are different!");
+Test(sf_memsuite_student, realloc_smaller_block_splinter, .init = sf_mem_init, .fini = sf_mem_fini) {
+	void *x = sf_malloc(sizeof(int) * 8);
+	void *y = sf_realloc(x, sizeof(char));
 
-// 	sf_header *hp = (sf_header *)((char*)y - sizeof(sf_footer));
-// 	cr_assert(hp->info.allocated == 1, "Allocated bit is not set!");
-// 	cr_assert(hp->info.block_size << 4 == 48, "Block size not what was expected!");
-// 	cr_assert(hp->info.requested_size == 1, "Requested size not what was expected!");
+	cr_assert_not_null(y, "y is NULL!");
+	cr_assert(x == y, "Payload addresses are different!");
 
-// 	// There should be only one free block of size 4000.
-// 	assert_free_block_count(1);
-// 	assert_free_list_count(4000, 1);
-// }
+	sf_header *hp = (sf_header *)((char*)y - sizeof(sf_footer));
+	cr_assert(hp->info.allocated == 1, "Allocated bit is not set!");
+	cr_assert(hp->info.block_size << 4 == 48, "Block size not what was expected!");
+	cr_assert(hp->info.requested_size == 1, "Requested size not what was expected!");
 
-// Test(sf_memsuite_student, realloc_smaller_block_free_block, .init = sf_mem_init, .fini = sf_mem_fini) {
-// 	void *x = sf_malloc(sizeof(double) * 8);
-// 	void *y = sf_realloc(x, sizeof(int));
+	// There should be only one free block of size 4000.
+	assert_free_block_count(1);
+	assert_free_list_count(4000, 1);
+}
 
-// 	cr_assert_not_null(y, "y is NULL!");
+Test(sf_memsuite_student, realloc_smaller_block_free_block, .init = sf_mem_init, .fini = sf_mem_fini) {
+	void *x = sf_malloc(sizeof(double) * 8);
+	void *y = sf_realloc(x, sizeof(int));
 
-// 	sf_header *hp = (sf_header *)((char*)y - sizeof(sf_footer));
-// 	cr_assert(hp->info.allocated == 1, "Allocated bit is not set!");
-// 	cr_assert(hp->info.block_size << 4 == 32, "Realloc'ed block size not what was expected!");
-// 	cr_assert(hp->info.requested_size == 4, "Requested size not what was expected!");
+	cr_assert_not_null(y, "y is NULL!");
 
-// 	// After realloc'ing x, we can return a block of size 48 to the freelist.
-// 	// This block will coalesce with the block of size 3968.
-// 	assert_free_block_count(1);
-// 	assert_free_list_count(4016, 1);
-// }
+	sf_header *hp = (sf_header *)((char*)y - sizeof(sf_footer));
+	cr_assert(hp->info.allocated == 1, "Allocated bit is not set!");
+	cr_assert(hp->info.block_size << 4 == 32, "Realloc'ed block size not what was expected!");
+	cr_assert(hp->info.requested_size == 4, "Requested size not what was expected!");
+
+	// After realloc'ing x, we can return a block of size 48 to the freelist.
+	// This block will coalesce with the block of size 3968.
+	assert_free_block_count(1);
+	assert_free_list_count(4016, 1);
+}
 
 //############################################
 //STUDENT UNIT TESTS SHOULD BE WRITTEN BELOW

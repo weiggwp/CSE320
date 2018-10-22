@@ -2,6 +2,16 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
+
+#define ALLOCATED 1
+#define FREE 0
+
+#define ALIGNMENT_SZ 16
+#define MIN_BLOCK_SZ 32
+
+#define VALID 1
+#define INVALID 0
+
 /*
 set the allocated bit of given block's info to given value
 param: headerPtr: ptr of block to be updated
@@ -78,7 +88,7 @@ void* getFittingBlock(size_t datasize);
 split the given block into two smaller block
 one fits the given size. one has the remaining space
 */
-void split(sf_header* headerPtr,size_t firstBlocksize);
+sf_header* split(sf_header* headerPtr,size_t firstBlocksize);
 
 /*
 update info struct of given header or footer

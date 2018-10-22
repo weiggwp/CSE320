@@ -11,6 +11,7 @@
 #include "helper.h"
 
 
+
 /*
    It acquires uninitialized memory that
  * is aligned and padded properly for the underlying system.
@@ -23,6 +24,16 @@
  * NULL is returned and sf_errno is set to ENOMEM.
  */
 
+size_t splitable(size_t bsize,size_t rsize){
+    size_t firstBsize = ((rsize+sizeof(sf_block_info)-1)/16+1)*16;
+    if(firstBsize<32) firstBsize = 32;
+    //if blocksize - givensize >=32: splitable
+    if(bsize-firstBsize >=32){
+        return firstBsize;
+    }
+    else
+        return 0;
+}
 void *sf_malloc(size_t size) {
     //If size is 0, then NULL is returned without setting sf_errno.
     if(size == 0) return NULL;
@@ -39,10 +50,8 @@ void *sf_malloc(size_t size) {
     //split the block into two
     //givesize = ((requestedsize-1)/16+1)*16 b/c allignment
     size_t blocksize = freeBlockHeaderPtr->info.block_size <<4;
-    size_t givensize = ((size+sizeof(sf_block_info)-1)/16+1)*16;
-    if(givensize<32) givensize = 32;
-    //if blocksize - givensize >=32: split
-    if(blocksize-givensize >=32){
+    size_t givensize;
+    if((givensize=splitable(blocksize,size))){
         split(freeBlockHeaderPtr,givensize);
         blocksize = givensize;
     }
@@ -80,15 +89,70 @@ void sf_free(void *pp) {
     // if blockPtr is not valid, exit program by calling abort
     if(!validateBlockPtr(blockP))
         abort();
-    sf_header* headerPtr = pp;
+    sf_header* headerPtr = blockP;
     //update block to free status
-    updateFreeBlock(headerPtr, headerPtr->info.block_size);
+    updateFreeBlock(headerPtr, headerPtr->info.block_size <<4);
     //coalesce if possible
-    headerPtr = coalesce(pp);
+    headerPtr = coalesce(headerPtr);
 
     return;
 }
-
+/*
+My implementation of realloc
+1.verify that the pointer and size parameters passed to the function are valid.
+*/
 void *sf_realloc(void *pp, size_t rsize) {
+    void * blockP = pp-sizeof(sf_block_info);
+    // if blockPtr is not valid, exit program by calling abort
+    if(!validateBlockPtr(blockP))
+        abort();
+    sf_header* headerPtr = blockP;
+    size_t blocksize = headerPtr->info.block_size <<4;
+    //realloc to size 0 is same as free
+    if(rsize ==0){
+        free(pp);
+        return NULL;
+    }
+
+    void* newpp;
+    /*When reallocating to a larger size, always follow these three steps:
+        Call sf_malloc to obtain a larger block.
+        Call memcpy to copy the data in the block given by the client to the block
+        returned by sf_malloc.
+        Call sf_free on the block given by the client (coalescing if necessary).
+        Return the block given to you by sf_malloc to the client.
+    */
+    if(rsize >= blocksize){
+        newpp = sf_malloc(rsize);
+        //FIXME: do i need to check if new block is null, and stop doing the following?
+        memcpy(newpp,pp,blocksize);
+        sf_free(pp);
+        return newpp;
+
+    }
+    //Reallocating to a Smaller Size
+    else{
+        size_t splitSize = splitable(blocksize,rsize);
+        //split the original block block
+        //two cases for splitting:
+        //1. Splitting the returned block results in a splinter. In this case, do not
+        // split the block. Leave the splinter in the block, update the header field
+        // if necessary, and return the same block back to the caller.
+        if(!splitSize)
+            headerPtr ->info.requested_size = rsize ;
+        // The block can be split without creating a splinter. In this case, split the
+        // block and update the block size fields in both headers.  Free the remaining block
+        // (i.e. coalesce if possible and insert the block into the head of the correct
+        // free list).  Return a pointer to the payload of the smaller block to the caller.
+        else{
+            sf_header* secBlockPtr =  split(headerPtr,splitSize);
+            coalesce(secBlockPtr);
+            setBlockRequestedSize(headerPtr,rsize);
+
+        }
+        return pp;
+    }
+
+
     return NULL;
 }
