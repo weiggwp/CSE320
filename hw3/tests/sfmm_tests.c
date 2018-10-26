@@ -211,3 +211,201 @@ Test(sf_memsuite_student, realloc_smaller_block_free_block, .init = sf_mem_init,
 //DO NOT DELETE THESE COMMENTS
 //############################################
 
+Test(sf_memsuite_student, malloc_an_Double_check_freelist, .init = sf_mem_init, .fini = sf_mem_fini) {
+    sf_errno = 0;
+    double *x = sf_malloc(sizeof(double));
+
+    cr_assert_not_null(x, "x is NULL!");
+
+    *x = 8;
+
+    cr_assert(*x == 8, "sf_malloc failed to give proper space for an int!");
+
+    assert_free_block_count(1);
+    assert_free_list_count(PAGE_SZ - sizeof(sf_prologue) - sizeof(sf_epilogue) - MIN_BLOCK_SIZE, 1);
+
+    cr_assert(sf_errno == 0, "sf_errno is not zero!");
+    cr_assert(sf_mem_start() + PAGE_SZ == sf_mem_end(), "Allocated more than necessary!");
+}
+
+Test(sf_memsuite_student, malloc_an_Char_check_freelist, .init = sf_mem_init, .fini = sf_mem_fini) {
+    sf_errno = 0;
+    char *x = sf_malloc(sizeof(char));
+
+    cr_assert_not_null(x, "x is NULL!");
+
+    *x = 'a';
+
+    cr_assert(*x == 'a', "sf_malloc failed to give proper space for an int!");
+
+    assert_free_block_count(1);
+    assert_free_list_count(PAGE_SZ - sizeof(sf_prologue) - sizeof(sf_epilogue) - MIN_BLOCK_SIZE, 1);
+
+    cr_assert(sf_errno == 0, "sf_errno is not zero!");
+    cr_assert(sf_mem_start() + PAGE_SZ == sf_mem_end(), "Allocated more than necessary!");
+}
+//rs = 32 bs = 48
+Test(sf_memsuite_student, malloc_32_Char_check_freelist, .init = sf_mem_init, .fini = sf_mem_fini) {
+    sf_errno = 0;
+    char *x = sf_malloc(32*sizeof(char));
+    cr_assert_not_null(x, "x is NULL!");
+
+    const char s[32] = "1234567890123456789012345678901";
+    memcpy(x, s, strlen(s)+1); //+1 for \0
+
+    cr_assert(strcmp(x,s)==0, "sf_malloc failed to give proper space!");
+
+    assert_free_block_count(1);
+    assert_free_list_count(PAGE_SZ - sizeof(sf_prologue) - sizeof(sf_epilogue) - MIN_BLOCK_SIZE-16, 1);
+
+    cr_assert(sf_errno == 0, "sf_errno is not zero!");
+    cr_assert(sf_mem_start() + PAGE_SZ == sf_mem_end(), "Allocated more than necessary!");
+}
+//rs = -1
+Test(sf_memsuite_student, malloc_negative_1_check_freelist, .init = sf_mem_init, .fini = sf_mem_fini) {
+    sf_errno = 0;
+    sf_malloc(-1);
+    cr_assert(sf_errno == ENOMEM, "sf_errno is zero!");
+}
+Test(sf_memsuite_student, malloc_15_ptr_check_freelist, .init = sf_mem_init, .fini = sf_mem_fini) {
+    sf_errno = 0;
+    int **p = sf_malloc(15*sizeof(*p));// bs = 128 rs 120
+    cr_assert_not_null(p, "x is NULL!");
+
+    assert_free_block_count(1);
+    assert_free_list_count(PAGE_SZ - sizeof(sf_prologue) - sizeof(sf_epilogue) - 128, 1);
+
+    cr_assert(sf_errno == 0, "sf_errno is not zero!");
+    cr_assert(sf_mem_start() + PAGE_SZ == sf_mem_end(), "Allocated more than necessary!");
+}
+
+Test(sf_memsuite_student, malloc_15_Integer_check_freelist, .init = sf_mem_init, .fini = sf_mem_fini) {
+    sf_errno = 0;
+    for (int i = 0; i < 15; ++i)
+    {
+        /* code */
+        sf_malloc(sizeof(int));
+    }
+
+    assert_free_block_count(1);
+    size_t bs = PAGE_SZ - sizeof(sf_prologue) - sizeof(sf_epilogue) - MIN_BLOCK_SIZE;
+    for (int i = 0; i < 14; ++i)
+    {
+        /* code */
+        assert_free_list_count(bs, 0);
+        bs-=MIN_BLOCK_SIZE;
+    }
+    cr_assert(sf_errno == 0, "sf_errno is not zero!");
+    cr_assert(sf_mem_start() + PAGE_SZ == sf_mem_end(), "Allocated more than necessary!");
+}
+Test(sf_memsuite_student, malloc_15_free_5th_Integer_check_freelist, .init = sf_mem_init, .fini = sf_mem_fini) {
+    sf_errno = 0;
+    int **p = sf_malloc(15*sizeof(int *));
+
+    for (int i = 0; i < 15; ++i)
+    {
+        /* code */
+        int *x = sf_malloc(sizeof(int));
+        *(p+i) = x;
+    }
+    for (int i = 0; i < 15; ++i)
+    {
+        /* code */
+        if(i%5 ==0)
+        sf_free(*(p+i) );
+    }
+
+    assert_free_block_count(4);
+    // assert_free_block_count(1);
+    size_t bs = PAGE_SZ - sizeof(sf_prologue) - sizeof(sf_epilogue) ;
+    assert_free_list_count(bs, 0);
+    bs-=128;
+    for (int i = 0; i < 14; ++i)
+    {
+        /* code */
+        assert_free_list_count(bs, 0);
+        bs-=MIN_BLOCK_SIZE;
+    }
+
+    // **(p+14) = 4;
+    // cr_assert(**(p+14) == 4, "sf_malloc failed to give proper space for an int!");
+    // sf_free(*(p+14));
+    // sert_free_list_count(PAGE_SZ - sizeof(sf_prologue) - sizeof(sf_epilogue) - 128, 1);
+
+    cr_assert(sf_errno == 0, "sf_errno is not zero!");
+    cr_assert(sf_mem_start() + PAGE_SZ == sf_mem_end(), "Allocated more than necessary!");
+}
+
+Test(sf_memsuite_student, malloc_15_free_non5th_Integer_check_freelist, .init = sf_mem_init, .fini = sf_mem_fini) {
+    sf_errno = 0;
+    int **p = sf_malloc(15*sizeof(int *));
+
+    //allocate 15 blocks
+    for (int i = 0; i < 15; ++i)
+    {
+        /* code */
+        int *x = sf_malloc(sizeof(int));
+        *(p+i) = x;
+    }
+    for (int i = 0; i < 15; ++i)
+    {
+        /* code */
+        if(i%5 !=0)
+        sf_free(*(p+i) );
+    }
+
+    assert_free_block_count(3);
+    size_t bs = PAGE_SZ - sizeof(sf_prologue) - sizeof(sf_epilogue) ;
+    assert_free_list_count(bs, 0);
+    assert_free_list_count(128,2);
+
+    // **(p+14) = 4;
+    // cr_assert(**(p+14) == 4, "sf_malloc failed to give proper space for an int!");
+    // sf_free(*(p+14));
+    // sert_free_list_count(PAGE_SZ - sizeof(sf_prologue) - sizeof(sf_epilogue) - 128, 1);
+
+    cr_assert(sf_errno == 0, "sf_errno is not zero!");
+    cr_assert(sf_mem_start() + PAGE_SZ == sf_mem_end(), "Allocated more than necessary!");
+}
+Test(sf_memsuite_student, realloc_larger_block_check_content, .init = sf_mem_init, .fini = sf_mem_fini) {
+    char *x = sf_malloc(32*sizeof(char)); //bs
+
+    cr_assert_not_null(x, "x is NULL!");
+    const char s[32] = "1234567890123456789012345678901";
+    memcpy(x, s, strlen(s)+1); //+1 for \0
+
+    cr_assert(strcmp(x,s)==0, "sf_malloc failed to give proper space!");
+    /* void *y = */ sf_malloc(10);
+
+    x = sf_realloc(x, sizeof(char) * 100); //bs 112
+    cr_assert_not_null(x, "x is NULL!");
+    cr_assert(strcmp(x,s)==0, "sf_realloc failed to give proper space!");
+
+    sf_header *hp = (sf_header *)((char *)x - sizeof(sf_footer));
+    cr_assert(hp->info.allocated == 1, "Allocated bit is not set!");
+    cr_assert(hp->info.block_size << 4 == 112, "Realloc'ed block size not what was expected!");
+
+    assert_free_block_count(2);
+    // assert_free_list_count(112, 0);
+    // assert_free_list_count(32, 0);// rs 10 block
+    assert_free_list_count(48, 1);
+}
+//realoc to rs 0
+Test(sf_memsuite_student, realloc_to_0, .init = sf_mem_init, .fini = sf_mem_fini) {
+    char *x = sf_malloc(32*sizeof(char)); //bs
+
+    cr_assert_not_null(x, "x is NULL!");
+    const char s[32] = "1234567890123456789012345678901";
+    memcpy(x, s, strlen(s)+1); //+1 for \0
+
+    cr_assert(strcmp(x,s)==0, "sf_malloc failed to give proper space!");
+    /* void *y = */ sf_malloc(10);
+
+    x = sf_realloc(x, 0); //bs 112
+    cr_assert_null(x, "x is not NULL!");
+
+
+    assert_free_block_count(2);
+    // assert_free_list_count(32, 0);// rs 10 block
+    assert_free_list_count(48, 1);
+}

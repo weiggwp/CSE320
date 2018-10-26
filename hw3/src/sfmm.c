@@ -110,7 +110,7 @@ void *sf_realloc(void *pp, size_t rsize) {
     size_t blocksize = headerPtr->info.block_size <<4;
     //realloc to size 0 is same as free
     if(rsize ==0){
-        free(pp);
+        sf_free(pp);
         return NULL;
     }
 

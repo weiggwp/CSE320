@@ -470,7 +470,7 @@ int validateBlockPtr(sf_header* headerPtr){
     // If the prev_alloc field is 0, indicating that the previous block is free,
     // then the alloc fields of the previous block header and footer should also be 0.
     if(!headerInfo.prev_allocated){
-        sf_block_info* prevFootInfoPtr = &headerInfo - 1;
+        sf_block_info* prevFootInfoPtr = (sf_block_info*)headerPtr - 1;
         if(prevFootInfoPtr->allocated !=FREE)
             return INVALID;
         sf_block_info* prevHeaderInfoPtr =
