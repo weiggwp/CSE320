@@ -1,4 +1,4 @@
-// The bandwidth problem takes as input a graph G, with n vertices and m edges (ie. pairs of vertices).
+// The bandwidth problem takes as input a Graph G, with n vertices and m edges (ie. pairs of vertices).
 // The goal is to find a permutation of the vertices on the line which minimizes the maximum length of any
 // edge. This is better understood through an example. Suppose G consists of 5 vertices and the edges (v1, v2),
 // (v1, v3), (v1, v4), and (v1, v5). We must map each vertex to a distinct number between 1 and n. Under the
@@ -11,14 +11,59 @@
 #include <stdio.h>
 #include <errno.h>
 #include <time.h>
+#include <signal.h>
+#include <unistd.h>
 
-#include "connectedComponents.h"
+#include "min_bandwidth.h"
+void exitfunc(int sig)
+{
+    printf("time up, terminated early\n");
+    exit(0);
+}
+
+#define nfile 1
+    char* filenames[nfile]  = {
+    // "g-4-1",
+    // "g-3-3",
+    // "g-p-4-3",
+
+    // "g-bt-10-9",
+    // "g-bt-11-10",
+    // "g-bt-12-11",
+    // "g-bt-13-12",
+    // "g-bt-14-13",
+    // "g-bt-16-15",
+    // "g-bt-18-17",
+    // "g-bt-19-18",
+        "g-bt-20-19",
+    // "g-gg-9-12",
+    // "g-gg-12-17",
+    // "g-gg-16-24",
+        // "g-gg-18-27",
+    // "g-gg-20-31",
+// "g-gg-24-38",
+    // "g-p-16-15",
+    // "g-p-20-19",
+    // "g-p-50-49",
+    // "g-p-100-99",
+
+    // "g-r-15-24",
+    // "g-r-18-46",
+    // "g-r-20-42",
+    // "g-r-100-501",
+
+    // "g-t-17-16",
+    // "g-t-20-19",
+
+    // "g-k-50-1225",
+};
 
 int main(int argc, char *argv[])
 {
-    char* filenames[5]  = {"g-3-3","g-p-4-3","g-bt-10-9","g-bt-11-10","g-bt-12-11"};
-    for(int i =0;i<sizeof(filenames);i++){
-
+    signal(SIGALRM, exitfunc);
+    alarm(60);
+    for(int i =0;i<nfile;i++){
+    printf(":::::%s:::::\n",filenames[i] );
     clock_t begin = clock();
     //moon
     // FILE* infile = fopen("g-bt-19-18", "r");
@@ -68,15 +113,17 @@ int main(int argc, char *argv[])
     // int nedges = line[0];
 
 
-    graph* g = malloc(sizeof(graph));
+    Graph* g = malloc(sizeof(Graph));
     build_graph(g,0,infile);
-    // connected_components(g);
-    find_min_bandth(g);
+    Components c;
+    connected_components(g,&c);
+    find_min_bandth(g,&c);
 
 
     clock_t end = clock();
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
     printf("Total time:%f\n",time_spent);
+    free(g);
     }
     exit(0);
 }

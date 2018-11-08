@@ -1,21 +1,34 @@
 
 #include "graph.h"
+// typedef struct {
+// int v;
+// struct Node *next;
+// } Node;
+
+typedef struct {
+    int     nodes[MAXV+1][MAXV+1];//1 list per component
+    int     indices[MAXV+1];
+    Graph*  graphs[MAXV+1];
+    int     ncomponents;
+} Components;
+
+
 typedef struct {
     int front, rear, size;
     int array[MAXV];
-} queue;
+} Queue;
 
-void connected_components(graph *g);
+void connected_components(Graph *g,Components* c);
 
-void bfs(graph *g, int start,int c);
+void bfs(Graph *g, int start,Components* c);
 
-int dequeue(queue* q);
+void initialize_search(Graph *g);
 
-void enqueue(queue* q,int v);
+int dequeue(Queue* q);
 
+void enqueue(Queue* q,int v);
 
-int empty_queue(queue*q);
+int empty_queue(Queue*q);
 
-void  init_queue(queue* q);
+void  init_queue(Queue* q);
 
-void initialize_search(graph *g);
