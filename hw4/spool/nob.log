@@ -1,0 +1,16 @@
+Successfully forked as daemon
+17 Nov 2018 14:37:52: PID file: spool/nob.pid
+17 Nov 2018 14:37:53: Accepted connection, fd = 6
+17 Nov 2018 14:37:58: Created stream for input
+17 Nov 2018 14:37:58: File type is 'b'
+17 Nov 2018 14:37:58: Saving data to file spool/nob_b_1542483478.940999
+17 Nov 2018 14:37:58: Created stream for output
+17 Nov 2018 14:37:58: Bytes received: 78
+17 Nov 2018 14:37:58: Connection terminated
+17 Nov 2018 14:41:03: Accepted connection, fd = 6
+17 Nov 2018 14:41:08: Created stream for input
+17 Nov 2018 14:41:08: File type is 'b'
+17 Nov 2018 14:41:08: Saving data to file spool/nob_b_1542483668.269970
+17 Nov 2018 14:41:08: Created stream for output
+17 Nov 2018 14:41:08: Bytes received: 78
+17 Nov 2018 14:41:08: Connection terminated

@@ -326,6 +326,15 @@ void jobReport(){
                 imp_format_job_status(j,(char*)info.buf,BUFSIZE));
         }
     }
+void updateJobChange_time(JOB* j){
+    struct timeval tv;
+    gettimeofday(&tv,NULL);
+    j->change_time=tv;
+}
+void updateJob(JOB* j,int status){
+    j->status = status;
+    updateJobChange_time(j);
+}
 JOB* createJob(char* file_name,int typeID,PRINTER_SET set)
 {
     // JOB* j = &info.jobList[info.jobCount];
@@ -356,8 +365,6 @@ void build_graph(Graph *g, int directed,int nvertices)
                 insert_edge(g, i, j, g->directed);
 }
 
-volatile sig_atomic_t done;
-int ccount = 0;
 void child_handler(int sig) {
     int olderrno = errno;
     pid_t pid;
@@ -365,17 +372,10 @@ void child_handler(int sig) {
     // for (i = 0; i < ; i++) {
 // /* Parent */ pid_t wpid = wait(&child_status); if (WIFEXITED(child_status)) printf("Child %d terminated with exit status %d\n", wpid, WEXITSTATUS(child_status)); else printf("Child %d terminate abnormally\n", wpid); } }
 
-    while(ccount>0 && (pid = wait(&child_status))){
-
+    while((pid = wait(&child_status))){
         if(pid < 0);
-        --ccount;
-        // Sio_puts("Handler reaped child ");
-        // Sio_putl((long)pid);
-        // Sio_puts(" \n");
         sleep(1);               /* Pretend cleanup work */
     }
-    if(ccount == 0)
-        done = 1;
     errno = olderrno;
 }
 
@@ -395,17 +395,39 @@ void child_handler(int sig) {
 //         ;
 // }
 
-void convert(char* file_name,Conversion* conversion,PRINTER* p){
+void convert(char* file_name,Conversion* conversion,PRINTER* p,JOB* j){
+    // signal(SIGCHLD, child_handler);
     int masterpid;
-    if ((masterpid = fork()) < 0)
-    {
+    if ((masterpid = fork()) < 0){
         char* msg = "fork error:\n";
         imp_format_error_message(msg, (void*)info.buf, BUFSIZE);
-        // fprintf(stderr, "fork error: %s\n", strerror/(errno));
-        exit(0);
+        _exit(1);
     }
+    setpgid(getpid(),getpid());
+    j->pgid = getpid();
     if (masterpid == 0) {
         /* master Child */
+        int in_fd ;
+        if ((in_fd = open(file_name, O_RDONLY)) < 0) {
+                        perror("open");
+                        //maybe send a signal to master
+                        _exit(1);
+                    }
+        int out_fd = imp_connect_to_printer(p, PRINTER_NORMAL);
+        if(out_fd<0){
+            fprintf(stderr, "%s\n", "connection error");
+        }
+
+        if(conversion->path_length==1){
+            fprintf(stderr, "%s\n","no pipe,direct print" );
+            if(dup2(in_fd, STDIN_FILENO)<0)//stdin = in file
+                fprintf(stderr, "dup2 no work at in fd to stdin\n" );
+            if(dup2(out_fd, STDOUT_FILENO)<0)
+                fprintf(stderr, "dup2 no work at out fd to stdout\n" );
+            execv("bin/cat",(char**){NULL});
+            _exit(1);
+
+        }
         int nchildren = conversion->path_length-1;
         pid_t pid[nchildren];
         int i,child_status;
@@ -423,96 +445,56 @@ void convert(char* file_name,Conversion* conversion,PRINTER* p){
             perror("Can't create pipe");
             exit(1);
         }
-        int in_fd ;
-        if ((in_fd = open(file_name, O_RDONLY)) < 0) {
-                        perror("open");
-                        //maybe send a signal to master
-                        exit(1);
-                    }
-        int out_fd = imp_connect_to_printer(p, PRINTER_NORMAL);
-        fprintf(stderr, "%s\n","master" );
+        fprintf(stderr, "%s%d\n","master",out_fd );
         int * path = conversion->path;
         Conversion* c;
 
-        // signal(SIGCHLD, child_handler);
-        fprintf(stderr, "child nums:%d\n",nchildren );
         for (i = 0; i < nchildren; ++i)
         {
+            fprintf(stderr,"%d:%d\n",path[i],path[i+1] );
             c = &info.conversionMatrix[path[i]][path[i+1]];
             //pipe takes array of 2 int, [0] for reading ,[1] for writing
             //close(array[0]) -> i want to write
             //close(array[1]) -> i want to readdd
-            // conversion = info.conversionMatrix[typeIDfrom][typeIDto];
             if ((pid[i] = fork()) == 0){
                 //if first child
                 if(i==0){
-                    fprintf(stderr, "child number %d\n", i);
-
-                    if(dup2(in_fd, STDIN_FILENO)<0)
+                    if(dup2(in_fd, STDIN_FILENO)<0)//stdin = in file
                         fprintf(stderr, "dup2 no work at in fd to stdin\n" );
-
-                    // close  both end for readPipe, not using it
-                    if(dup2(writePipe[1],STDOUT_FILENO)<0)
+                    // fprintf(stderr, "%d:writePipe%p\n",i,writePipe);
+                    if(dup2(writePipe[1],STDOUT_FILENO)<0)// out = writepipe[1]
                         fprintf(stderr, "dup2 no work at writepipe 1 to stdout\n" );
-
-                    close(readPipe[0]);
-                    close(readPipe[1]);
-                    //close read end, aka writing
-                    close(writePipe[0]);
-
-                    fprintf(stderr, "%s\n",c->name );
-                    int i = 0;
-                    while(c->args[i]!=NULL){
-                        fprintf(stderr,"%s  ",c->args[i++]);
-                    }
-                    //call program
-                    int result = execvp(c->name,c->args);
-
-                    fprintf(stderr, "ying is wrong %d\n",result );
-                    _exit(EXIT_FAILURE);
-
+                    close(readPipe[0]);//close read pipe, not using it
                 }
                 //if last child
                 else if(i==nchildren-1){
-
                     if(dup2(out_fd, STDOUT_FILENO)<0)
                         fprintf(stderr, "dup2 no work at out fd to stdout\n" );
+                    // fprintf(stderr, "%d:readPile:%p\n",i,readPipe);
                     if(dup2(readPipe[0],STDIN_FILENO)<0)
                         fprintf(stderr, "dup2 no work at readpipe 0 to stdin\n" );
-
-                    //close write end, aka reading
-
-
-                    close(readPipe[1]);
                     // close(readPipe[0]);
+                    close(writePipe[1]);//close write pipe, not using it
+                    // fprintf(stdout, "%s\n","ggweg" );
 
-                    // close  both end for writePipe, not using it
-                    close(writePipe[0]);
-                    close(writePipe[1]);
-
-
-                    fprintf(stdout, "%s\n",c->name );
-                    //call program
-                    int result = execvp(c->name,c->args);
-
-                    fprintf(stderr, "ying is wrong %d\n",result );
-                    _exit(EXIT_FAILURE);
                 }
                 else{
 
                     dup2(readPipe[0],STDIN_FILENO);
                     dup2(writePipe[1], STDOUT_FILENO);
-                    //close write end, aka reading
-                    close(readPipe[1]);
-                    // close read end, aka writing
-                    close(writePipe[0]);
-
-                    //call program
-                    execvp(c->name,c->args);
-
                 }
-                fprintf(stderr, "eixt chilld number %d\n",i );
-                exit(0);
+                close(readPipe[1]); //close write end of read pipe
+                close(writePipe[0]);//close read end of write pipe
+                //call program
+                // if(i==nchildren-1){
+                // fprintf(stderr, "in child %d\n", i);
+                //     char concat_str[100];
+                //     read(readPipe[0], concat_str, 1000);
+                //     fprintf(stderr,"Concatenated string %s\n", concat_str);
+                // }
+                execvp(c->name,c->args);
+                fprintf(stderr, "%s\n","exiterror" );
+                _exit(EXIT_FAILURE);
             }
             int * temp = readPipe;
             readPipe = writePipe;
@@ -530,13 +512,15 @@ void convert(char* file_name,Conversion* conversion,PRINTER* p){
         for (i = 0; i < nchildren; i++) {
             /* Parent */
             pid_t wpid;
-            while( (wpid=wait(&child_status))>0){
-            if (WIFEXITED(child_status))
-                printf("Child %d terminated with exit status %d\n",
-                    wpid, WEXITSTATUS(child_status));
-            else
-                printf("Child %d terminate abnormally\n", wpid);
-        }
+            while((wpid=wait(&child_status))>0){
+                // fprintf(stderr, "wpid:%d(should be %d:%d)\n",wpid,i,pid[i] );
+                if (WIFEXITED(child_status))
+                    printf("Child %d terminated with exit status %d\n",
+                        wpid, WEXITSTATUS(child_status));
+                else
+                    printf("Child %d terminate abnormally\n", wpid);
+
+            }
         }
 
         exit(0);
@@ -579,36 +563,38 @@ void print(char* wordList[],int wordCount)
         // check if any printer is avaliable to do this job
         for (int i = 0; i < info.printerCount; ++i)
         {
+            //printer is in the set or not
             if(set>>i & 1){
                 PRINTER* p = &info.printerList[i];
 
                 // if not busy and theres a path
                 if(!p->busy){
-                    // findPath();
                     int toTypeID = findTypeID(p->type);
-                    if(typeID ==toTypeID){
-                        execv("bin/cat",(char**){NULL});
-                        return;
-                    }
                     //bfs to find path
                     Conversion *c = &info.conversionMatrix[typeID][toTypeID];
-                    int path[TPYEMAX];
-                    Graph g;
-                    build_graph(&g,1, info.typeCount);
-                    int path_length = findShortestPath(&g,typeID,toTypeID,info.typeCount,path);
-                    freeEdges(&g);
-                    if(path_length){
-                        //set first node
-                        int index = 0;
-                        c->path[index++] = path[path_length-1];
+                    if(typeID ==toTypeID){
+                        c->path_length = 1;
 
-                        for (int i = 1; i < path_length; ++i){
-                                Conversion c1 = info.conversionMatrix[path[path_length-i]][path[path_length-i-1]];
-                            for(int j = 1;j<c1.path_length;j++){
-                                c->path[index++]=c1.path[j];
+                    }
+                    else{
+                        int path[TPYEMAX];
+                        Graph g;
+                        build_graph(&g,1, info.typeCount);
+                        int path_length = findShortestPath(&g,typeID,toTypeID,info.typeCount,path);
+                        freeEdges(&g);
+                        if(path_length){
+                            //set first node
+                            int index = 0;
+                            c->path[index++] = path[path_length-1];
+
+                            for (int i = 1; i < path_length; ++i){
+                                    Conversion c1 = info.conversionMatrix[path[path_length-i]][path[path_length-i-1]];
+                                for(int j = 1;j<c1.path_length;j++){
+                                    c->path[index++]=c1.path[j];
+                                }
                             }
+                            c->path_length = index;
                         }
-                        c->path_length = index;
                     }
                     //if path found
                     if(c->path_length){
@@ -617,7 +603,10 @@ void print(char* wordList[],int wordCount)
                         //     fprintf(stderr,"%d ",c->path[i]);
                         // }
                         // fprintf(stderr,"\n");
-                        convert(file_name,c,p);
+                        p->busy = 1;
+                        j->chosen_printer = p;
+                        updateJob(j,RUNNING);
+                        convert(file_name,c,p,j);
                     }
                 }
             }
