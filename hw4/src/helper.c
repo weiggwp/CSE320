@@ -408,40 +408,34 @@ void convert(char* file_name,Conversion* conversion,PRINTER* p){
         /* master Child */
         int nchildren = conversion->path_length-1;
         pid_t pid[nchildren];
-        int i;
-        int child_status;
-        ccount = nchildren;
+        int i,child_status;
+        // ccount = nchildren;
         // signal(SIGKILL, kill_handler);
 
+        //my pipes
         int pipe1 [2];
         int pipe2 [2];
         int* readPipe = pipe1;
         int* writePipe = pipe2;
 
-        if(pipe(pipe1) < 0) {
+
+        if(pipe(pipe1) < 0 || pipe(pipe2) < 0) {
             perror("Can't create pipe");
             exit(1);
         }
-        if(pipe(pipe2) < 0) {
-            perror("Can't create pipe");
-            exit(1);
-        }
-        // close  both end for readPipe and write pipe
-        close(readPipe[0]);
-        close(readPipe[1]);
-        close(writePipe[0]);
-        close(writePipe[1]);
-        int fd ;
-        if ((fd = open(file_name, O_RDONLY)) < 0) {
+        int in_fd ;
+        if ((in_fd = open(file_name, O_RDONLY)) < 0) {
                         perror("open");
                         //maybe send a signal to master
                         exit(1);
                     }
         int out_fd = imp_connect_to_printer(p, PRINTER_NORMAL);
+        fprintf(stderr, "%s\n","master" );
         int * path = conversion->path;
         Conversion* c;
 
         // signal(SIGCHLD, child_handler);
+        fprintf(stderr, "child nums:%d\n",nchildren );
         for (i = 0; i < nchildren; ++i)
         {
             c = &info.conversionMatrix[path[i]][path[i+1]];
@@ -450,15 +444,17 @@ void convert(char* file_name,Conversion* conversion,PRINTER* p){
             //close(array[1]) -> i want to readdd
             // conversion = info.conversionMatrix[typeIDfrom][typeIDto];
             if ((pid[i] = fork()) == 0){
-                fprintf(stderr, "start child number %d\n", i);
-
-
                 //if first child
                 if(i==0){
+                    fprintf(stderr, "child number %d\n", i);
 
-                    dup2(fd, STDIN_FILENO);
-                    dup2(writePipe[1],STDOUT_FILENO);
+                    if(dup2(in_fd, STDIN_FILENO)<0)
+                        fprintf(stderr, "dup2 no work at in fd to stdin\n" );
+
                     // close  both end for readPipe, not using it
+                    if(dup2(writePipe[1],STDOUT_FILENO)<0)
+                        fprintf(stderr, "dup2 no work at writepipe 1 to stdout\n" );
+
                     close(readPipe[0]);
                     close(readPipe[1]);
                     //close read end, aka writing
@@ -488,7 +484,7 @@ void convert(char* file_name,Conversion* conversion,PRINTER* p){
 
 
                     close(readPipe[1]);
-                    close(readPipe[0]);
+                    // close(readPipe[0]);
 
                     // close  both end for writePipe, not using it
                     close(writePipe[0]);
@@ -497,8 +493,9 @@ void convert(char* file_name,Conversion* conversion,PRINTER* p){
 
                     fprintf(stdout, "%s\n",c->name );
                     //call program
-                    execv(c->name,c->args);
-                    fprintf(stderr, "ying is wrong\n" );
+                    int result = execvp(c->name,c->args);
+
+                    fprintf(stderr, "ying is wrong %d\n",result );
                     _exit(EXIT_FAILURE);
                 }
                 else{
@@ -511,7 +508,7 @@ void convert(char* file_name,Conversion* conversion,PRINTER* p){
                     close(writePipe[0]);
 
                     //call program
-                    execv(c->name,c->args);
+                    execvp(c->name,c->args);
 
                 }
                 fprintf(stderr, "eixt chilld number %d\n",i );
@@ -521,18 +518,25 @@ void convert(char* file_name,Conversion* conversion,PRINTER* p){
             readPipe = writePipe;
             writePipe = temp;
         }
+        // close  both end for readPipe and write pipe
+        close(readPipe[0]);
+        close(readPipe[1]);
+        close(writePipe[0]);
+        close(writePipe[1]);
         // /* Parent spins */
         // while (!done){
         //     fprintf(stderr, "%s ","not done" );
         // }
         for (i = 0; i < nchildren; i++) {
             /* Parent */
-            pid_t wpid = wait(&child_status);
+            pid_t wpid;
+            while( (wpid=wait(&child_status))>0){
             if (WIFEXITED(child_status))
                 printf("Child %d terminated with exit status %d\n",
                     wpid, WEXITSTATUS(child_status));
             else
                 printf("Child %d terminate abnormally\n", wpid);
+        }
         }
 
         exit(0);
@@ -690,7 +694,7 @@ int excuteCommand(char* line)
     // printer is an eligible printer.
     // fprintf(stderr, "%d\n",(wordCount >0 && strcmp(wordList[0],"print")==0) );
     else if(wordCount >0 && strcmp(wordList[0],"print")==0  ){
-        fprintf(stderr, "%s\n", "printing");
+        // fprintf(stderr, "%s\n", "printing");
         print(wordList,wordCount);
     }
 
