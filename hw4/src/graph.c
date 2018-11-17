@@ -28,6 +28,17 @@ void insert_edge(Graph *g, int x, int y, int  directed)
     g -> nedges ++;
 }
 
+void freeEdges(Graph *g){
+    for(int i=0;i<g->nvertices;i++){
+        Edgenode *p= g -> edges[i];
+        while(p!=NULL){
+            Edgenode *next =(Edgenode*)p->next;
+            free(p);
+            p = next;
+        }
+
+    }
+}
 // void build_graph(Graph *g, int directed,void***matrix,int nvertices)
 // {
 //     g ->directed = 1;

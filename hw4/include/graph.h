@@ -19,3 +19,4 @@ void initialize_graph(Graph *g, int  directed);
 void insert_edge(Graph *g, int x, int y, int  directed);
 // void build_graph(Graph *g, int directed,void***matrix,int nvertices);
 
+void freeEdges(Graph *g);

@@ -86,6 +86,6 @@ int main(int argc, char *argv[])
             quit = excuteCommand(line);
         free(line);
     }
-    printf("%s\n","Hello" );
+    printf("%s\n","Bye" );
     exit(EXIT_SUCCESS);
 }
