@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <getopt.h>
 #include <readline/readline.h>
+#include <signal.h>
 #include "imprimer.h"
 #include "helper.h"
 
@@ -18,22 +19,6 @@ int main(int argc, char *argv[])
     FILE* infile;
     initInfo();
 
-    // info info;
-    // //list of Types, 32 types at max
-    // info.typeList =  calloc(TPYEMAX,sizeof(TypePrinter));
-    // info.typeCount = 0;
-    // //list of printers
-    // info.printerList = calloc(PRINTERMAX, sizeof(PRINTER));
-    // info.printerCount = 0;
-
-    // //list of conversions
-    // //thoughts: create a 2d array stores conversion function name (str*)
-    // info.conversionMatrix = calloc(TPYEMAX,sizeof(int*));
-
-    // for(int i = 0; i < TPYEMAX; i++) {
-    //    info.conversionMatrix[i] = calloc(TPYEMAX, sizeof(int));
-    // }
-    // Then access array elements like matrix[i][j]
     while(optind < argc) {
     	if((optval = getopt(argc, argv, "i:")) != -1) {
     	    switch(optval) {
@@ -65,6 +50,7 @@ int main(int argc, char *argv[])
                     else if(line[strlen(line)-1] == '\n' )
                         line[strlen(line)-1] = 0;
                     excuteCommand(line);
+                    // free(line);
                 }
                 // while(fgets(line, sizeof(line), infile)){
                 //     excuteCommand(line);
@@ -79,13 +65,26 @@ int main(int argc, char *argv[])
     	    }
     	}
     }
-    int quit = 1;
-    while(quit){
+    // for(int i=0;i<info.typeCount;i++){
+    //     free(info.typeList[i].name);
+    // }
+    // for (int i = 0; i < info.printerCount; ++i)
+    // {
+    //     free(info.printerList[i].name);
+    //     free(info.printerList[i].type);
+    // }
+    // freeStorage();
+    // exit(EXIT_SUCCESS);
+    int cont = 1;
+    while(cont){
         char* line = readline("imp> ");
         if(line !=NULL && strcmp(line,"")!=0 && strcmp(line,"\n")!=0 )
-            quit = excuteCommand(line);
-        free(line);
+            cont = excuteCommand(line);
+        if(line!=NULL)
+            free(line);
     }
+
+    // kill(-1,SIGKILL);
     printf("%s\n","Bye" );
     exit(EXIT_SUCCESS);
 }

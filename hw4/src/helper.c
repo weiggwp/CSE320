@@ -116,7 +116,7 @@ void initInfo()
 void usage()
 {
     struct option_info *opt;
-        fprintf(stderr, "Valid options are:\n");
+        fprintf(info.outfile, "Valid options are:\n");
         for(unsigned int i = 0; i < NUM_OPTIONS-1; i++) {
                 opt = &option_table[i];
                 char optchr[5] = {' ', ' ', ' ', ' ', '\0'};
@@ -127,7 +127,7 @@ void usage()
                     sprintf(arg, " <%.40s>", opt->argname);
                 else
                     sprintf(arg, "%.13s", "");
-                fprintf(stderr, "%s--%-10s%-35s\t%s\n",
+                fprintf(info.outfile, "%s--%-10s%-35s\t%s\n",
                             optchr, opt->name, arg, opt->descr);
                 opt++;
         }
@@ -372,7 +372,7 @@ void child_handler(int sig) {
     int wstatus;
     printf("signal\n");
     while((pid = waitpid(-1,&wstatus, WNOHANG|WUNTRACED | WCONTINUED))>0){
-        fprintf(stderr, "master %d interrupted\n",pid );
+        // fprintf(stderr, "master %d interrupted\n",pid );
         JOB* j = info.q.front;
         while(j!=NULL){
             if(j->pgid ==pid)
@@ -413,7 +413,7 @@ void child_handler(int sig) {
 
 void errorReport(char*msg,int exit){
     char* newMsg = imp_format_error_message(msg, (void*)info.buf, BUFSIZE);
-    fprintf(stdout, "%s\n",newMsg );
+    fprintf(info.outfile, "%s\n",newMsg );
     if(exit)
         _exit(EXIT_FAILURE);
 }
@@ -468,8 +468,8 @@ void convert(char* file_name,Conversion* conversion,PRINTER* p,JOB* j){
         // sigemptyset(&empty);
         // sigprocmask(SIG_SETMASK, &empty, NULL);
 
-        fprintf(stderr, "master started:PID:%d,PGID:%d\n",getpgrp(),getpid());
-        sleep(2);
+        // fprintf(stderr, "master started:PID:%d,PGID:%d\n",getpgrp(),getpid());
+        // sleep(2);
 
         int out_fd = imp_connect_to_printer(p, PRINTER_NORMAL);
         if(out_fd<0){
@@ -482,8 +482,8 @@ void convert(char* file_name,Conversion* conversion,PRINTER* p,JOB* j){
             errorReport(msg,1);
         }
         //debug
-        fprintf(stderr, "%d,%dconversion->path_length:%d\n",
-            in_fd,out_fd,conversion->path_length );
+        // fprintf(stderr, "%d,%dconversion->path_length:%d\n",
+            // in_fd,out_fd,conversion->path_length );
 
         //path_length ==1 means no conversion needed,
         //the printer can do job directly
@@ -528,7 +528,7 @@ void convert(char* file_name,Conversion* conversion,PRINTER* p,JOB* j){
                 char* msg = "cannot create pipe\n";
                 errorReport(msg,1);
             }
-            fprintf(stderr,"%d:%d\n",path[i],path[i+1] );
+            // fprintf(stderr,"%d:%d\n",path[i],path[i+1] );
             c = &info.conversionMatrix[path[i]][path[i+1]];
             //pipe takes array of 2 int, [0] for reading ,[1] for writing
             //close(array[0]) -> i want to write
@@ -726,9 +726,9 @@ JOB* getJobFromID(int jobID){
 
 int jobKill(int id){
     JOB*j = getJobFromID(id);
-    fprintf(stderr, "Cancel job:%d\n",id );
-    char * s = imp_format_job_status(j, (char*)info.buf, BUFSIZE);
-    fprintf(stderr, "%s\n",s );
+    // fprintf(stderr, "Cancel job:%d\n",id );
+    // char * s = imp_format_job_status(j, (char*)info.buf, BUFSIZE);
+    // fprintf(stderr, "%s\n",s );
     if(j->status==ABORTED){
         char* msg = "job already ABORTED\n";
         errorReport(msg,0);
@@ -738,12 +738,12 @@ int jobKill(int id){
         j->status = ABORTED;
     }
     else if(j->status == PAUSED){
-        fprintf(stderr, "kiling paused process:pgid:%d\n",j->pgid);
+        // fprintf(stderr, "kiling paused process:pgid:%d\n",j->pgid);
         kill(j->pgid,SIGCONT);
         kill(j->pgid,SIGTERM);
     }
     else{
-        fprintf(stderr, "kiling running process:pgid:%d\n",j->pgid);
+        // fprintf(stderr, "kiling running process:pgid:%d\n",j->pgid);
         kill(j->pgid,SIGTERM);
     }
     return 1;
@@ -767,7 +767,7 @@ int jobPause(int id){
         return -1;
     }
     else{
-        fprintf(stderr, "pausing:%d:%s:%d\n",j->jobid,j->file_name,j->pgid);
+        // fprintf(stderr, "pausing:%d:%s:%d\n",j->jobid,j->file_name,j->pgid);
         kill(j->pgid,SIGSTOP);
     }
     return 1;
@@ -791,39 +791,12 @@ int jobCont(int id){
         return -1;
     }
     else{
-        fprintf(stderr, "resuming:%d:%s:%d\n",j->jobid,j->file_name,j->pgid);
+        // fprintf(stderr, "resuming:%d:%s:%d\n",j->jobid,j->file_name,j->pgid);
         kill(j->pgid,SIGCONT);
     }
     return 1;
 
 }
-// int jobCommand(int jobID,int command){
-//     if(jobID>=info.jobCount){
-//         char* msg = "invalid jobID";
-//         errorReport(msg,0);
-//         return -1;
-//     }
-//     JOB* j = info.q.front;
-//     while(j!=NULL){
-//         if(j->jobid==jobID)
-//             break;
-//         j=j->other_info;
-//     }
-//     if(j==NULL){
-//         char* msg = "invalid jobID";
-//         errorReport(msg,0);
-//         return -1;
-//     }
-//     if(command == SIGTERM){
-//         jobKill(j);
-//     }
-//     if(command == SIGSTOP){
-//         jobPause(j);
-//     }
-//     if(command == SIGCONT)
-//         jobCont(j);
-//     return 1;
-// }
 int printerCommand(int printerID,int enable){
     if(printerID>=info.printerCount){
         char* msg = "invalid printerID";
@@ -833,15 +806,47 @@ int printerCommand(int printerID,int enable){
     info.printerList[printerID].enabled = enable;
     return 1;
 }
+// void deleteJob(JOB *head_ref, int key)
+// {
+//     // Store head node
+//     struct Node* temp = *head_ref, *prev;
+
+//     // If head node itself holds the key to be deleted
+//     if (temp != NULL && temp->data == key)
+//     {
+//         *head_ref = temp->next;   // Changed head
+//         free(temp);               // free old head
+//         return;
+//     }
+
+//     // Search for the key to be deleted, keep track of the
+//     // previous node as we need to change 'prev->next'
+//     while (temp != NULL && temp->data != key)
+//     {
+//         prev = temp;
+//         temp = temp->next;
+//     }
+
+//     // If key was not present in linked list
+//     if (temp == NULL) return;
+
+//     // Unlink the node from linked list
+//     prev->next = temp->next;
+
+//     free(temp);  // Free memory
+//     }
 void deqOldJob(){
     //remove job from the queue after 1 min of completion or abortion
-    fprintf(stderr, "checking job end time\n");
+    // fprintf(stderr, "checking job end time\n");
     JOB* j = info.q.front;
     JOB* prev_j = NULL;
     while(j!=NULL){
+         struct timeval tv;
+        gettimeofday(&tv,NULL);
+
         if((j->status==COMPLETED || j->status==ABORTED)
-         && j->change_time.tv_sec-j->creation_time.tv_sec >=60){
-            fprintf(stderr, "deqing\n" );
+         && tv.tv_sec - j->change_time.tv_sec  >=60){
+            // fprintf(stderr, "deqing\n" );
             if(prev_j==NULL){
                 if(info.q.front==info.q.rear)
                     info.q.front=info.q.rear=NULL;
@@ -852,6 +857,7 @@ void deqOldJob(){
             else{
                 prev_j->other_info=j->other_info;
             }
+            free(j);
             info.jobCount--;
         }
         else
@@ -863,20 +869,23 @@ int excuteCommand(char* line)
 {
     //word list
     // dynamically allocated
-    int wordList_size = 10;
-    char** wordList = malloc(wordList_size* sizeof(char*));//argv
+    int wordList_size = 100;
+    char* wordList[wordList_size * sizeof(char*)];//argv
+    fprintf(stderr, "%p\n",wordList);
     //arg count = len of list?
 
     // char* buff = malloc(256);
     int wordCount = 0;//argc
 
-        char* word = strtok(line, " ");
+    char* word = strtok(line, " ");
     while( word !=NULL){
-        if(wordCount>wordList_size){
-            wordList_size*=2;
-            wordList = realloc(wordList,sizeof(char*)*(wordList_size));
-        }
+
+        // if(wordCount>=wordList_size){
+        //     wordList_size*=2;
+        //     wordList = realloc(wordList,sizeof(char*)*(wordList_size));
+        // }
         wordList[wordCount++] = word;
+        // free(word);
         word = strtok(NULL, " ");
     }
     init_options();
@@ -887,7 +896,7 @@ int excuteCommand(char* line)
     }
     //The quit command takes no arguments and causes execution to terminate.
     else if(wordCount == 1 && strcmp(wordList[0],"quit")==0){
-        printInfo();
+        // printInfo();
         return 0;
         // exit(0);
     }
@@ -935,7 +944,7 @@ int excuteCommand(char* line)
         print(wordList,wordCount);
     }
     else if(wordCount ==2 && strcmp(wordList[0],"cancel")==0  ){
-        fprintf(stderr, "canceling:%d\n",atoi(wordList[1]));
+        // fprintf(stderr, "canceling:%d\n",atoi(wordList[1]));
         jobKill(atoi(wordList[1]));
         // jobCommand(atoi(wordList[1]),SIGTERM);
     }
@@ -980,10 +989,17 @@ int excuteCommand(char* line)
         errorReport(msg,0);
         return -1;
     }
-
-    if(word) free(word);
-    if(wordList) free(wordList);
     return 1;
 
 }
 
+// void freeStorage(){
+//     for(int i=0;i<info.typeCount;i++){
+//         free(info.typeList[i].name);
+//     }
+//     for (int i = 0; i < info.printerCount; ++i)
+//     {
+//         fre(info.printerList[i].name);
+//         free(info.printerList[i].type);
+//     }
+// }
