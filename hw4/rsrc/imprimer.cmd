@@ -14,7 +14,7 @@ printer noob
 print jamesStevenDialog.pdf alice bob
 print rsrc/complaint.pcl bob
 print ying.txt noob
-
 help
+quit
 
 
