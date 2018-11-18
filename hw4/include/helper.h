@@ -52,3 +52,4 @@ char* readWord(char* wordp,char* linep);
 
 int excuteCommand(char* line);
 
+void findJob(PRINTER*p);

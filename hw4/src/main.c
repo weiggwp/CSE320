@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
             case 'i':
                 infile = fopen(optarg, "r");
                 //open the next arg as file, if faied then exit
-                if (infile <0)
+                if (infile ==NULL)
                 {
                     fprintf(stderr, "Usage: %s [-i <cmd_file>] [-o <out_file>]\n", argv[0]);
                     exit(EXIT_FAILURE);
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
                 if(optind<argc)
                     info.outfile = fopen(optarg, "w");
                 //open the next arg as file, if failed then exit
-                if (info.outfile <0)
+                if (info.outfile==NULL )
                 {
                     fprintf(stderr, "Usage: %s [-i <cmd_file>] [-o <out_file>]\n", argv[0]);
                     exit(EXIT_FAILURE);
@@ -79,8 +79,8 @@ int main(int argc, char *argv[])
     	    }
     	}
     }
-    int quit = 0;
-    while(!quit){
+    int quit = 1;
+    while(quit){
         char* line = readline("imp> ");
         if(line !=NULL && strcmp(line,"")!=0 && strcmp(line,"\n")!=0 )
             quit = excuteCommand(line);

@@ -40,32 +40,32 @@ static struct option_info {
         char *argname;
         char *descr;
 } option_table[] = {
- {HELP,         "help",    'h',      no_argument, NULL,
-                  "Process input data and produce specified reports."},
- {QUIT,         "quit",   'q',      no_argument, NULL,
-                  "Collate input data and dump to standard output."},
- {TYPE,         "type",     0,        required_argument, NULL,
-                  "Print frequency tables."},
- {PRTER,        "printer",    0,        required_argument, NULL,
-                  "Print quantile information."},
- {CONVERSION,   "conversion", 0,        required_argument, NULL,
-                  "Print quantile summaries."},
+ {HELP,         "help",    0,      no_argument, NULL,
+                  "Print valid command table."},
+ {QUIT,         "quit",   0,      no_argument, NULL,
+                  "Quit."},
+ {TYPE,         "type",     0,        required_argument, "file_type",
+                  "Declare type."},
+ {PRTER,        "printer",    0,        required_argument, "printer_name file_type",
+                  "Declare printer."},
+ {CONVERSION,   "conversion", 0,        required_argument, "type1 type2 program [arg1 arg2 ...]",
+                  "Declare conversion."},
  {PRINTERS,     "printers",     0,        no_argument, NULL,
-                  "Print means and standard deviations."},
+                  "Print a report on the current status of the declared printers."},
  {JOBS,         "jobs",     0,        no_argument, NULL,
-                  "Print students' composite scores."},
- {PRINT,        "print",    0,        no_argument, NULL,
-                  "Print students' individual scores."},
- {CANCEL,       "cancel",    0,        no_argument, NULL,
-                  "Print histograms of assignment scores."},
- {PAUSE,        "pause",    0,        no_argument, NULL,
-                  "Print tab-separated table of student scores."},
- {RESUME,       "resume",       'a',      no_argument, NULL,
-                  "Print all reports."},
- {DISABLE,      "disable",    'k',      required_argument, "key",
-                  "Sort by {name, id, score}."},
- {ENABLE,       "enable",   'n',      no_argument, NULL,
-                  "Suppress printing of students' names."},
+                  "Print a report on the status of the queued jobs."},
+ {PRINT,        "print",    0,        required_argument, "file_name [printer1 printer2 ...]",
+                  "Set up a job for printing file_name."},
+ {CANCEL,       "cancel",    0,        required_argument, "job_number",
+                  "Cancel an existing job."},
+ {PAUSE,        "pause",    0,        required_argument, "job_number",
+                  "Pause a job that is currently being processed."},
+ {RESUME,       "resume",       0,      required_argument, "job_number",
+                  "Resume a job that was previously paused."},
+ {DISABLE,      "disable",    0,      required_argument, "printer_name",
+                  "Set the state of a specified printer to disabled."},
+ {ENABLE,       "enable",   0,      required_argument, "printer_name",
+                  "Set the state of a specified printer to enabled."},
  {0,NULL, 0, 0, NULL, NULL}
  /*real BUG1: need Null termination so getopt_long knows when to stop when invalid args */
 
@@ -124,10 +124,10 @@ void usage()
                   sprintf(optchr, "-%c, ", opt->chr);
                 char arg[32];
                 if(opt->has_arg)
-                    sprintf(arg, " <%.10s>", opt->argname);
+                    sprintf(arg, " <%.40s>", opt->argname);
                 else
                     sprintf(arg, "%.13s", "");
-                fprintf(stderr, "\t%s--%-10s%-13s\t%s\n",
+                fprintf(stderr, "%s--%-10s%-35s\t%s\n",
                             optchr, opt->name, arg, opt->descr);
                 opt++;
         }
@@ -365,92 +365,136 @@ void build_graph(Graph *g, int directed,int nvertices)
                 insert_edge(g, i, j, g->directed);
 }
 
-void child_handler(int sig) {
-    int olderrno = errno;
-    pid_t pid;
-    int child_status;
-    // for (i = 0; i < ; i++) {
-// /* Parent */ pid_t wpid = wait(&child_status); if (WIFEXITED(child_status)) printf("Child %d terminated with exit status %d\n", wpid, WEXITSTATUS(child_status)); else printf("Child %d terminate abnormally\n", wpid); } }
 
-    while((pid = wait(&child_status))){
-        if(pid < 0);
-        sleep(1);               /* Pretend cleanup work */
+void child_handler(int sig) {
+    pid_t pid=-1;
+    int wstatus;
+    if((pid = waitpid(pid,&wstatus,WNOHANG | WUNTRACED | WUNTRACED))>0){
+        JOB* j = info.q.front;
+        while(j!=NULL){
+            if(j->pgid ==pid)
+                break;
+            j=j->other_info;
+        }
+        //exited normally
+        if(WIFEXITED(wstatus)){
+            updateJob(j,COMPLETED);
+            j->chosen_printer->busy=0;
+            findJob(j->chosen_printer);
+        }
+        //paused
+        else if(WIFSTOPPED(wstatus))
+            updateJob(j,PAUSED);
+        //resumed
+        else if(WIFCONTINUED(wstatus))
+            updateJob(j,RUNNING);
+        //terminated
+        else{
+            updateJob(j,ABORTED);
+            j->chosen_printer->busy=0;
+            findJob(j->chosen_printer);
+
+        }
     }
-    errno = olderrno;
 }
 
-// void fork14() {
-//     pid_t pid[N];
-//     int i;
-//     ccount = N;
-//     Signal(SIGCHLD, child_handler);
-//     for (i = 0; i < N; i++) {
-//         if ((pid[i] = Fork()) == 0) {
-//             printf("Hi %d\n", (int) getpid());
-//             Sleep(1);
-//             exit(0);  /* Child exits */
-//         }
-//     }
-//     while (!done) /* Parent spins */
-//         ;
-// }
+void errorReport(char*msg,int exit){
+    char* newMsg = imp_format_error_message(msg, (void*)info.buf, BUFSIZE);
+    fprintf(stdout, "%s\n",newMsg );
+    if(exit)
+        _exit(EXIT_FAILURE);
+}
+int mydup2(int fd1,int fd2){
+    if(dup2(fd1, fd2)<0){//stdin = in file
+        snprintf((char*)info.buf, sizeof info, "cannot dup2 at %d to %d\n",fd1,fd2);
 
+        // char* msg = "dup2 no work\n";
+        errorReport((char*)info.buf,1);
+    }
+    return 1;
+}
+void directPrint(int in_fd,int out_fd){
+
+    mydup2(in_fd, STDIN_FILENO);
+    mydup2(out_fd, STDOUT_FILENO);
+    char name[4] = "cat";
+    char*args[2] = {name,NULL};
+    execvp("cat",args);
+    _exit(1);
+}
 void convert(char* file_name,Conversion* conversion,PRINTER* p,JOB* j){
-    // signal(SIGCHLD, child_handler);
+
+    //install handler
+    signal(SIGCHLD, child_handler);
+
+    //block all signals
+    sigset_t mask_all, prev_all;
+    sigfillset(&mask_all);
+    sigprocmask(SIG_BLOCK, &mask_all, &prev_all);
     int masterpid;
     if ((masterpid = fork()) < 0){
-        char* msg = "fork error:\n";
-        imp_format_error_message(msg, (void*)info.buf, BUFSIZE);
-        _exit(1);
+        char* msg = "fork master error\n";
+        errorReport(msg,1);
     }
     setpgid(getpid(),getpid());
-    j->pgid = getpid();
+
+    /* master Child */
     if (masterpid == 0) {
-        /* master Child */
-        int in_fd ;
-        if ((in_fd = open(file_name, O_RDONLY)) < 0) {
-                        perror("open");
-                        //maybe send a signal to master
-                        _exit(1);
-                    }
+
         int out_fd = imp_connect_to_printer(p, PRINTER_NORMAL);
         if(out_fd<0){
-            fprintf(stderr, "%s\n", "connection error");
+            char* msg = "cannot connect to printer\n";
+            errorReport(msg,1);
         }
+         int in_fd;
+        if ((in_fd = open(file_name, O_RDONLY)) < 0) {
+            char* msg = "cannot open in file\n";
+            errorReport(msg,1);
+        }
+        //debug
+        fprintf(stderr, "%d,%dconversion->path_length:%d\n",
+            in_fd,out_fd,conversion->path_length );
 
+        //path_length ==1 means no conversion needed,
+        //the printer can do job directly
         if(conversion->path_length==1){
-            fprintf(stderr, "%s\n","no pipe,direct print" );
-            if(dup2(in_fd, STDIN_FILENO)<0)//stdin = in file
-                fprintf(stderr, "dup2 no work at in fd to stdin\n" );
-            if(dup2(out_fd, STDOUT_FILENO)<0)
-                fprintf(stderr, "dup2 no work at out fd to stdout\n" );
-            execv("bin/cat",(char**){NULL});
-            _exit(1);
-
+            directPrint(in_fd,out_fd);
         }
+        //path_length ==2 means one conversion needed,
+        //no pipe needed
+        if(conversion->path_length==2){
+            // fprintf(stderr, "%s\n","path2" );
+            // printf("%s\n",conversion->name );
+            mydup2(in_fd, STDIN_FILENO);
+            mydup2(out_fd, STDOUT_FILENO);
+            execvp(conversion->name,conversion->args);
+            char* msg = "cannot execvp\n";
+            errorReport(msg,1);
+        }
+
+        //PIPELINE
         int nchildren = conversion->path_length-1;
         pid_t pid[nchildren];
         int i,child_status;
-        // ccount = nchildren;
-        // signal(SIGKILL, kill_handler);
 
         //my pipes
         int pipe1 [2];
         int pipe2 [2];
+        //ptr to pipe for swapping purpose
         int* readPipe = pipe1;
         int* writePipe = pipe2;
 
-
         if(pipe(pipe1) < 0 || pipe(pipe2) < 0) {
-            perror("Can't create pipe");
-            exit(1);
+            char* msg = "cannot create pipe\n";
+            errorReport(msg,1);
         }
-        fprintf(stderr, "%s%d\n","master",out_fd );
+        fprintf(stderr, "%s%d\n","master",nchildren );
         int * path = conversion->path;
         Conversion* c;
 
         for (i = 0; i < nchildren; ++i)
         {
+
             fprintf(stderr,"%d:%d\n",path[i],path[i+1] );
             c = &info.conversionMatrix[path[i]][path[i+1]];
             //pipe takes array of 2 int, [0] for reading ,[1] for writing
@@ -459,159 +503,223 @@ void convert(char* file_name,Conversion* conversion,PRINTER* p,JOB* j){
             if ((pid[i] = fork()) == 0){
                 //if first child
                 if(i==0){
-                    if(dup2(in_fd, STDIN_FILENO)<0)//stdin = in file
-                        fprintf(stderr, "dup2 no work at in fd to stdin\n" );
-                    // fprintf(stderr, "%d:writePipe%p\n",i,writePipe);
-                    if(dup2(writePipe[1],STDOUT_FILENO)<0)// out = writepipe[1]
-                        fprintf(stderr, "dup2 no work at writepipe 1 to stdout\n" );
+                    mydup2(in_fd, STDIN_FILENO);//stdin = in file
+                    mydup2(writePipe[1], STDOUT_FILENO);// out = writepipe[1]
                     close(readPipe[0]);//close read pipe, not using it
                 }
                 //if last child
                 else if(i==nchildren-1){
-                    if(dup2(out_fd, STDOUT_FILENO)<0)
-                        fprintf(stderr, "dup2 no work at out fd to stdout\n" );
-                    // fprintf(stderr, "%d:readPile:%p\n",i,readPipe);
-                    if(dup2(readPipe[0],STDIN_FILENO)<0)
-                        fprintf(stderr, "dup2 no work at readpipe 0 to stdin\n" );
-                    // close(readPipe[0]);
+                    mydup2(readPipe[0], STDIN_FILENO);// in = readpipe[0]
+                    mydup2(out_fd, STDOUT_FILENO);//stdout = out file
                     close(writePipe[1]);//close write pipe, not using it
                     // fprintf(stdout, "%s\n","ggweg" );
 
                 }
                 else{
-
-                    dup2(readPipe[0],STDIN_FILENO);
-                    dup2(writePipe[1], STDOUT_FILENO);
+                    mydup2(readPipe[0], STDIN_FILENO);//stdin = readpipe[0]
+                    // fprintf(stderr, "%p\n", );
+                    mydup2(writePipe[1], STDOUT_FILENO);// out = writepipe[1]
                 }
                 close(readPipe[1]); //close write end of read pipe
                 close(writePipe[0]);//close read end of write pipe
                 //call program
-                // if(i==nchildren-1){
-                // fprintf(stderr, "in child %d\n", i);
-                //     char concat_str[100];
-                //     read(readPipe[0], concat_str, 1000);
-                //     fprintf(stderr,"Concatenated string %s\n", concat_str);
-                // }
                 execvp(c->name,c->args);
-                fprintf(stderr, "%s\n","exiterror" );
-                _exit(EXIT_FAILURE);
+                char* msg = "cannot execvp\n";
+                errorReport(msg,1);
             }
+            //swap pipes
             int * temp = readPipe;
             readPipe = writePipe;
             writePipe = temp;
         }
-        // close  both end for readPipe and write pipe
+        // close both end for readPipe and write pipe
+        //not used by master
         close(readPipe[0]);
         close(readPipe[1]);
         close(writePipe[0]);
         close(writePipe[1]);
-        // /* Parent spins */
-        // while (!done){
-        //     fprintf(stderr, "%s ","not done" );
-        // }
+
         for (i = 0; i < nchildren; i++) {
             /* Parent */
             pid_t wpid;
-            while((wpid=wait(&child_status))>0){
-                // fprintf(stderr, "wpid:%d(should be %d:%d)\n",wpid,i,pid[i] );
+            if((wpid=wait(&child_status))>0){
+                fprintf(stderr, "wpid:%d(should be %d:%d)\n",wpid,i,pid[i] );
                 if (WIFEXITED(child_status))
+
                     printf("Child %d terminated with exit status %d\n",
                         wpid, WEXITSTATUS(child_status));
-                else
-                    printf("Child %d terminate abnormally\n", wpid);
+                else{
+                    char* msg = "children terminate abnormally\n";
+                    errorReport(msg,1);
+                    // printf("Child %d terminate abnormally\n", wpid);
+
+                }
+
 
             }
-        }
 
-        exit(0);
+        }
+        j->pgid = masterpid;
+        sigprocmask(SIG_SETMASK, &prev_all, NULL);
+        _exit(0);
 
     }
+}
+void runJob(JOB *j){
+
+    char* file_name = j->file_name;
+    PRINTER_SET set = j->eligible_printers;
+
+    //find extension aka find str after .
+    int typeID =  getFileTypeID(file_name);
+
+    for (int i = 0; i < info.printerCount; ++i)
+    {
+        //printer is in the set or not
+        if(set>>i & 1){
+            PRINTER* p = &info.printerList[i];
+
+            // if not busy and theres a path
+            if(!p->busy){
+                int toTypeID = findTypeID(p->type);
+                //bfs to find path
+                Conversion *c = &info.conversionMatrix[typeID][toTypeID];
+                if(typeID ==toTypeID){
+                    c->path_length = 1;
+
+                }
+                else{
+                    int path[TPYEMAX];
+                    Graph g;
+                    build_graph(&g,1, info.typeCount);
+                    int path_length = findShortestPath(&g,typeID,toTypeID,info.typeCount,path);
+                    freeEdges(&g);
+                    if(path_length){
+                        //set first node
+                        int index = 0;
+                        c->path[index++] = path[path_length-1];
+
+                        for (int i = 1; i < path_length; ++i){
+                                Conversion c1 = info.conversionMatrix[path[path_length-i]][path[path_length-i-1]];
+                            for(int j = 1;j<c1.path_length;j++){
+                                c->path[index++]=c1.path[j];
+                            }
+                        }
+                        c->path_length = index;
+                    }
+                }
+                //if path found
+                if(c->path_length){
+                    // for (int i = 0; i < c->path_length; ++i)
+                    // {
+                    //     fprintf(stderr,"%d ",c->path[i]);
+                    // }
+                    // fprintf(stderr,"\n");
+                    p->busy = 1;
+                    j->chosen_printer = p;
+                    updateJob(j,RUNNING);
+                    convert(file_name,c,p,j);
+                }
+            }
+        }
+    }
+    //if printer is found,print it
+}
+void findJob(PRINTER*p){
+    JOB* j = info.q.front;
+    while(j!=NULL){
+        if(j->eligible_printers & (0x1 << p->id)){
+            runJob(j);
+        }
+
+        j=j->other_info;
+    }
+
 
 }
 void print(char* wordList[],int wordCount)
 {
-        char* file_name = wordList[1];
-        //find extension aka find str after .
-        int typeID =  getFileTypeID(file_name);
-        //if type not found
-        if(typeID<0){
-            char* msg = "type not found";
+    char* file_name = wordList[1];
+    //find extension aka find str after .
+    int typeID =  getFileTypeID(file_name);
+    //if type not found
+    if(typeID<0){
+        char* msg = "type not found";
+        imp_format_error_message(msg, (void*)info.buf, BUFSIZE);
+        return;
+    }
+    PRINTER_SET  set = 0;
+    for (int i = 2; i < wordCount; ++i)
+    {
+        int printerID = findPrinterID(wordList[i]);
+        if(printerID<0){
+             char* msg = "printer not found";
             imp_format_error_message(msg, (void*)info.buf, BUFSIZE);
             return;
         }
-        PRINTER_SET  set = 0;
-        for (int i = 2; i < wordCount; ++i)
-        {
-            int printerID = findPrinterID(wordList[i]);
-            if(printerID<0){
-                 char* msg = "printer not found";
-                imp_format_error_message(msg, (void*)info.buf, BUFSIZE);
-                return;
-            }
 
-                set|= 0x1<<printerID;
-        }
-        if(set==0)
-            set=ANY_PRINTER;
+            set|= 0x1<<printerID;
+    }
+    if(set==0)
+        set=ANY_PRINTER;
 
-        JOB* j = createJob(file_name,typeID,set);
-        enqueue_job(&info.q,j);
-        // eligible printer can only be used to print a job
-        //     if there is a way to convert the file in the
-        //     job to the type that can be printed by that printer.
-        //     check
-        // check if any printer is avaliable to do this job
-        for (int i = 0; i < info.printerCount; ++i)
-        {
-            //printer is in the set or not
-            if(set>>i & 1){
-                PRINTER* p = &info.printerList[i];
+    JOB* j = createJob(file_name,typeID,set);
+    enqueue_job(&info.q,j);
+    runJob(j);
 
-                // if not busy and theres a path
-                if(!p->busy){
-                    int toTypeID = findTypeID(p->type);
-                    //bfs to find path
-                    Conversion *c = &info.conversionMatrix[typeID][toTypeID];
-                    if(typeID ==toTypeID){
-                        c->path_length = 1;
+}
 
-                    }
-                    else{
-                        int path[TPYEMAX];
-                        Graph g;
-                        build_graph(&g,1, info.typeCount);
-                        int path_length = findShortestPath(&g,typeID,toTypeID,info.typeCount,path);
-                        freeEdges(&g);
-                        if(path_length){
-                            //set first node
-                            int index = 0;
-                            c->path[index++] = path[path_length-1];
-
-                            for (int i = 1; i < path_length; ++i){
-                                    Conversion c1 = info.conversionMatrix[path[path_length-i]][path[path_length-i-1]];
-                                for(int j = 1;j<c1.path_length;j++){
-                                    c->path[index++]=c1.path[j];
-                                }
-                            }
-                            c->path_length = index;
-                        }
-                    }
-                    //if path found
-                    if(c->path_length){
-                        // for (int i = 0; i < c->path_length; ++i)
-                        // {
-                        //     fprintf(stderr,"%d ",c->path[i]);
-                        // }
-                        // fprintf(stderr,"\n");
-                        p->busy = 1;
-                        j->chosen_printer = p;
-                        updateJob(j,RUNNING);
-                        convert(file_name,c,p,j);
-                    }
+int jobCommand(int jobID,int command){
+    if(jobID>=info.jobCount){
+        char* msg = "invalid jobID";
+        errorReport(msg,0);
+        return -1;
+    }
+    JOB* j = info.q.front;
+    while(j!=NULL){
+        if(j->jobid==jobID)
+            break;
+        j=j->other_info;
+    }
+    if(j==NULL){
+        char* msg = "invalid jobID";
+        errorReport(msg,0);
+        return -1;
+    }
+    kill(command,j->pgid);
+    return 1;
+}
+int printerCommand(int printerID,int enable){
+    if(printerID>=info.printerCount){
+        char* msg = "invalid printerID";
+        errorReport(msg,0);
+        return -1;
+    }
+    info.printerList[printerID].enabled = enable;
+    return 1;
+}
+void deqOldJob(){
+    JOB* j = info.q.front;
+    JOB* prev_j = NULL;
+    while(j!=NULL){
+        if((j->status==COMPLETED||j->status==ABORTED)
+         && j->change_time.tv_sec-j->creation_time.tv_sec >=60){
+            if(prev_j==NULL){
+                if(info.q.front==info.q.rear)
+                    info.q.front=info.q.rear=NULL;
+                else{
+                    info.q.front=j->other_info;
                 }
             }
+            else{
+                prev_j->other_info=j->other_info;
+            }
+            info.jobCount--;
         }
-        //if printer is found,print it
+        else
+            prev_j=j;
+        j=j->other_info;
+    }
 }
 int excuteCommand(char* line)
 {
@@ -642,7 +750,8 @@ int excuteCommand(char* line)
     //The quit command takes no arguments and causes execution to terminate.
     else if(wordCount == 1 && strcmp(wordList[0],"quit")==0){
         printInfo();
-        exit(0);
+        return 0;
+        // exit(0);
     }
     else if(wordCount == 2 && strcmp(wordList[0],"type")==0 ){
         //if type defined then ignore
@@ -659,7 +768,7 @@ int excuteCommand(char* line)
     // The conversion command declares that files of type file_type1 can be
     // converted into file_type2 by running program conversion_program with any
     // arguments that have been indicated.
-    else if(wordCount >=3 && strcmp(wordList[0],"conversion")==0)
+    else if(wordCount >=4 && strcmp(wordList[0],"conversion")==0)
     {
         declareConversion(wordList,wordCount);
 
@@ -672,6 +781,7 @@ int excuteCommand(char* line)
     // The jobs command prints a similar status report for the print jobs that have
     // been queued
     else if(wordCount ==1 && strcmp(wordList[0],"jobs")==0 ){
+        deqOldJob();
         jobReport();
     }
     // The print command sets up a job for printing file_name.
@@ -685,6 +795,21 @@ int excuteCommand(char* line)
     else if(wordCount >0 && strcmp(wordList[0],"print")==0  ){
         // fprintf(stderr, "%s\n", "printing");
         print(wordList,wordCount);
+    }
+    else if(wordCount ==2 && strcmp(wordList[0],"cancel")==0  ){
+        jobCommand(atoi(wordList[1]),SIGTERM);
+    }
+    else if(wordCount ==2 && strcmp(wordList[0],"pause")==0  ){
+        jobCommand(atoi(wordList[1]),SIGSTOP);
+    }
+    else if(wordCount ==2 && strcmp(wordList[0],"resume")==0  ){
+        jobCommand(atoi(wordList[1]),SIGCONT);
+    }
+    else if(wordCount ==2 && strcmp(wordList[0],"disable")==0  ){
+        printerCommand(atoi(wordList[1]),0);
+    }
+    else if(wordCount ==2 && strcmp(wordList[0],"enable")==0  ){
+        printerCommand(atoi(wordList[1]),1);
     }
 
     // The cancel command cancels an existing job.  If the job is currently being
@@ -710,13 +835,13 @@ int excuteCommand(char* line)
     // started for one such job.
     else{
         char* msg = "invalid command";
-        imp_format_error_message(msg, (void*)info.buf, BUFSIZE);
+        errorReport(msg,0);
         return -1;
     }
 
     if(word) free(word);
     if(wordList) free(wordList);
-    return 0;
+    return 1;
 
 }
 
