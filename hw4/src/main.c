@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     initInfo();
 
     while(optind < argc) {
-    	if((optval = getopt(argc, argv, "i:")) != -1) {
+    	if((optval = getopt(argc, argv, "i:o:")) != -1) {
     	    switch(optval) {
             case 'i':
                 infile = fopen(optarg, "r");
@@ -30,10 +30,11 @@ int main(int argc, char *argv[])
                     fprintf(stderr, "Usage: %s [-i <cmd_file>] [-o <out_file>]\n", argv[0]);
                     exit(EXIT_FAILURE);
                 }
-                if(optind<argc)
-                    info.outfile = fopen(optarg, "w");
+            break;
+            case 'o':
+                info.outfile = fopen(optarg, "w");
                 //open the next arg as file, if failed then exit
-                if (info.outfile==NULL )
+                if (info.outfile==NULL)
                 {
                     fprintf(stderr, "Usage: %s [-i <cmd_file>] [-o <out_file>]\n", argv[0]);
                     exit(EXIT_FAILURE);
@@ -52,7 +53,9 @@ int main(int argc, char *argv[])
                     excuteCommand(line);
                     // free(line);
                 }
-                // while(fgets(line, sizeof(line), infile)){
+                // char line[1024];
+                // while(fgets(line, 1024, infile)){
+                //     fprintf(stderr, "%s\n", line);
                 //     excuteCommand(line);
                 // }
             break;

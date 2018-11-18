@@ -229,7 +229,6 @@ void declareType(char* type)
             return;
         }
     }
-    //FIXME: might need to check if type t already exist
     int index = info.typeCount;
     TypePrinter* t = &info.typeList[index];
     t->id = index;
@@ -240,7 +239,7 @@ void declareType(char* type)
 void declarePrinter(char* name,char* type)
 {
     int type1ID = findTypeID(type);
-    //TODO: check if id is -1
+    //check if id is -1
     if(type1ID<0){
         char* msg = "type not found";
         imp_format_error_message(msg, (void*)info.buf, BUFSIZE);
@@ -265,7 +264,6 @@ void declarePrinter(char* name,char* type)
     int index = info.printerCount;
     PRINTER* p = &info.printerList[index];
     p->id = index;
-    // p->enabled = 1;//FIXME
     char* namecpy = myStrCopy(name);
     char* typecpy = myStrCopy(type);
     p->name=namecpy;
@@ -276,7 +274,7 @@ void declareConversion(char** wordList,int wordCount)
 {
     int type1ID = findTypeID(wordList[1]);
     int type2ID = findTypeID(wordList[2]);
-    //TODO: check if id is -1
+    //check if id is -1
     if(type1ID<0 || type2ID<0){
         char* msg = "type not found";
         imp_format_error_message(msg, (void*)info.buf, BUFSIZE);
@@ -305,28 +303,29 @@ void declareConversion(char** wordList,int wordCount)
     c->path[0] = type1ID;
     c->path[1] = type2ID;
 }
-void printerReport(){
-
+void printerReport(PRINTER* p){
+    fprintf(info.outfile,"%s\n",
+            imp_format_printer_status(p,(char*)info.buf,BUFSIZE));
+}
+void printerTable(){
         PRINTER* printerList = info.printerList;
-
         for (int i = 0; i < info.printerCount; ++i)
         {
-            fprintf(info.outfile,
-                "%s\n",
-                imp_format_printer_status(&printerList[i],(char*)info.buf,BUFSIZE));
-
+            printerReport(&printerList[i]);
         }
 }
-void jobReport(){
-
+void jobReport(JOB* j){
+    fprintf(info.outfile,
+        "%s\n",
+        imp_format_job_status(j,(char*)info.buf,BUFSIZE));
+}
+void jobTable(){
     JOB* j = info.q.front;
-        while(j!=NULL){
-            fprintf(info.outfile,
-                "%s\n",
-                imp_format_job_status(j,(char*)info.buf,BUFSIZE));
-            j=j->other_info;
-        }
+    while(j!=NULL){
+        jobReport(j);
+        j=j->other_info;
     }
+}
 void updateJobChange_time(JOB* j){
     struct timeval tv;
     gettimeofday(&tv,NULL);
@@ -335,6 +334,8 @@ void updateJobChange_time(JOB* j){
 void updateJob(JOB* j,int status){
     j->status = status;
     updateJobChange_time(j);
+    jobReport(j);
+
 }
 JOB* createJob(char* file_name,int typeID,PRINTER_SET set)
 {
@@ -351,6 +352,7 @@ JOB* createJob(char* file_name,int typeID,PRINTER_SET set)
     j->creation_time = tv;
     j->change_time=tv;
     j->other_info = NULL;
+    jobReport(j);
     return j;
 }
 void build_graph(Graph *g, int directed,int nvertices)
@@ -366,11 +368,17 @@ void build_graph(Graph *g, int directed,int nvertices)
                 insert_edge(g, i, j, g->directed);
 }
 
+void updatePrinter(PRINTER* p,int busy){
+    p->busy=busy;
+    printerReport(p);
+
+}
+
 
 void child_handler(int sig) {
     pid_t pid;
     int wstatus;
-    printf("signal\n");
+    // printf("signal\n");
     while((pid = waitpid(-1,&wstatus, WNOHANG|WUNTRACED | WCONTINUED))>0){
         // fprintf(stderr, "master %d interrupted\n",pid );
         JOB* j = info.q.front;
@@ -395,7 +403,8 @@ void child_handler(int sig) {
         else if(WIFEXITED(wstatus)){
         fprintf(stderr, "master %d COMPLETED\n",pid );
             updateJob(j,COMPLETED);
-            j->chosen_printer->busy=0;
+            updatePrinter(j->chosen_printer,0);
+            // j->chosen_printer->busy=0;
             // fprintf(stderr, "%s%d\n",j->chosen_printer->name,j->chosen_printer->busy);
             findJob(j->chosen_printer);
         }
@@ -404,7 +413,9 @@ void child_handler(int sig) {
         fprintf(stderr, "master %d terminated\n",pid );
 
             updateJob(j,ABORTED);
-            j->chosen_printer->busy=0;
+            updatePrinter(j->chosen_printer,0);
+
+            // j->chosen_printer->busy=0;
             // findJob(j->chosen_printer);
 
         }
@@ -650,7 +661,7 @@ void runJob(JOB *j){
                     //     fprintf(stderr,"%d ",c->path[i]);
                     // }
                     // fprintf(stderr,"\n");
-                    p->busy = 1;
+                    updatePrinter(p,1);
                     j->chosen_printer = p;
                     updateJob(j,RUNNING);
                     convert(file_name,c,p,j);
@@ -797,8 +808,9 @@ int jobCont(int id){
     return 1;
 
 }
-int printerCommand(int printerID,int enable){
-    if(printerID>=info.printerCount){
+int printerSetEnable(char* name,int enable){
+    int printerID = findPrinterID(name);
+    if(printerID<0){
         char* msg = "invalid printerID";
         errorReport(msg,0);
         return -1;
@@ -871,7 +883,7 @@ int excuteCommand(char* line)
     // dynamically allocated
     int wordList_size = 100;
     char* wordList[wordList_size * sizeof(char*)];//argv
-    fprintf(stderr, "%p\n",wordList);
+    // fprintf(stderr, "%p\n",wordList);
     //arg count = len of list?
 
     // char* buff = malloc(256);
@@ -922,14 +934,14 @@ int excuteCommand(char* line)
     }
     //The printers command prints a report on the current status of the declared printers,
     else if(wordCount ==1 && strcmp(wordList[0],"printers")==0 ){
-        printerReport();
+        printerTable();
     }
 
     // The jobs command prints a similar status report for the print jobs that have
     // been queued
     else if(wordCount ==1 && strcmp(wordList[0],"jobs")==0 ){
         deqOldJob();
-        jobReport();
+        jobTable();
     }
     // The print command sets up a job for printing file_name.
     // eligible printers for this job.  Only a printer in the set of eligible printers
@@ -957,10 +969,10 @@ int excuteCommand(char* line)
         // jobCommand(atoi(wordList[1]),SIGCONT);
     }
     else if(wordCount ==2 && strcmp(wordList[0],"disable")==0  ){
-        printerCommand(atoi(wordList[1]),0);
+        printerSetEnable(wordList[1],0);
     }
     else if(wordCount ==2 && strcmp(wordList[0],"enable")==0  ){
-        printerCommand(atoi(wordList[1]),1);
+        printerSetEnable(wordList[1],1);
     }
 
     // The cancel command cancels an existing job.  If the job is currently being

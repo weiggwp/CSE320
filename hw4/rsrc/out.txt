@@ -1,0 +1,6 @@
+JOB, 0, 18 Nov 2018 18:20:31, bat, queued, 18 Nov 2018 18:20:31, 0, , rsrc/testBFS.bat, 1
+PRINTER, 0, wei, a, enabled, busy
+JOB, 0, 18 Nov 2018 18:20:31, bat, running, 18 Nov 2018 18:20:31, 0, wei, rsrc/testBFS.bat, 1
+JOB, 0, 18 Nov 2018 18:20:31, bat, completed, 18 Nov 2018 18:20:39, 20097, , rsrc/testBFS.bat, 1
+PRINTER, 0, wei, a, enabled, idle
+JOB, 0, 18 Nov 2018 18:20:31, bat, completed, 18 Nov 2018 18:20:39, 20097, , rsrc/testBFS.bat, 1
