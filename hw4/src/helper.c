@@ -478,22 +478,27 @@ void convert(char* file_name,Conversion* conversion,PRINTER* p,JOB* j){
         int i,child_status;
 
         //my pipes
-        int pipe1 [2];
-        int pipe2 [2];
-        //ptr to pipe for swapping purpose
-        int* readPipe = pipe1;
-        int* writePipe = pipe2;
+        int pipeList [2*nchildren];
 
-        if(pipe(pipe1) < 0 || pipe(pipe2) < 0) {
-            char* msg = "cannot create pipe\n";
-            errorReport(msg,1);
-        }
+        //ptr to pipe for swapping purpose
+
         fprintf(stderr, "%s%d\n","master",nchildren );
         int * path = conversion->path;
         Conversion* c;
-
+        // pipe(pipeList);
+        int* writePipe;
+        int* readPipe;
         for (i = 0; i < nchildren; ++i)
         {
+             writePipe =&pipeList[2*i];
+             if(i>0)
+                readPipe =&pipeList[2*(i-1)];
+            // int* writePipe = pipeList[2*(i+1)];
+
+            if(pipe(writePipe) < 0) {
+                char* msg = "cannot create pipe\n";
+                errorReport(msg,1);
+            }
 
             fprintf(stderr,"%d:%d\n",path[i],path[i+1] );
             c = &info.conversionMatrix[path[i]][path[i+1]];
@@ -505,7 +510,7 @@ void convert(char* file_name,Conversion* conversion,PRINTER* p,JOB* j){
                 if(i==0){
                     mydup2(in_fd, STDIN_FILENO);//stdin = in file
                     mydup2(writePipe[1], STDOUT_FILENO);// out = writepipe[1]
-                    close(readPipe[0]);//close read pipe, not using it
+                    // close(readPipe[0]);//close read pipe, not using it
                 }
                 //if last child
                 else if(i==nchildren-1){
@@ -520,17 +525,24 @@ void convert(char* file_name,Conversion* conversion,PRINTER* p,JOB* j){
                     // fprintf(stderr, "%p\n", );
                     mydup2(writePipe[1], STDOUT_FILENO);// out = writepipe[1]
                 }
-                close(readPipe[1]); //close write end of read pipe
+                if(i>0)
+                    close(readPipe[1]); //close write end of read pipe
                 close(writePipe[0]);//close read end of write pipe
                 //call program
                 execvp(c->name,c->args);
                 char* msg = "cannot execvp\n";
                 errorReport(msg,1);
             }
+            if(i>0){
+                close(readPipe[0]);
+                close(readPipe[1]);
+            }
+
+            //close prev pipe
             //swap pipes
-            int * temp = readPipe;
-            readPipe = writePipe;
-            writePipe = temp;
+            // int * temp = readPipe;
+            // readPipe = writePipe;
+            // writePipe = temp;
         }
         // close both end for readPipe and write pipe
         //not used by master

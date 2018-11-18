@@ -1,0 +1,9 @@
+Successfully forked as daemon
+17 Nov 2018 22:43:41: PID file: spool/wei.pid
+17 Nov 2018 22:43:42: Accepted connection, fd = 5
+17 Nov 2018 22:43:47: Created stream for input
+17 Nov 2018 22:43:47: File type is 'a'
+17 Nov 2018 22:43:47: Saving data to file spool/wei_a_1542512627.803818
+17 Nov 2018 22:43:47: Created stream for output
+17 Nov 2018 22:43:47: Bytes received: 57
+17 Nov 2018 22:43:47: Connection terminated

@@ -1,11 +1,27 @@
+type one
+type one2
+conversion one one2 cat
+printer one one2
+print rsrc/one.one
+type d
+printer d d
+print rsrc/gg.d
 type a
 type b
-type txt
 type c
+type txt
 conversion txt a cat
 conversion a b cat
+conversion c d cat
 printer bob c
 printer noob b
 print rsrc/ying.txt noob bob
-
-
+type f1f
+type f2f
+type f3f
+type f4f
+conversion f1f f2f cat
+conversion f2f f3f cat
+conversion f3f f4f sort
+printer f f4f
+print rsrc/f.f1f
