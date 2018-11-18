@@ -1,0 +1,821 @@
+Successfully forked as daemon
+17 Nov 2018 23:19:01: PID file: spool/d.pid
+17 Nov 2018 23:19:02: Accepted connection, fd = 5
+17 Nov 2018 23:19:07: Created stream for input
+17 Nov 2018 23:19:07: File type is 'd'
+17 Nov 2018 23:19:07: Saving data to file spool/d_d_1542514747.246902
+17 Nov 2018 23:19:07: Created stream for output
+17 Nov 2018 23:19:07: Bytes received: 4
+17 Nov 2018 23:19:07: Connection terminated
+17 Nov 2018 23:21:21: Accepted connection, fd = 5
+17 Nov 2018 23:21:26: Created stream for input
+17 Nov 2018 23:21:26: File type is 'd'
+17 Nov 2018 23:21:26: Saving data to file spool/d_d_1542514886.352943
+17 Nov 2018 23:21:26: Created stream for output
+17 Nov 2018 23:21:26: Bytes received: 4
+17 Nov 2018 23:21:26: Connection terminated
+17 Nov 2018 23:24:02: Accepted connection, fd = 5
+17 Nov 2018 23:24:07: Created stream for input
+17 Nov 2018 23:24:07: File type is 'd'
+17 Nov 2018 23:24:07: Saving data to file spool/d_d_1542515047.311651
+17 Nov 2018 23:24:07: Created stream for output
+17 Nov 2018 23:24:07: Bytes received: 4
+17 Nov 2018 23:24:07: Connection terminated
+17 Nov 2018 23:25:57: Accepted connection, fd = 5
+17 Nov 2018 23:26:02: Created stream for input
+17 Nov 2018 23:26:02: File type is 'd'
+17 Nov 2018 23:26:02: Saving data to file spool/d_d_1542515162.972236
+17 Nov 2018 23:26:02: Created stream for output
+17 Nov 2018 23:26:02: Bytes received: 4
+17 Nov 2018 23:26:02: Connection terminated
+17 Nov 2018 23:29:24: Accepted connection, fd = 5
+17 Nov 2018 23:29:29: Created stream for input
+17 Nov 2018 23:29:29: File type is 'd'
+17 Nov 2018 23:29:29: Saving data to file spool/d_d_1542515369.718451
+17 Nov 2018 23:29:29: Created stream for output
+17 Nov 2018 23:29:29: Bytes received: 4
+17 Nov 2018 23:29:29: Connection terminated
+17 Nov 2018 23:29:29: Accepted connection, fd = 5
+17 Nov 2018 23:29:34: Created stream for input
+17 Nov 2018 23:29:34: File type is 'd'
+17 Nov 2018 23:29:34: Saving data to file spool/d_d_1542515374.734329
+17 Nov 2018 23:29:34: Created stream for output
+17 Nov 2018 23:29:34: Bytes received: 4
+17 Nov 2018 23:29:34: Connection terminated
+17 Nov 2018 23:29:34: Accepted connection, fd = 5
+17 Nov 2018 23:29:39: Created stream for input
+17 Nov 2018 23:29:39: File type is 'd'
+17 Nov 2018 23:29:39: Saving data to file spool/d_d_1542515379.754175
+17 Nov 2018 23:29:39: Created stream for output
+17 Nov 2018 23:29:39: Bytes received: 4
+17 Nov 2018 23:29:39: Connection terminated
+17 Nov 2018 23:29:39: Accepted connection, fd = 5
+17 Nov 2018 23:29:44: Created stream for input
+17 Nov 2018 23:29:44: File type is 'd'
+17 Nov 2018 23:29:44: Saving data to file spool/d_d_1542515384.773740
+17 Nov 2018 23:29:44: Created stream for output
+17 Nov 2018 23:29:44: Bytes received: 4
+17 Nov 2018 23:29:44: Connection terminated
+17 Nov 2018 23:29:44: Accepted connection, fd = 5
+17 Nov 2018 23:29:49: Created stream for input
+17 Nov 2018 23:29:49: File type is 'd'
+17 Nov 2018 23:29:49: Saving data to file spool/d_d_1542515389.789249
+17 Nov 2018 23:29:49: Created stream for output
+17 Nov 2018 23:29:49: Bytes received: 4
+17 Nov 2018 23:29:49: Connection terminated
+17 Nov 2018 23:29:49: Accepted connection, fd = 5
+17 Nov 2018 23:29:54: Created stream for input
+17 Nov 2018 23:29:54: File type is 'd'
+17 Nov 2018 23:29:54: Saving data to file spool/d_d_1542515394.806138
+17 Nov 2018 23:29:54: Created stream for output
+17 Nov 2018 23:29:54: Bytes received: 4
+17 Nov 2018 23:29:54: Connection terminated
+17 Nov 2018 23:29:54: Accepted connection, fd = 5
+17 Nov 2018 23:29:59: Created stream for input
+17 Nov 2018 23:29:59: File type is 'd'
+17 Nov 2018 23:29:59: Saving data to file spool/d_d_1542515399.823259
+17 Nov 2018 23:29:59: Created stream for output
+17 Nov 2018 23:29:59: Bytes received: 4
+17 Nov 2018 23:29:59: Connection terminated
+17 Nov 2018 23:29:59: Accepted connection, fd = 5
+17 Nov 2018 23:30:04: Created stream for input
+17 Nov 2018 23:30:04: File type is 'd'
+17 Nov 2018 23:30:04: Saving data to file spool/d_d_1542515404.840557
+17 Nov 2018 23:30:04: Created stream for output
+17 Nov 2018 23:30:04: Bytes received: 4
+17 Nov 2018 23:30:04: Connection terminated
+17 Nov 2018 23:30:04: Accepted connection, fd = 5
+17 Nov 2018 23:30:09: Created stream for input
+17 Nov 2018 23:30:09: File type is 'd'
+17 Nov 2018 23:30:09: Saving data to file spool/d_d_1542515409.861798
+17 Nov 2018 23:30:09: Created stream for output
+17 Nov 2018 23:30:09: Bytes received: 4
+17 Nov 2018 23:30:09: Connection terminated
+17 Nov 2018 23:30:09: Accepted connection, fd = 5
+17 Nov 2018 23:30:14: Created stream for input
+17 Nov 2018 23:30:14: File type is 'd'
+17 Nov 2018 23:30:14: Saving data to file spool/d_d_1542515414.880490
+17 Nov 2018 23:30:14: Created stream for output
+17 Nov 2018 23:30:14: Bytes received: 4
+17 Nov 2018 23:30:14: Connection terminated
+17 Nov 2018 23:30:14: Accepted connection, fd = 5
+17 Nov 2018 23:30:19: Created stream for input
+17 Nov 2018 23:30:19: File type is 'd'
+17 Nov 2018 23:30:19: Saving data to file spool/d_d_1542515419.901888
+17 Nov 2018 23:30:19: Created stream for output
+17 Nov 2018 23:30:19: Bytes received: 4
+17 Nov 2018 23:30:19: Connection terminated
+17 Nov 2018 23:30:19: Accepted connection, fd = 5
+17 Nov 2018 23:30:24: Created stream for input
+17 Nov 2018 23:30:24: File type is 'd'
+17 Nov 2018 23:30:24: Saving data to file spool/d_d_1542515424.928315
+17 Nov 2018 23:30:24: Created stream for output
+17 Nov 2018 23:30:24: Bytes received: 4
+17 Nov 2018 23:30:24: Connection terminated
+17 Nov 2018 23:30:24: Accepted connection, fd = 5
+17 Nov 2018 23:30:29: Created stream for input
+17 Nov 2018 23:30:29: File type is 'd'
+17 Nov 2018 23:30:29: Saving data to file spool/d_d_1542515429.946383
+17 Nov 2018 23:30:29: Created stream for output
+17 Nov 2018 23:30:29: Bytes received: 4
+17 Nov 2018 23:30:29: Connection terminated
+17 Nov 2018 23:30:29: Accepted connection, fd = 5
+17 Nov 2018 23:30:34: Created stream for input
+17 Nov 2018 23:30:34: File type is 'd'
+17 Nov 2018 23:30:34: Saving data to file spool/d_d_1542515434.964048
+17 Nov 2018 23:30:34: Created stream for output
+17 Nov 2018 23:30:34: Bytes received: 4
+17 Nov 2018 23:30:34: Connection terminated
+17 Nov 2018 23:30:34: Accepted connection, fd = 5
+17 Nov 2018 23:30:39: Created stream for input
+17 Nov 2018 23:30:39: File type is 'd'
+17 Nov 2018 23:30:39: Saving data to file spool/d_d_1542515439.978446
+17 Nov 2018 23:30:39: Created stream for output
+17 Nov 2018 23:30:39: Bytes received: 4
+17 Nov 2018 23:30:39: Connection terminated
+17 Nov 2018 23:30:39: Accepted connection, fd = 5
+17 Nov 2018 23:30:44: Created stream for input
+17 Nov 2018 23:30:44: File type is 'd'
+17 Nov 2018 23:30:44: Saving data to file spool/d_d_1542515444.991132
+17 Nov 2018 23:30:44: Created stream for output
+17 Nov 2018 23:30:44: Bytes received: 4
+17 Nov 2018 23:30:44: Connection terminated
+17 Nov 2018 23:30:44: Accepted connection, fd = 5
+17 Nov 2018 23:30:50: Created stream for input
+17 Nov 2018 23:30:50: File type is 'd'
+17 Nov 2018 23:30:50: Saving data to file spool/d_d_1542515450.6760
+17 Nov 2018 23:30:50: Created stream for output
+17 Nov 2018 23:30:50: Bytes received: 4
+17 Nov 2018 23:30:50: Connection terminated
+17 Nov 2018 23:30:50: Accepted connection, fd = 5
+17 Nov 2018 23:30:55: Created stream for input
+17 Nov 2018 23:30:55: File type is 'd'
+17 Nov 2018 23:30:55: Saving data to file spool/d_d_1542515455.19528
+17 Nov 2018 23:30:55: Created stream for output
+17 Nov 2018 23:30:55: Bytes received: 4
+17 Nov 2018 23:30:55: Connection terminated
+17 Nov 2018 23:30:55: Accepted connection, fd = 5
+17 Nov 2018 23:31:00: Created stream for input
+17 Nov 2018 23:31:00: File type is 'd'
+17 Nov 2018 23:31:00: Saving data to file spool/d_d_1542515460.30404
+17 Nov 2018 23:31:00: Created stream for output
+17 Nov 2018 23:31:00: Bytes received: 4
+17 Nov 2018 23:31:00: Connection terminated
+17 Nov 2018 23:31:00: Accepted connection, fd = 5
+17 Nov 2018 23:31:05: Created stream for input
+17 Nov 2018 23:31:05: File type is 'd'
+17 Nov 2018 23:31:05: Saving data to file spool/d_d_1542515465.41725
+17 Nov 2018 23:31:05: Created stream for output
+17 Nov 2018 23:31:05: Bytes received: 4
+17 Nov 2018 23:31:05: Connection terminated
+17 Nov 2018 23:31:05: Accepted connection, fd = 5
+17 Nov 2018 23:31:10: Created stream for input
+17 Nov 2018 23:31:10: File type is 'd'
+17 Nov 2018 23:31:10: Saving data to file spool/d_d_1542515470.55000
+17 Nov 2018 23:31:10: Created stream for output
+17 Nov 2018 23:31:10: Bytes received: 4
+17 Nov 2018 23:31:10: Connection terminated
+17 Nov 2018 23:31:10: Accepted connection, fd = 5
+17 Nov 2018 23:31:15: Created stream for input
+17 Nov 2018 23:31:15: File type is 'd'
+17 Nov 2018 23:31:15: Saving data to file spool/d_d_1542515475.65417
+17 Nov 2018 23:31:15: Created stream for output
+17 Nov 2018 23:31:15: Bytes received: 4
+17 Nov 2018 23:31:15: Connection terminated
+17 Nov 2018 23:31:15: Accepted connection, fd = 5
+17 Nov 2018 23:31:20: Created stream for input
+17 Nov 2018 23:31:20: File type is 'd'
+17 Nov 2018 23:31:20: Saving data to file spool/d_d_1542515480.78565
+17 Nov 2018 23:31:20: Created stream for output
+17 Nov 2018 23:31:20: Bytes received: 4
+17 Nov 2018 23:31:20: Connection terminated
+17 Nov 2018 23:31:20: Accepted connection, fd = 5
+17 Nov 2018 23:31:25: Created stream for input
+17 Nov 2018 23:31:25: File type is 'd'
+17 Nov 2018 23:31:25: Saving data to file spool/d_d_1542515485.88380
+17 Nov 2018 23:31:25: Created stream for output
+17 Nov 2018 23:31:25: Bytes received: 4
+17 Nov 2018 23:31:25: Connection terminated
+17 Nov 2018 23:31:25: Accepted connection, fd = 5
+17 Nov 2018 23:31:30: Created stream for input
+17 Nov 2018 23:31:30: File type is 'd'
+17 Nov 2018 23:31:30: Saving data to file spool/d_d_1542515490.97755
+17 Nov 2018 23:31:30: Created stream for output
+17 Nov 2018 23:31:30: Bytes received: 4
+17 Nov 2018 23:31:30: Connection terminated
+17 Nov 2018 23:31:30: Accepted connection, fd = 5
+17 Nov 2018 23:31:35: Created stream for input
+17 Nov 2018 23:31:35: File type is 'd'
+17 Nov 2018 23:31:35: Saving data to file spool/d_d_1542515495.109256
+17 Nov 2018 23:31:35: Created stream for output
+17 Nov 2018 23:31:35: Bytes received: 4
+17 Nov 2018 23:31:35: Connection terminated
+17 Nov 2018 23:31:35: Accepted connection, fd = 5
+17 Nov 2018 23:31:40: Created stream for input
+17 Nov 2018 23:31:40: File type is 'd'
+17 Nov 2018 23:31:40: Saving data to file spool/d_d_1542515500.122722
+17 Nov 2018 23:31:40: Created stream for output
+17 Nov 2018 23:31:40: Bytes received: 4
+17 Nov 2018 23:31:40: Connection terminated
+17 Nov 2018 23:31:40: Accepted connection, fd = 5
+17 Nov 2018 23:31:45: Created stream for input
+17 Nov 2018 23:31:45: File type is 'd'
+17 Nov 2018 23:31:45: Saving data to file spool/d_d_1542515505.133269
+17 Nov 2018 23:31:45: Created stream for output
+17 Nov 2018 23:31:45: Bytes received: 4
+17 Nov 2018 23:31:45: Connection terminated
+17 Nov 2018 23:31:45: Accepted connection, fd = 5
+17 Nov 2018 23:31:50: Created stream for input
+17 Nov 2018 23:31:50: File type is 'd'
+17 Nov 2018 23:31:50: Saving data to file spool/d_d_1542515510.143715
+17 Nov 2018 23:31:50: Created stream for output
+17 Nov 2018 23:31:50: Bytes received: 4
+17 Nov 2018 23:31:50: Connection terminated
+17 Nov 2018 23:31:50: Accepted connection, fd = 5
+17 Nov 2018 23:31:55: Created stream for input
+17 Nov 2018 23:31:55: File type is 'd'
+17 Nov 2018 23:31:55: Saving data to file spool/d_d_1542515515.154254
+17 Nov 2018 23:31:55: Created stream for output
+17 Nov 2018 23:31:55: Bytes received: 4
+17 Nov 2018 23:31:55: Connection terminated
+17 Nov 2018 23:31:55: Accepted connection, fd = 5
+17 Nov 2018 23:32:00: Created stream for input
+17 Nov 2018 23:32:00: File type is 'd'
+17 Nov 2018 23:32:00: Saving data to file spool/d_d_1542515520.166583
+17 Nov 2018 23:32:00: Created stream for output
+17 Nov 2018 23:32:00: Bytes received: 4
+17 Nov 2018 23:32:00: Connection terminated
+17 Nov 2018 23:32:00: Accepted connection, fd = 5
+17 Nov 2018 23:32:05: Created stream for input
+17 Nov 2018 23:32:05: File type is 'd'
+17 Nov 2018 23:32:05: Saving data to file spool/d_d_1542515525.180263
+17 Nov 2018 23:32:05: Created stream for output
+17 Nov 2018 23:32:05: Bytes received: 4
+17 Nov 2018 23:32:05: Connection terminated
+17 Nov 2018 23:32:05: Accepted connection, fd = 5
+17 Nov 2018 23:32:10: Created stream for input
+17 Nov 2018 23:32:10: File type is 'd'
+17 Nov 2018 23:32:10: Saving data to file spool/d_d_1542515530.193509
+17 Nov 2018 23:32:10: Created stream for output
+17 Nov 2018 23:32:10: Bytes received: 4
+17 Nov 2018 23:32:10: Connection terminated
+17 Nov 2018 23:32:10: Accepted connection, fd = 5
+17 Nov 2018 23:32:15: Created stream for input
+17 Nov 2018 23:32:15: File type is 'd'
+17 Nov 2018 23:32:15: Saving data to file spool/d_d_1542515535.206874
+17 Nov 2018 23:32:15: Created stream for output
+17 Nov 2018 23:32:15: Bytes received: 4
+17 Nov 2018 23:32:15: Connection terminated
+17 Nov 2018 23:32:15: Accepted connection, fd = 5
+17 Nov 2018 23:32:20: Created stream for input
+17 Nov 2018 23:32:20: File type is 'd'
+17 Nov 2018 23:32:20: Saving data to file spool/d_d_1542515540.220902
+17 Nov 2018 23:32:20: Created stream for output
+17 Nov 2018 23:32:20: Bytes received: 4
+17 Nov 2018 23:32:20: Connection terminated
+17 Nov 2018 23:32:20: Accepted connection, fd = 5
+17 Nov 2018 23:32:25: Created stream for input
+17 Nov 2018 23:32:25: File type is 'd'
+17 Nov 2018 23:32:25: Saving data to file spool/d_d_1542515545.238376
+17 Nov 2018 23:32:25: Created stream for output
+17 Nov 2018 23:32:25: Bytes received: 4
+17 Nov 2018 23:32:25: Connection terminated
+17 Nov 2018 23:32:25: Accepted connection, fd = 5
+17 Nov 2018 23:32:30: Created stream for input
+17 Nov 2018 23:32:30: File type is 'd'
+17 Nov 2018 23:32:30: Saving data to file spool/d_d_1542515550.252740
+17 Nov 2018 23:32:30: Created stream for output
+17 Nov 2018 23:32:30: Bytes received: 4
+17 Nov 2018 23:32:30: Connection terminated
+17 Nov 2018 23:32:30: Accepted connection, fd = 5
+17 Nov 2018 23:32:35: Created stream for input
+17 Nov 2018 23:32:35: File type is 'd'
+17 Nov 2018 23:32:35: Saving data to file spool/d_d_1542515555.269581
+17 Nov 2018 23:32:35: Created stream for output
+17 Nov 2018 23:32:35: Bytes received: 4
+17 Nov 2018 23:32:35: Connection terminated
+17 Nov 2018 23:32:35: Accepted connection, fd = 5
+17 Nov 2018 23:32:40: Created stream for input
+17 Nov 2018 23:32:40: File type is 'd'
+17 Nov 2018 23:32:40: Saving data to file spool/d_d_1542515560.283418
+17 Nov 2018 23:32:40: Created stream for output
+17 Nov 2018 23:32:40: Bytes received: 4
+17 Nov 2018 23:32:40: Connection terminated
+17 Nov 2018 23:32:40: Accepted connection, fd = 5
+17 Nov 2018 23:32:45: Created stream for input
+17 Nov 2018 23:32:45: File type is 'd'
+17 Nov 2018 23:32:45: Saving data to file spool/d_d_1542515565.296111
+17 Nov 2018 23:32:45: Created stream for output
+17 Nov 2018 23:32:45: Bytes received: 4
+17 Nov 2018 23:32:45: Connection terminated
+17 Nov 2018 23:32:45: Accepted connection, fd = 5
+17 Nov 2018 23:32:50: Created stream for input
+17 Nov 2018 23:32:50: File type is 'd'
+17 Nov 2018 23:32:50: Saving data to file spool/d_d_1542515570.307726
+17 Nov 2018 23:32:50: Created stream for output
+17 Nov 2018 23:32:50: Bytes received: 4
+17 Nov 2018 23:32:50: Connection terminated
+17 Nov 2018 23:32:50: Accepted connection, fd = 5
+17 Nov 2018 23:32:55: Created stream for input
+17 Nov 2018 23:32:55: File type is 'd'
+17 Nov 2018 23:32:55: Saving data to file spool/d_d_1542515575.318189
+17 Nov 2018 23:32:55: Created stream for output
+17 Nov 2018 23:32:55: Bytes received: 4
+17 Nov 2018 23:32:55: Connection terminated
+17 Nov 2018 23:32:55: Accepted connection, fd = 5
+17 Nov 2018 23:33:00: Created stream for input
+17 Nov 2018 23:33:00: File type is 'd'
+17 Nov 2018 23:33:00: Saving data to file spool/d_d_1542515580.327675
+17 Nov 2018 23:33:00: Created stream for output
+17 Nov 2018 23:33:00: Bytes received: 4
+17 Nov 2018 23:33:00: Connection terminated
+17 Nov 2018 23:33:00: Accepted connection, fd = 5
+17 Nov 2018 23:33:05: Created stream for input
+17 Nov 2018 23:33:05: File type is 'd'
+17 Nov 2018 23:33:05: Saving data to file spool/d_d_1542515585.338118
+17 Nov 2018 23:33:05: Created stream for output
+17 Nov 2018 23:33:05: Bytes received: 4
+17 Nov 2018 23:33:05: Connection terminated
+17 Nov 2018 23:33:05: Accepted connection, fd = 5
+17 Nov 2018 23:33:10: Created stream for input
+17 Nov 2018 23:33:10: File type is 'd'
+17 Nov 2018 23:33:10: Saving data to file spool/d_d_1542515590.349778
+17 Nov 2018 23:33:10: Created stream for output
+17 Nov 2018 23:33:10: Bytes received: 4
+17 Nov 2018 23:33:10: Connection terminated
+17 Nov 2018 23:33:10: Accepted connection, fd = 5
+17 Nov 2018 23:33:15: Created stream for input
+17 Nov 2018 23:33:15: File type is 'd'
+17 Nov 2018 23:33:15: Saving data to file spool/d_d_1542515595.365949
+17 Nov 2018 23:33:15: Created stream for output
+17 Nov 2018 23:33:15: Bytes received: 4
+17 Nov 2018 23:33:15: Connection terminated
+17 Nov 2018 23:33:15: Accepted connection, fd = 5
+17 Nov 2018 23:33:20: Created stream for input
+17 Nov 2018 23:33:20: File type is 'd'
+17 Nov 2018 23:33:20: Saving data to file spool/d_d_1542515600.379799
+17 Nov 2018 23:33:20: Created stream for output
+17 Nov 2018 23:33:20: Bytes received: 4
+17 Nov 2018 23:33:20: Connection terminated
+17 Nov 2018 23:33:20: Accepted connection, fd = 5
+17 Nov 2018 23:33:25: Created stream for input
+17 Nov 2018 23:33:25: File type is 'd'
+17 Nov 2018 23:33:25: Saving data to file spool/d_d_1542515605.388837
+17 Nov 2018 23:33:25: Created stream for output
+17 Nov 2018 23:33:25: Bytes received: 4
+17 Nov 2018 23:33:25: Connection terminated
+17 Nov 2018 23:33:25: Accepted connection, fd = 5
+17 Nov 2018 23:33:30: Created stream for input
+17 Nov 2018 23:33:30: File type is 'd'
+17 Nov 2018 23:33:30: Saving data to file spool/d_d_1542515610.397108
+17 Nov 2018 23:33:30: Created stream for output
+17 Nov 2018 23:33:30: Bytes received: 4
+17 Nov 2018 23:33:30: Connection terminated
+17 Nov 2018 23:33:32: Accepted connection, fd = 5
+17 Nov 2018 23:33:37: Created stream for input
+17 Nov 2018 23:33:37: File type is 'd'
+17 Nov 2018 23:33:37: Saving data to file spool/d_d_1542515617.815362
+17 Nov 2018 23:33:37: Created stream for output
+17 Nov 2018 23:33:37: Bytes received: 4
+17 Nov 2018 23:33:37: Connection terminated
+17 Nov 2018 23:33:37: Accepted connection, fd = 5
+17 Nov 2018 23:33:42: Created stream for input
+17 Nov 2018 23:33:42: File type is 'd'
+17 Nov 2018 23:33:42: Saving data to file spool/d_d_1542515622.834886
+17 Nov 2018 23:33:42: Created stream for output
+17 Nov 2018 23:33:42: Bytes received: 4
+17 Nov 2018 23:33:42: Connection terminated
+17 Nov 2018 23:33:42: Accepted connection, fd = 5
+17 Nov 2018 23:33:47: Created stream for input
+17 Nov 2018 23:33:47: File type is 'd'
+17 Nov 2018 23:33:47: Saving data to file spool/d_d_1542515627.850658
+17 Nov 2018 23:33:47: Created stream for output
+17 Nov 2018 23:33:47: Bytes received: 4
+17 Nov 2018 23:33:47: Connection terminated
+17 Nov 2018 23:33:47: Accepted connection, fd = 5
+17 Nov 2018 23:33:52: Created stream for input
+17 Nov 2018 23:33:52: File type is 'd'
+17 Nov 2018 23:33:52: Saving data to file spool/d_d_1542515632.870508
+17 Nov 2018 23:33:52: Created stream for output
+17 Nov 2018 23:33:52: Bytes received: 4
+17 Nov 2018 23:33:52: Connection terminated
+17 Nov 2018 23:33:52: Accepted connection, fd = 5
+17 Nov 2018 23:33:57: Created stream for input
+17 Nov 2018 23:33:57: File type is 'd'
+17 Nov 2018 23:33:57: Saving data to file spool/d_d_1542515637.890359
+17 Nov 2018 23:33:57: Created stream for output
+17 Nov 2018 23:33:57: Bytes received: 4
+17 Nov 2018 23:33:57: Connection terminated
+17 Nov 2018 23:33:57: Accepted connection, fd = 5
+17 Nov 2018 23:34:02: Created stream for input
+17 Nov 2018 23:34:02: File type is 'd'
+17 Nov 2018 23:34:02: Saving data to file spool/d_d_1542515642.907625
+17 Nov 2018 23:34:02: Created stream for output
+17 Nov 2018 23:34:02: Bytes received: 4
+17 Nov 2018 23:34:02: Connection terminated
+17 Nov 2018 23:34:02: Accepted connection, fd = 5
+17 Nov 2018 23:34:07: Created stream for input
+17 Nov 2018 23:34:07: File type is 'd'
+17 Nov 2018 23:34:07: Saving data to file spool/d_d_1542515647.925254
+17 Nov 2018 23:34:07: Created stream for output
+17 Nov 2018 23:34:07: Bytes received: 4
+17 Nov 2018 23:34:07: Connection terminated
+17 Nov 2018 23:34:07: Accepted connection, fd = 5
+17 Nov 2018 23:34:12: Created stream for input
+17 Nov 2018 23:34:12: File type is 'd'
+17 Nov 2018 23:34:12: Saving data to file spool/d_d_1542515652.947472
+17 Nov 2018 23:34:12: Created stream for output
+17 Nov 2018 23:34:12: Bytes received: 4
+17 Nov 2018 23:34:12: Connection terminated
+17 Nov 2018 23:34:12: Accepted connection, fd = 5
+17 Nov 2018 23:34:17: Created stream for input
+17 Nov 2018 23:34:17: File type is 'd'
+17 Nov 2018 23:34:17: Saving data to file spool/d_d_1542515657.961829
+17 Nov 2018 23:34:17: Created stream for output
+17 Nov 2018 23:34:17: Bytes received: 4
+17 Nov 2018 23:34:17: Connection terminated
+17 Nov 2018 23:34:17: Accepted connection, fd = 5
+17 Nov 2018 23:34:22: Created stream for input
+17 Nov 2018 23:34:22: File type is 'd'
+17 Nov 2018 23:34:22: Saving data to file spool/d_d_1542515662.984705
+17 Nov 2018 23:34:22: Created stream for output
+17 Nov 2018 23:34:22: Bytes received: 4
+17 Nov 2018 23:34:22: Connection terminated
+17 Nov 2018 23:34:22: Accepted connection, fd = 5
+17 Nov 2018 23:34:27: Created stream for input
+17 Nov 2018 23:34:27: File type is 'd'
+17 Nov 2018 23:34:27: Saving data to file spool/d_d_1542515667.998147
+17 Nov 2018 23:34:28: Created stream for output
+17 Nov 2018 23:34:28: Bytes received: 4
+17 Nov 2018 23:34:28: Connection terminated
+17 Nov 2018 23:34:28: Accepted connection, fd = 5
+17 Nov 2018 23:34:33: Created stream for input
+17 Nov 2018 23:34:33: File type is 'd'
+17 Nov 2018 23:34:33: Saving data to file spool/d_d_1542515673.18496
+17 Nov 2018 23:34:33: Created stream for output
+17 Nov 2018 23:34:33: Bytes received: 4
+17 Nov 2018 23:34:33: Connection terminated
+17 Nov 2018 23:34:33: Accepted connection, fd = 5
+17 Nov 2018 23:34:38: Created stream for input
+17 Nov 2018 23:34:38: File type is 'd'
+17 Nov 2018 23:34:38: Saving data to file spool/d_d_1542515678.39133
+17 Nov 2018 23:34:38: Created stream for output
+17 Nov 2018 23:34:38: Bytes received: 4
+17 Nov 2018 23:34:38: Connection terminated
+17 Nov 2018 23:34:38: Accepted connection, fd = 5
+17 Nov 2018 23:34:43: Created stream for input
+17 Nov 2018 23:34:43: File type is 'd'
+17 Nov 2018 23:34:43: Saving data to file spool/d_d_1542515683.57374
+17 Nov 2018 23:34:43: Created stream for output
+17 Nov 2018 23:34:43: Bytes received: 4
+17 Nov 2018 23:34:43: Connection terminated
+17 Nov 2018 23:34:43: Accepted connection, fd = 5
+17 Nov 2018 23:34:48: Created stream for input
+17 Nov 2018 23:34:48: File type is 'd'
+17 Nov 2018 23:34:48: Saving data to file spool/d_d_1542515688.84273
+17 Nov 2018 23:34:48: Created stream for output
+17 Nov 2018 23:34:48: Bytes received: 4
+17 Nov 2018 23:34:48: Connection terminated
+17 Nov 2018 23:34:48: Accepted connection, fd = 5
+17 Nov 2018 23:34:53: Created stream for input
+17 Nov 2018 23:34:53: File type is 'd'
+17 Nov 2018 23:34:53: Saving data to file spool/d_d_1542515693.102816
+17 Nov 2018 23:34:53: Created stream for output
+17 Nov 2018 23:34:53: Bytes received: 4
+17 Nov 2018 23:34:53: Connection terminated
+17 Nov 2018 23:34:53: Accepted connection, fd = 5
+17 Nov 2018 23:34:58: Created stream for input
+17 Nov 2018 23:34:58: File type is 'd'
+17 Nov 2018 23:34:58: Saving data to file spool/d_d_1542515698.121817
+17 Nov 2018 23:34:58: Created stream for output
+17 Nov 2018 23:34:58: Bytes received: 4
+17 Nov 2018 23:34:58: Connection terminated
+17 Nov 2018 23:34:58: Accepted connection, fd = 5
+17 Nov 2018 23:35:03: Created stream for input
+17 Nov 2018 23:35:03: File type is 'd'
+17 Nov 2018 23:35:03: Saving data to file spool/d_d_1542515703.140640
+17 Nov 2018 23:35:03: Created stream for output
+17 Nov 2018 23:35:03: Bytes received: 4
+17 Nov 2018 23:35:03: Connection terminated
+17 Nov 2018 23:35:03: Accepted connection, fd = 5
+17 Nov 2018 23:35:08: Created stream for input
+17 Nov 2018 23:35:08: File type is 'd'
+17 Nov 2018 23:35:08: Saving data to file spool/d_d_1542515708.161962
+17 Nov 2018 23:35:08: Created stream for output
+17 Nov 2018 23:35:08: Bytes received: 4
+17 Nov 2018 23:35:08: Connection terminated
+17 Nov 2018 23:35:08: Accepted connection, fd = 5
+17 Nov 2018 23:35:13: Created stream for input
+17 Nov 2018 23:35:13: File type is 'd'
+17 Nov 2018 23:35:13: Saving data to file spool/d_d_1542515713.178929
+17 Nov 2018 23:35:13: Created stream for output
+17 Nov 2018 23:35:13: Bytes received: 4
+17 Nov 2018 23:35:13: Connection terminated
+17 Nov 2018 23:38:03: Accepted connection, fd = 5
+17 Nov 2018 23:38:08: Created stream for input
+17 Nov 2018 23:38:08: File type is 'd'
+17 Nov 2018 23:38:08: Saving data to file spool/d_d_1542515888.870599
+17 Nov 2018 23:38:08: Created stream for output
+17 Nov 2018 23:38:08: Bytes received: 4
+17 Nov 2018 23:38:08: Connection terminated
+17 Nov 2018 23:39:58: Accepted connection, fd = 5
+17 Nov 2018 23:40:03: Created stream for input
+17 Nov 2018 23:40:03: File type is 'd'
+17 Nov 2018 23:40:03: Saving data to file spool/d_d_1542516003.337841
+17 Nov 2018 23:40:03: Created stream for output
+17 Nov 2018 23:40:03: Bytes received: 4
+17 Nov 2018 23:40:03: Connection terminated
+17 Nov 2018 23:40:04: Accepted connection, fd = 5
+17 Nov 2018 23:40:09: Created stream for input
+17 Nov 2018 23:40:09: File type is 'd'
+17 Nov 2018 23:40:09: Saving data to file spool/d_d_1542516009.27554
+17 Nov 2018 23:40:09: Created stream for output
+17 Nov 2018 23:40:09: Bytes received: 4
+17 Nov 2018 23:40:09: Connection terminated
+17 Nov 2018 23:41:53: Accepted connection, fd = 5
+17 Nov 2018 23:41:58: Created stream for input
+17 Nov 2018 23:41:58: File type is 'd'
+17 Nov 2018 23:41:58: Saving data to file spool/d_d_1542516118.194468
+17 Nov 2018 23:41:58: Created stream for output
+17 Nov 2018 23:41:58: Bytes received: 4
+17 Nov 2018 23:41:58: Connection terminated
+17 Nov 2018 23:41:58: Accepted connection, fd = 5
+17 Nov 2018 23:42:03: Created stream for input
+17 Nov 2018 23:42:03: File type is 'd'
+17 Nov 2018 23:42:03: Saving data to file spool/d_d_1542516123.214291
+17 Nov 2018 23:42:03: Created stream for output
+17 Nov 2018 23:42:03: Bytes received: 4
+17 Nov 2018 23:42:03: Connection terminated
+17 Nov 2018 23:42:03: Accepted connection, fd = 5
+17 Nov 2018 23:42:08: Created stream for input
+17 Nov 2018 23:42:08: File type is 'd'
+17 Nov 2018 23:42:08: Saving data to file spool/d_d_1542516128.245326
+17 Nov 2018 23:42:08: Created stream for output
+17 Nov 2018 23:42:08: Bytes received: 4
+17 Nov 2018 23:42:08: Connection terminated
+17 Nov 2018 23:42:08: Accepted connection, fd = 5
+17 Nov 2018 23:42:13: Created stream for input
+17 Nov 2018 23:42:13: File type is 'd'
+17 Nov 2018 23:42:13: Saving data to file spool/d_d_1542516133.271263
+17 Nov 2018 23:42:13: Created stream for output
+17 Nov 2018 23:42:13: Bytes received: 4
+17 Nov 2018 23:42:13: Connection terminated
+17 Nov 2018 23:42:13: Accepted connection, fd = 5
+17 Nov 2018 23:42:18: Created stream for input
+17 Nov 2018 23:42:18: File type is 'd'
+17 Nov 2018 23:42:18: Saving data to file spool/d_d_1542516138.291790
+17 Nov 2018 23:42:18: Created stream for output
+17 Nov 2018 23:42:18: Bytes received: 4
+17 Nov 2018 23:42:18: Connection terminated
+17 Nov 2018 23:42:18: Accepted connection, fd = 5
+17 Nov 2018 23:42:23: Created stream for input
+17 Nov 2018 23:42:23: File type is 'd'
+17 Nov 2018 23:42:23: Saving data to file spool/d_d_1542516143.326688
+17 Nov 2018 23:42:23: Created stream for output
+17 Nov 2018 23:42:23: Bytes received: 4
+17 Nov 2018 23:42:23: Connection terminated
+17 Nov 2018 23:42:23: Accepted connection, fd = 5
+17 Nov 2018 23:42:28: Created stream for input
+17 Nov 2018 23:42:28: File type is 'd'
+17 Nov 2018 23:42:28: Saving data to file spool/d_d_1542516148.349707
+17 Nov 2018 23:42:28: Created stream for output
+17 Nov 2018 23:42:28: Bytes received: 4
+17 Nov 2018 23:42:28: Connection terminated
+17 Nov 2018 23:42:28: Accepted connection, fd = 5
+17 Nov 2018 23:42:33: Created stream for input
+17 Nov 2018 23:42:33: File type is 'd'
+17 Nov 2018 23:42:33: Saving data to file spool/d_d_1542516153.388868
+17 Nov 2018 23:42:33: Created stream for output
+17 Nov 2018 23:42:33: Bytes received: 4
+17 Nov 2018 23:42:33: Connection terminated
+17 Nov 2018 23:42:33: Accepted connection, fd = 5
+17 Nov 2018 23:42:38: Created stream for input
+17 Nov 2018 23:42:38: File type is 'd'
+17 Nov 2018 23:42:38: Saving data to file spool/d_d_1542516158.409396
+17 Nov 2018 23:42:38: Created stream for output
+17 Nov 2018 23:42:38: Bytes received: 4
+17 Nov 2018 23:42:38: Connection terminated
+17 Nov 2018 23:42:38: Accepted connection, fd = 5
+17 Nov 2018 23:42:43: Created stream for input
+17 Nov 2018 23:42:43: File type is 'd'
+17 Nov 2018 23:42:43: Saving data to file spool/d_d_1542516163.433283
+17 Nov 2018 23:42:43: Created stream for output
+17 Nov 2018 23:42:43: Bytes received: 4
+17 Nov 2018 23:42:43: Connection terminated
+17 Nov 2018 23:42:43: Accepted connection, fd = 5
+17 Nov 2018 23:42:48: Created stream for input
+17 Nov 2018 23:42:48: File type is 'd'
+17 Nov 2018 23:42:48: Saving data to file spool/d_d_1542516168.449802
+17 Nov 2018 23:42:48: Created stream for output
+17 Nov 2018 23:42:48: Bytes received: 4
+17 Nov 2018 23:42:48: Connection terminated
+17 Nov 2018 23:42:48: Accepted connection, fd = 5
+17 Nov 2018 23:42:53: Created stream for input
+17 Nov 2018 23:42:53: File type is 'd'
+17 Nov 2018 23:42:53: Saving data to file spool/d_d_1542516173.468613
+17 Nov 2018 23:42:53: Created stream for output
+17 Nov 2018 23:42:53: Bytes received: 4
+17 Nov 2018 23:42:53: Connection terminated
+17 Nov 2018 23:42:53: Accepted connection, fd = 5
+17 Nov 2018 23:42:58: Created stream for input
+17 Nov 2018 23:42:58: File type is 'd'
+17 Nov 2018 23:42:58: Saving data to file spool/d_d_1542516178.490248
+17 Nov 2018 23:42:58: Created stream for output
+17 Nov 2018 23:42:58: Bytes received: 4
+17 Nov 2018 23:42:58: Connection terminated
+17 Nov 2018 23:44:27: Accepted connection, fd = 5
+17 Nov 2018 23:44:32: Created stream for input
+17 Nov 2018 23:44:32: File type is 'd'
+17 Nov 2018 23:44:32: Saving data to file spool/d_d_1542516272.185448
+17 Nov 2018 23:44:32: Created stream for output
+17 Nov 2018 23:44:32: Bytes received: 4
+17 Nov 2018 23:44:32: Connection terminated
+17 Nov 2018 23:44:32: Accepted connection, fd = 5
+17 Nov 2018 23:44:37: Created stream for input
+17 Nov 2018 23:44:37: File type is 'd'
+17 Nov 2018 23:44:37: Saving data to file spool/d_d_1542516277.207323
+17 Nov 2018 23:44:37: Created stream for output
+17 Nov 2018 23:44:37: Bytes received: 4
+17 Nov 2018 23:44:37: Connection terminated
+17 Nov 2018 23:44:37: Accepted connection, fd = 5
+17 Nov 2018 23:44:42: Created stream for input
+17 Nov 2018 23:44:42: File type is 'd'
+17 Nov 2018 23:44:42: Saving data to file spool/d_d_1542516282.233043
+17 Nov 2018 23:44:42: Created stream for output
+17 Nov 2018 23:44:42: Bytes received: 4
+17 Nov 2018 23:44:42: Connection terminated
+17 Nov 2018 23:44:42: Accepted connection, fd = 5
+17 Nov 2018 23:44:47: Created stream for input
+17 Nov 2018 23:44:47: File type is 'd'
+17 Nov 2018 23:44:47: Saving data to file spool/d_d_1542516287.249935
+17 Nov 2018 23:44:47: Created stream for output
+17 Nov 2018 23:44:47: Bytes received: 4
+17 Nov 2018 23:44:47: Connection terminated
+17 Nov 2018 23:44:47: Accepted connection, fd = 5
+17 Nov 2018 23:44:52: Created stream for input
+17 Nov 2018 23:44:52: File type is 'd'
+17 Nov 2018 23:44:52: Saving data to file spool/d_d_1542516292.264796
+17 Nov 2018 23:44:52: Created stream for output
+17 Nov 2018 23:44:52: Bytes received: 4
+17 Nov 2018 23:44:52: Connection terminated
+17 Nov 2018 23:44:52: Accepted connection, fd = 5
+17 Nov 2018 23:44:57: Created stream for input
+17 Nov 2018 23:44:57: File type is 'd'
+17 Nov 2018 23:44:57: Saving data to file spool/d_d_1542516297.277870
+17 Nov 2018 23:44:57: Created stream for output
+17 Nov 2018 23:44:57: Bytes received: 4
+17 Nov 2018 23:44:57: Connection terminated
+17 Nov 2018 23:44:57: Accepted connection, fd = 5
+17 Nov 2018 23:45:02: Created stream for input
+17 Nov 2018 23:45:02: File type is 'd'
+17 Nov 2018 23:45:02: Saving data to file spool/d_d_1542516302.295033
+17 Nov 2018 23:45:02: Created stream for output
+17 Nov 2018 23:45:02: Bytes received: 4
+17 Nov 2018 23:45:02: Connection terminated
+17 Nov 2018 23:45:02: Accepted connection, fd = 5
+17 Nov 2018 23:45:07: Created stream for input
+17 Nov 2018 23:45:07: File type is 'd'
+17 Nov 2018 23:45:07: Saving data to file spool/d_d_1542516307.312526
+17 Nov 2018 23:45:07: Created stream for output
+17 Nov 2018 23:45:07: Bytes received: 4
+17 Nov 2018 23:45:07: Connection terminated
+17 Nov 2018 23:45:07: Accepted connection, fd = 5
+17 Nov 2018 23:45:12: Created stream for input
+17 Nov 2018 23:45:12: File type is 'd'
+17 Nov 2018 23:45:12: Saving data to file spool/d_d_1542516312.332451
+17 Nov 2018 23:45:12: Created stream for output
+17 Nov 2018 23:45:12: Bytes received: 4
+17 Nov 2018 23:45:12: Connection terminated
+17 Nov 2018 23:45:12: Accepted connection, fd = 5
+17 Nov 2018 23:45:17: Created stream for input
+17 Nov 2018 23:45:17: File type is 'd'
+17 Nov 2018 23:45:17: Saving data to file spool/d_d_1542516317.349802
+17 Nov 2018 23:45:17: Created stream for output
+17 Nov 2018 23:45:17: Bytes received: 4
+17 Nov 2018 23:45:17: Connection terminated
+17 Nov 2018 23:45:17: Accepted connection, fd = 5
+17 Nov 2018 23:45:22: Created stream for input
+17 Nov 2018 23:45:22: File type is 'd'
+17 Nov 2018 23:45:22: Saving data to file spool/d_d_1542516322.378232
+17 Nov 2018 23:45:22: Created stream for output
+17 Nov 2018 23:45:22: Bytes received: 4
+17 Nov 2018 23:45:22: Connection terminated
+17 Nov 2018 23:45:22: Accepted connection, fd = 5
+17 Nov 2018 23:45:27: Created stream for input
+17 Nov 2018 23:45:27: File type is 'd'
+17 Nov 2018 23:45:27: Saving data to file spool/d_d_1542516327.402750
+17 Nov 2018 23:45:27: Created stream for output
+17 Nov 2018 23:45:27: Bytes received: 4
+17 Nov 2018 23:45:27: Connection terminated
+17 Nov 2018 23:45:27: Accepted connection, fd = 5
+17 Nov 2018 23:45:32: Created stream for input
+17 Nov 2018 23:45:32: File type is 'd'
+17 Nov 2018 23:45:32: Saving data to file spool/d_d_1542516332.421160
+17 Nov 2018 23:45:32: Created stream for output
+17 Nov 2018 23:45:32: Bytes received: 4
+17 Nov 2018 23:45:32: Connection terminated
+17 Nov 2018 23:45:32: Accepted connection, fd = 5
+17 Nov 2018 23:45:37: Created stream for input
+17 Nov 2018 23:45:37: File type is 'd'
+17 Nov 2018 23:45:37: Saving data to file spool/d_d_1542516337.446735
+17 Nov 2018 23:45:37: Created stream for output
+17 Nov 2018 23:45:37: Bytes received: 4
+17 Nov 2018 23:45:37: Connection terminated
+17 Nov 2018 23:45:37: Accepted connection, fd = 5
+17 Nov 2018 23:45:42: Created stream for input
+17 Nov 2018 23:45:42: File type is 'd'
+17 Nov 2018 23:45:42: Saving data to file spool/d_d_1542516342.467070
+17 Nov 2018 23:45:42: Created stream for output
+17 Nov 2018 23:45:42: Bytes received: 4
+17 Nov 2018 23:45:42: Connection terminated
+17 Nov 2018 23:45:42: Accepted connection, fd = 5
+17 Nov 2018 23:45:47: Created stream for input
+17 Nov 2018 23:45:47: File type is 'd'
+17 Nov 2018 23:45:47: Saving data to file spool/d_d_1542516347.485230
+17 Nov 2018 23:45:47: Created stream for output
+17 Nov 2018 23:45:47: Bytes received: 4
+17 Nov 2018 23:45:47: Connection terminated
+17 Nov 2018 23:45:47: Accepted connection, fd = 5
+17 Nov 2018 23:45:52: Created stream for input
+17 Nov 2018 23:45:52: File type is 'd'
+17 Nov 2018 23:45:52: Saving data to file spool/d_d_1542516352.502643
+17 Nov 2018 23:45:52: Created stream for output
+17 Nov 2018 23:45:52: Bytes received: 4
+17 Nov 2018 23:45:52: Connection terminated
+17 Nov 2018 23:45:52: Accepted connection, fd = 5
+17 Nov 2018 23:45:57: Created stream for input
+17 Nov 2018 23:45:57: File type is 'd'
+17 Nov 2018 23:45:57: Saving data to file spool/d_d_1542516357.513490
+17 Nov 2018 23:45:57: Created stream for output
+17 Nov 2018 23:45:57: Bytes received: 4
+17 Nov 2018 23:45:57: Connection terminated
+17 Nov 2018 23:45:57: Accepted connection, fd = 5
+17 Nov 2018 23:46:02: Created stream for input
+17 Nov 2018 23:46:02: File type is 'd'
+17 Nov 2018 23:46:02: Saving data to file spool/d_d_1542516362.529862
+17 Nov 2018 23:46:02: Created stream for output
+17 Nov 2018 23:46:02: Bytes received: 4
+17 Nov 2018 23:46:02: Connection terminated
+17 Nov 2018 23:46:02: Accepted connection, fd = 5
+17 Nov 2018 23:46:07: Created stream for input
+17 Nov 2018 23:46:07: File type is 'd'
+17 Nov 2018 23:46:07: Saving data to file spool/d_d_1542516367.542881
+17 Nov 2018 23:46:07: Created stream for output
+17 Nov 2018 23:46:07: Bytes received: 4
+17 Nov 2018 23:46:07: Connection terminated
+17 Nov 2018 23:46:07: Accepted connection, fd = 5
+17 Nov 2018 23:46:12: Created stream for input
+17 Nov 2018 23:46:12: File type is 'd'
+17 Nov 2018 23:46:12: Saving data to file spool/d_d_1542516372.554489
+17 Nov 2018 23:46:12: Created stream for output
+17 Nov 2018 23:46:12: Bytes received: 4
+17 Nov 2018 23:46:12: Connection terminated
+17 Nov 2018 23:46:12: Accepted connection, fd = 5
+17 Nov 2018 23:46:17: Created stream for input
+17 Nov 2018 23:46:17: File type is 'd'
+17 Nov 2018 23:46:17: Saving data to file spool/d_d_1542516377.570516
+17 Nov 2018 23:46:17: Created stream for output
+17 Nov 2018 23:46:17: Bytes received: 4
+17 Nov 2018 23:46:17: Connection terminated
+17 Nov 2018 23:46:17: Accepted connection, fd = 5
+17 Nov 2018 23:46:22: Created stream for input
+17 Nov 2018 23:46:22: File type is 'd'
+17 Nov 2018 23:46:22: Saving data to file spool/d_d_1542516382.595469
+17 Nov 2018 23:46:22: Created stream for output
+17 Nov 2018 23:46:22: Bytes received: 4
+17 Nov 2018 23:46:22: Connection terminated
+17 Nov 2018 23:46:22: Accepted connection, fd = 5
+17 Nov 2018 23:46:27: Created stream for input
+17 Nov 2018 23:46:27: File type is 'd'
+17 Nov 2018 23:46:27: Saving data to file spool/d_d_1542516387.608592
+17 Nov 2018 23:46:27: Created stream for output
+17 Nov 2018 23:46:27: Bytes received: 4
+17 Nov 2018 23:46:27: Connection terminated
+17 Nov 2018 23:46:27: Accepted connection, fd = 5
+17 Nov 2018 23:46:32: Created stream for input
+17 Nov 2018 23:46:32: File type is 'd'
+17 Nov 2018 23:46:32: Saving data to file spool/d_d_1542516392.626534
+17 Nov 2018 23:46:32: Created stream for output
+17 Nov 2018 23:46:32: Bytes received: 4
+17 Nov 2018 23:46:32: Connection terminated
+17 Nov 2018 23:46:32: Accepted connection, fd = 5
+17 Nov 2018 23:46:37: Created stream for input
+17 Nov 2018 23:46:37: File type is 'd'
+17 Nov 2018 23:46:37: Saving data to file spool/d_d_1542516397.647024
+17 Nov 2018 23:46:37: Created stream for output
+17 Nov 2018 23:46:37: Bytes received: 4
+17 Nov 2018 23:46:37: Connection terminated
+17 Nov 2018 23:46:37: Accepted connection, fd = 5
+17 Nov 2018 23:46:42: Created stream for input
+17 Nov 2018 23:46:42: File type is 'd'
+17 Nov 2018 23:46:42: Saving data to file spool/d_d_1542516402.664977
+17 Nov 2018 23:46:42: Created stream for output
+17 Nov 2018 23:46:42: Bytes received: 4
+17 Nov 2018 23:46:42: Connection terminated
+17 Nov 2018 23:46:42: Accepted connection, fd = 5
+17 Nov 2018 23:46:47: Created stream for input
+17 Nov 2018 23:46:47: File type is 'd'
+17 Nov 2018 23:46:47: Saving data to file spool/d_d_1542516407.678399
+17 Nov 2018 23:46:47: Created stream for output
+17 Nov 2018 23:46:47: Bytes received: 4
+17 Nov 2018 23:46:47: Connection terminated

@@ -1,0 +1,821 @@
+Successfully forked as daemon
+17 Nov 2018 23:19:01: PID file: spool/f.pid
+17 Nov 2018 23:19:02: Accepted connection, fd = 5
+17 Nov 2018 23:19:07: Created stream for input
+17 Nov 2018 23:19:07: File type is 'f4f'
+17 Nov 2018 23:19:07: Saving data to file spool/f_f4f_1542514747.248838
+17 Nov 2018 23:19:07: Created stream for output
+17 Nov 2018 23:19:07: Bytes received: 14
+17 Nov 2018 23:19:07: Connection terminated
+17 Nov 2018 23:21:21: Accepted connection, fd = 5
+17 Nov 2018 23:21:26: Created stream for input
+17 Nov 2018 23:21:26: File type is 'f4f'
+17 Nov 2018 23:21:26: Saving data to file spool/f_f4f_1542514886.353280
+17 Nov 2018 23:21:26: Created stream for output
+17 Nov 2018 23:21:26: Bytes received: 14
+17 Nov 2018 23:21:26: Connection terminated
+17 Nov 2018 23:24:02: Accepted connection, fd = 5
+17 Nov 2018 23:24:07: Created stream for input
+17 Nov 2018 23:24:07: File type is 'f4f'
+17 Nov 2018 23:24:07: Saving data to file spool/f_f4f_1542515047.309177
+17 Nov 2018 23:24:07: Created stream for output
+17 Nov 2018 23:24:07: Bytes received: 14
+17 Nov 2018 23:24:07: Connection terminated
+17 Nov 2018 23:25:57: Accepted connection, fd = 5
+17 Nov 2018 23:26:02: Created stream for input
+17 Nov 2018 23:26:02: File type is 'f4f'
+17 Nov 2018 23:26:02: Saving data to file spool/f_f4f_1542515162.972209
+17 Nov 2018 23:26:02: Created stream for output
+17 Nov 2018 23:26:02: Bytes received: 14
+17 Nov 2018 23:26:02: Connection terminated
+17 Nov 2018 23:29:24: Accepted connection, fd = 5
+17 Nov 2018 23:29:29: Created stream for input
+17 Nov 2018 23:29:29: File type is 'f4f'
+17 Nov 2018 23:29:29: Saving data to file spool/f_f4f_1542515369.723181
+17 Nov 2018 23:29:29: Created stream for output
+17 Nov 2018 23:29:29: Bytes received: 14
+17 Nov 2018 23:29:29: Connection terminated
+17 Nov 2018 23:29:29: Accepted connection, fd = 5
+17 Nov 2018 23:29:34: Created stream for input
+17 Nov 2018 23:29:34: File type is 'f4f'
+17 Nov 2018 23:29:34: Saving data to file spool/f_f4f_1542515374.738709
+17 Nov 2018 23:29:34: Created stream for output
+17 Nov 2018 23:29:34: Bytes received: 14
+17 Nov 2018 23:29:34: Connection terminated
+17 Nov 2018 23:29:34: Accepted connection, fd = 5
+17 Nov 2018 23:29:39: Created stream for input
+17 Nov 2018 23:29:39: File type is 'f4f'
+17 Nov 2018 23:29:39: Saving data to file spool/f_f4f_1542515379.756288
+17 Nov 2018 23:29:39: Created stream for output
+17 Nov 2018 23:29:39: Bytes received: 14
+17 Nov 2018 23:29:39: Connection terminated
+17 Nov 2018 23:29:39: Accepted connection, fd = 5
+17 Nov 2018 23:29:44: Created stream for input
+17 Nov 2018 23:29:44: File type is 'f4f'
+17 Nov 2018 23:29:44: Saving data to file spool/f_f4f_1542515384.774898
+17 Nov 2018 23:29:44: Created stream for output
+17 Nov 2018 23:29:44: Bytes received: 14
+17 Nov 2018 23:29:44: Connection terminated
+17 Nov 2018 23:29:44: Accepted connection, fd = 5
+17 Nov 2018 23:29:49: Created stream for input
+17 Nov 2018 23:29:49: File type is 'f4f'
+17 Nov 2018 23:29:49: Saving data to file spool/f_f4f_1542515389.790851
+17 Nov 2018 23:29:49: Created stream for output
+17 Nov 2018 23:29:49: Bytes received: 14
+17 Nov 2018 23:29:49: Connection terminated
+17 Nov 2018 23:29:49: Accepted connection, fd = 5
+17 Nov 2018 23:29:54: Created stream for input
+17 Nov 2018 23:29:54: File type is 'f4f'
+17 Nov 2018 23:29:54: Saving data to file spool/f_f4f_1542515394.809793
+17 Nov 2018 23:29:54: Created stream for output
+17 Nov 2018 23:29:54: Bytes received: 14
+17 Nov 2018 23:29:54: Connection terminated
+17 Nov 2018 23:29:54: Accepted connection, fd = 5
+17 Nov 2018 23:29:59: Created stream for input
+17 Nov 2018 23:29:59: File type is 'f4f'
+17 Nov 2018 23:29:59: Saving data to file spool/f_f4f_1542515399.825821
+17 Nov 2018 23:29:59: Created stream for output
+17 Nov 2018 23:29:59: Bytes received: 14
+17 Nov 2018 23:29:59: Connection terminated
+17 Nov 2018 23:29:59: Accepted connection, fd = 5
+17 Nov 2018 23:30:04: Created stream for input
+17 Nov 2018 23:30:04: File type is 'f4f'
+17 Nov 2018 23:30:04: Saving data to file spool/f_f4f_1542515404.844439
+17 Nov 2018 23:30:04: Created stream for output
+17 Nov 2018 23:30:04: Bytes received: 14
+17 Nov 2018 23:30:04: Connection terminated
+17 Nov 2018 23:30:04: Accepted connection, fd = 5
+17 Nov 2018 23:30:09: Created stream for input
+17 Nov 2018 23:30:09: File type is 'f4f'
+17 Nov 2018 23:30:09: Saving data to file spool/f_f4f_1542515409.861376
+17 Nov 2018 23:30:09: Created stream for output
+17 Nov 2018 23:30:09: Bytes received: 14
+17 Nov 2018 23:30:09: Connection terminated
+17 Nov 2018 23:30:09: Accepted connection, fd = 5
+17 Nov 2018 23:30:14: Created stream for input
+17 Nov 2018 23:30:14: File type is 'f4f'
+17 Nov 2018 23:30:14: Saving data to file spool/f_f4f_1542515414.879832
+17 Nov 2018 23:30:14: Created stream for output
+17 Nov 2018 23:30:14: Bytes received: 14
+17 Nov 2018 23:30:14: Connection terminated
+17 Nov 2018 23:30:14: Accepted connection, fd = 5
+17 Nov 2018 23:30:19: Created stream for input
+17 Nov 2018 23:30:19: File type is 'f4f'
+17 Nov 2018 23:30:19: Saving data to file spool/f_f4f_1542515419.902222
+17 Nov 2018 23:30:19: Created stream for output
+17 Nov 2018 23:30:19: Bytes received: 14
+17 Nov 2018 23:30:19: Connection terminated
+17 Nov 2018 23:30:19: Accepted connection, fd = 5
+17 Nov 2018 23:30:24: Created stream for input
+17 Nov 2018 23:30:24: File type is 'f4f'
+17 Nov 2018 23:30:24: Saving data to file spool/f_f4f_1542515424.928376
+17 Nov 2018 23:30:24: Created stream for output
+17 Nov 2018 23:30:24: Bytes received: 14
+17 Nov 2018 23:30:24: Connection terminated
+17 Nov 2018 23:30:24: Accepted connection, fd = 5
+17 Nov 2018 23:30:29: Created stream for input
+17 Nov 2018 23:30:29: File type is 'f4f'
+17 Nov 2018 23:30:29: Saving data to file spool/f_f4f_1542515429.947009
+17 Nov 2018 23:30:29: Created stream for output
+17 Nov 2018 23:30:29: Bytes received: 14
+17 Nov 2018 23:30:29: Connection terminated
+17 Nov 2018 23:30:29: Accepted connection, fd = 5
+17 Nov 2018 23:30:34: Created stream for input
+17 Nov 2018 23:30:34: File type is 'f4f'
+17 Nov 2018 23:30:34: Saving data to file spool/f_f4f_1542515434.968653
+17 Nov 2018 23:30:34: Created stream for output
+17 Nov 2018 23:30:34: Bytes received: 14
+17 Nov 2018 23:30:34: Connection terminated
+17 Nov 2018 23:30:34: Accepted connection, fd = 5
+17 Nov 2018 23:30:39: Created stream for input
+17 Nov 2018 23:30:39: File type is 'f4f'
+17 Nov 2018 23:30:39: Saving data to file spool/f_f4f_1542515439.982979
+17 Nov 2018 23:30:39: Created stream for output
+17 Nov 2018 23:30:39: Bytes received: 14
+17 Nov 2018 23:30:39: Connection terminated
+17 Nov 2018 23:30:39: Accepted connection, fd = 5
+17 Nov 2018 23:30:44: Created stream for input
+17 Nov 2018 23:30:44: File type is 'f4f'
+17 Nov 2018 23:30:44: Saving data to file spool/f_f4f_1542515444.997342
+17 Nov 2018 23:30:45: Created stream for output
+17 Nov 2018 23:30:45: Bytes received: 14
+17 Nov 2018 23:30:45: Connection terminated
+17 Nov 2018 23:30:45: Accepted connection, fd = 5
+17 Nov 2018 23:30:50: Created stream for input
+17 Nov 2018 23:30:50: File type is 'f4f'
+17 Nov 2018 23:30:50: Saving data to file spool/f_f4f_1542515450.13056
+17 Nov 2018 23:30:50: Created stream for output
+17 Nov 2018 23:30:50: Bytes received: 14
+17 Nov 2018 23:30:50: Connection terminated
+17 Nov 2018 23:30:50: Accepted connection, fd = 5
+17 Nov 2018 23:30:55: Created stream for input
+17 Nov 2018 23:30:55: File type is 'f4f'
+17 Nov 2018 23:30:55: Saving data to file spool/f_f4f_1542515455.29967
+17 Nov 2018 23:30:55: Created stream for output
+17 Nov 2018 23:30:55: Bytes received: 14
+17 Nov 2018 23:30:55: Connection terminated
+17 Nov 2018 23:30:55: Accepted connection, fd = 5
+17 Nov 2018 23:31:00: Created stream for input
+17 Nov 2018 23:31:00: File type is 'f4f'
+17 Nov 2018 23:31:00: Saving data to file spool/f_f4f_1542515460.45818
+17 Nov 2018 23:31:00: Created stream for output
+17 Nov 2018 23:31:00: Bytes received: 14
+17 Nov 2018 23:31:00: Connection terminated
+17 Nov 2018 23:31:00: Accepted connection, fd = 5
+17 Nov 2018 23:31:05: Created stream for input
+17 Nov 2018 23:31:05: File type is 'f4f'
+17 Nov 2018 23:31:05: Saving data to file spool/f_f4f_1542515465.62294
+17 Nov 2018 23:31:05: Created stream for output
+17 Nov 2018 23:31:05: Bytes received: 14
+17 Nov 2018 23:31:05: Connection terminated
+17 Nov 2018 23:31:05: Accepted connection, fd = 5
+17 Nov 2018 23:31:10: Created stream for input
+17 Nov 2018 23:31:10: File type is 'f4f'
+17 Nov 2018 23:31:10: Saving data to file spool/f_f4f_1542515470.79073
+17 Nov 2018 23:31:10: Created stream for output
+17 Nov 2018 23:31:10: Bytes received: 14
+17 Nov 2018 23:31:10: Connection terminated
+17 Nov 2018 23:31:10: Accepted connection, fd = 5
+17 Nov 2018 23:31:15: Created stream for input
+17 Nov 2018 23:31:15: File type is 'f4f'
+17 Nov 2018 23:31:15: Saving data to file spool/f_f4f_1542515475.98841
+17 Nov 2018 23:31:15: Created stream for output
+17 Nov 2018 23:31:15: Bytes received: 14
+17 Nov 2018 23:31:15: Connection terminated
+17 Nov 2018 23:31:15: Accepted connection, fd = 5
+17 Nov 2018 23:31:20: Created stream for input
+17 Nov 2018 23:31:20: File type is 'f4f'
+17 Nov 2018 23:31:20: Saving data to file spool/f_f4f_1542515480.119299
+17 Nov 2018 23:31:20: Created stream for output
+17 Nov 2018 23:31:20: Bytes received: 14
+17 Nov 2018 23:31:20: Connection terminated
+17 Nov 2018 23:31:20: Accepted connection, fd = 5
+17 Nov 2018 23:31:25: Created stream for input
+17 Nov 2018 23:31:25: File type is 'f4f'
+17 Nov 2018 23:31:25: Saving data to file spool/f_f4f_1542515485.137118
+17 Nov 2018 23:31:25: Created stream for output
+17 Nov 2018 23:31:25: Bytes received: 14
+17 Nov 2018 23:31:25: Connection terminated
+17 Nov 2018 23:31:25: Accepted connection, fd = 5
+17 Nov 2018 23:31:30: Created stream for input
+17 Nov 2018 23:31:30: File type is 'f4f'
+17 Nov 2018 23:31:30: Saving data to file spool/f_f4f_1542515490.154813
+17 Nov 2018 23:31:30: Created stream for output
+17 Nov 2018 23:31:30: Bytes received: 14
+17 Nov 2018 23:31:30: Connection terminated
+17 Nov 2018 23:31:30: Accepted connection, fd = 5
+17 Nov 2018 23:31:35: Created stream for input
+17 Nov 2018 23:31:35: File type is 'f4f'
+17 Nov 2018 23:31:35: Saving data to file spool/f_f4f_1542515495.173572
+17 Nov 2018 23:31:35: Created stream for output
+17 Nov 2018 23:31:35: Bytes received: 14
+17 Nov 2018 23:31:35: Connection terminated
+17 Nov 2018 23:31:35: Accepted connection, fd = 5
+17 Nov 2018 23:31:40: Created stream for input
+17 Nov 2018 23:31:40: File type is 'f4f'
+17 Nov 2018 23:31:40: Saving data to file spool/f_f4f_1542515500.194509
+17 Nov 2018 23:31:40: Created stream for output
+17 Nov 2018 23:31:40: Bytes received: 14
+17 Nov 2018 23:31:40: Connection terminated
+17 Nov 2018 23:31:40: Accepted connection, fd = 5
+17 Nov 2018 23:31:45: Created stream for input
+17 Nov 2018 23:31:45: File type is 'f4f'
+17 Nov 2018 23:31:45: Saving data to file spool/f_f4f_1542515505.210391
+17 Nov 2018 23:31:45: Created stream for output
+17 Nov 2018 23:31:45: Bytes received: 14
+17 Nov 2018 23:31:45: Connection terminated
+17 Nov 2018 23:31:45: Accepted connection, fd = 5
+17 Nov 2018 23:31:50: Created stream for input
+17 Nov 2018 23:31:50: File type is 'f4f'
+17 Nov 2018 23:31:50: Saving data to file spool/f_f4f_1542515510.233114
+17 Nov 2018 23:31:50: Created stream for output
+17 Nov 2018 23:31:50: Bytes received: 14
+17 Nov 2018 23:31:50: Connection terminated
+17 Nov 2018 23:31:50: Accepted connection, fd = 5
+17 Nov 2018 23:31:55: Created stream for input
+17 Nov 2018 23:31:55: File type is 'f4f'
+17 Nov 2018 23:31:55: Saving data to file spool/f_f4f_1542515515.258311
+17 Nov 2018 23:31:55: Created stream for output
+17 Nov 2018 23:31:55: Bytes received: 14
+17 Nov 2018 23:31:55: Connection terminated
+17 Nov 2018 23:31:55: Accepted connection, fd = 5
+17 Nov 2018 23:32:00: Created stream for input
+17 Nov 2018 23:32:00: File type is 'f4f'
+17 Nov 2018 23:32:00: Saving data to file spool/f_f4f_1542515520.273576
+17 Nov 2018 23:32:00: Created stream for output
+17 Nov 2018 23:32:00: Bytes received: 14
+17 Nov 2018 23:32:00: Connection terminated
+17 Nov 2018 23:32:00: Accepted connection, fd = 5
+17 Nov 2018 23:32:05: Created stream for input
+17 Nov 2018 23:32:05: File type is 'f4f'
+17 Nov 2018 23:32:05: Saving data to file spool/f_f4f_1542515525.291852
+17 Nov 2018 23:32:05: Created stream for output
+17 Nov 2018 23:32:05: Bytes received: 14
+17 Nov 2018 23:32:05: Connection terminated
+17 Nov 2018 23:32:05: Accepted connection, fd = 5
+17 Nov 2018 23:32:10: Created stream for input
+17 Nov 2018 23:32:10: File type is 'f4f'
+17 Nov 2018 23:32:10: Saving data to file spool/f_f4f_1542515530.309263
+17 Nov 2018 23:32:10: Created stream for output
+17 Nov 2018 23:32:10: Bytes received: 14
+17 Nov 2018 23:32:10: Connection terminated
+17 Nov 2018 23:32:10: Accepted connection, fd = 5
+17 Nov 2018 23:32:15: Created stream for input
+17 Nov 2018 23:32:15: File type is 'f4f'
+17 Nov 2018 23:32:15: Saving data to file spool/f_f4f_1542515535.330731
+17 Nov 2018 23:32:15: Created stream for output
+17 Nov 2018 23:32:15: Bytes received: 14
+17 Nov 2018 23:32:15: Connection terminated
+17 Nov 2018 23:32:15: Accepted connection, fd = 5
+17 Nov 2018 23:32:20: Created stream for input
+17 Nov 2018 23:32:20: File type is 'f4f'
+17 Nov 2018 23:32:20: Saving data to file spool/f_f4f_1542515540.350302
+17 Nov 2018 23:32:20: Created stream for output
+17 Nov 2018 23:32:20: Bytes received: 14
+17 Nov 2018 23:32:20: Connection terminated
+17 Nov 2018 23:32:20: Accepted connection, fd = 5
+17 Nov 2018 23:32:25: Created stream for input
+17 Nov 2018 23:32:25: File type is 'f4f'
+17 Nov 2018 23:32:25: Saving data to file spool/f_f4f_1542515545.364722
+17 Nov 2018 23:32:25: Created stream for output
+17 Nov 2018 23:32:25: Bytes received: 14
+17 Nov 2018 23:32:25: Connection terminated
+17 Nov 2018 23:32:25: Accepted connection, fd = 5
+17 Nov 2018 23:32:30: Created stream for input
+17 Nov 2018 23:32:30: File type is 'f4f'
+17 Nov 2018 23:32:30: Saving data to file spool/f_f4f_1542515550.377285
+17 Nov 2018 23:32:30: Created stream for output
+17 Nov 2018 23:32:30: Bytes received: 14
+17 Nov 2018 23:32:30: Connection terminated
+17 Nov 2018 23:32:30: Accepted connection, fd = 5
+17 Nov 2018 23:32:35: Created stream for input
+17 Nov 2018 23:32:35: File type is 'f4f'
+17 Nov 2018 23:32:35: Saving data to file spool/f_f4f_1542515555.388166
+17 Nov 2018 23:32:35: Created stream for output
+17 Nov 2018 23:32:35: Bytes received: 14
+17 Nov 2018 23:32:35: Connection terminated
+17 Nov 2018 23:32:35: Accepted connection, fd = 5
+17 Nov 2018 23:32:40: Created stream for input
+17 Nov 2018 23:32:40: File type is 'f4f'
+17 Nov 2018 23:32:40: Saving data to file spool/f_f4f_1542515560.400987
+17 Nov 2018 23:32:40: Created stream for output
+17 Nov 2018 23:32:40: Bytes received: 14
+17 Nov 2018 23:32:40: Connection terminated
+17 Nov 2018 23:32:40: Accepted connection, fd = 5
+17 Nov 2018 23:32:45: Created stream for input
+17 Nov 2018 23:32:45: File type is 'f4f'
+17 Nov 2018 23:32:45: Saving data to file spool/f_f4f_1542515565.413593
+17 Nov 2018 23:32:45: Created stream for output
+17 Nov 2018 23:32:45: Bytes received: 14
+17 Nov 2018 23:32:45: Connection terminated
+17 Nov 2018 23:32:45: Accepted connection, fd = 5
+17 Nov 2018 23:32:50: Created stream for input
+17 Nov 2018 23:32:50: File type is 'f4f'
+17 Nov 2018 23:32:50: Saving data to file spool/f_f4f_1542515570.426142
+17 Nov 2018 23:32:50: Created stream for output
+17 Nov 2018 23:32:50: Bytes received: 14
+17 Nov 2018 23:32:50: Connection terminated
+17 Nov 2018 23:32:50: Accepted connection, fd = 5
+17 Nov 2018 23:32:55: Created stream for input
+17 Nov 2018 23:32:55: File type is 'f4f'
+17 Nov 2018 23:32:55: Saving data to file spool/f_f4f_1542515575.438674
+17 Nov 2018 23:32:55: Created stream for output
+17 Nov 2018 23:32:55: Bytes received: 14
+17 Nov 2018 23:32:55: Connection terminated
+17 Nov 2018 23:32:55: Accepted connection, fd = 5
+17 Nov 2018 23:33:00: Created stream for input
+17 Nov 2018 23:33:00: File type is 'f4f'
+17 Nov 2018 23:33:00: Saving data to file spool/f_f4f_1542515580.454276
+17 Nov 2018 23:33:00: Created stream for output
+17 Nov 2018 23:33:00: Bytes received: 14
+17 Nov 2018 23:33:00: Connection terminated
+17 Nov 2018 23:33:00: Accepted connection, fd = 5
+17 Nov 2018 23:33:05: Created stream for input
+17 Nov 2018 23:33:05: File type is 'f4f'
+17 Nov 2018 23:33:05: Saving data to file spool/f_f4f_1542515585.466689
+17 Nov 2018 23:33:05: Created stream for output
+17 Nov 2018 23:33:05: Bytes received: 14
+17 Nov 2018 23:33:05: Connection terminated
+17 Nov 2018 23:33:05: Accepted connection, fd = 5
+17 Nov 2018 23:33:10: Created stream for input
+17 Nov 2018 23:33:10: File type is 'f4f'
+17 Nov 2018 23:33:10: Saving data to file spool/f_f4f_1542515590.481586
+17 Nov 2018 23:33:10: Created stream for output
+17 Nov 2018 23:33:10: Bytes received: 14
+17 Nov 2018 23:33:10: Connection terminated
+17 Nov 2018 23:33:10: Accepted connection, fd = 5
+17 Nov 2018 23:33:15: Created stream for input
+17 Nov 2018 23:33:15: File type is 'f4f'
+17 Nov 2018 23:33:15: Saving data to file spool/f_f4f_1542515595.494099
+17 Nov 2018 23:33:15: Created stream for output
+17 Nov 2018 23:33:15: Bytes received: 14
+17 Nov 2018 23:33:15: Connection terminated
+17 Nov 2018 23:33:15: Accepted connection, fd = 5
+17 Nov 2018 23:33:20: Created stream for input
+17 Nov 2018 23:33:20: File type is 'f4f'
+17 Nov 2018 23:33:20: Saving data to file spool/f_f4f_1542515600.506947
+17 Nov 2018 23:33:20: Created stream for output
+17 Nov 2018 23:33:20: Bytes received: 14
+17 Nov 2018 23:33:20: Connection terminated
+17 Nov 2018 23:33:20: Accepted connection, fd = 5
+17 Nov 2018 23:33:25: Created stream for input
+17 Nov 2018 23:33:25: File type is 'f4f'
+17 Nov 2018 23:33:25: Saving data to file spool/f_f4f_1542515605.521171
+17 Nov 2018 23:33:25: Created stream for output
+17 Nov 2018 23:33:25: Bytes received: 14
+17 Nov 2018 23:33:25: Connection terminated
+17 Nov 2018 23:33:25: Accepted connection, fd = 5
+17 Nov 2018 23:33:30: Created stream for input
+17 Nov 2018 23:33:30: File type is 'f4f'
+17 Nov 2018 23:33:30: Saving data to file spool/f_f4f_1542515610.533563
+17 Nov 2018 23:33:30: Created stream for output
+17 Nov 2018 23:33:30: Bytes received: 14
+17 Nov 2018 23:33:30: Connection terminated
+17 Nov 2018 23:33:32: Accepted connection, fd = 5
+17 Nov 2018 23:33:37: Created stream for input
+17 Nov 2018 23:33:37: File type is 'f4f'
+17 Nov 2018 23:33:37: Saving data to file spool/f_f4f_1542515617.813746
+17 Nov 2018 23:33:37: Created stream for output
+17 Nov 2018 23:33:37: Bytes received: 14
+17 Nov 2018 23:33:37: Connection terminated
+17 Nov 2018 23:33:37: Accepted connection, fd = 5
+17 Nov 2018 23:33:42: Created stream for input
+17 Nov 2018 23:33:42: File type is 'f4f'
+17 Nov 2018 23:33:42: Saving data to file spool/f_f4f_1542515622.831415
+17 Nov 2018 23:33:42: Created stream for output
+17 Nov 2018 23:33:42: Bytes received: 14
+17 Nov 2018 23:33:42: Connection terminated
+17 Nov 2018 23:33:42: Accepted connection, fd = 5
+17 Nov 2018 23:33:47: Created stream for input
+17 Nov 2018 23:33:47: File type is 'f4f'
+17 Nov 2018 23:33:47: Saving data to file spool/f_f4f_1542515627.845377
+17 Nov 2018 23:33:47: Created stream for output
+17 Nov 2018 23:33:47: Bytes received: 14
+17 Nov 2018 23:33:47: Connection terminated
+17 Nov 2018 23:33:47: Accepted connection, fd = 5
+17 Nov 2018 23:33:52: Created stream for input
+17 Nov 2018 23:33:52: File type is 'f4f'
+17 Nov 2018 23:33:52: Saving data to file spool/f_f4f_1542515632.863686
+17 Nov 2018 23:33:52: Created stream for output
+17 Nov 2018 23:33:52: Bytes received: 14
+17 Nov 2018 23:33:52: Connection terminated
+17 Nov 2018 23:33:52: Accepted connection, fd = 5
+17 Nov 2018 23:33:57: Created stream for input
+17 Nov 2018 23:33:57: File type is 'f4f'
+17 Nov 2018 23:33:57: Saving data to file spool/f_f4f_1542515637.881926
+17 Nov 2018 23:33:57: Created stream for output
+17 Nov 2018 23:33:57: Bytes received: 14
+17 Nov 2018 23:33:57: Connection terminated
+17 Nov 2018 23:33:57: Accepted connection, fd = 5
+17 Nov 2018 23:34:02: Created stream for input
+17 Nov 2018 23:34:02: File type is 'f4f'
+17 Nov 2018 23:34:02: Saving data to file spool/f_f4f_1542515642.892264
+17 Nov 2018 23:34:02: Created stream for output
+17 Nov 2018 23:34:02: Bytes received: 14
+17 Nov 2018 23:34:02: Connection terminated
+17 Nov 2018 23:34:02: Accepted connection, fd = 5
+17 Nov 2018 23:34:07: Created stream for input
+17 Nov 2018 23:34:07: File type is 'f4f'
+17 Nov 2018 23:34:07: Saving data to file spool/f_f4f_1542515647.902656
+17 Nov 2018 23:34:07: Created stream for output
+17 Nov 2018 23:34:07: Bytes received: 14
+17 Nov 2018 23:34:07: Connection terminated
+17 Nov 2018 23:34:07: Accepted connection, fd = 5
+17 Nov 2018 23:34:12: Created stream for input
+17 Nov 2018 23:34:12: File type is 'f4f'
+17 Nov 2018 23:34:12: Saving data to file spool/f_f4f_1542515652.916683
+17 Nov 2018 23:34:12: Created stream for output
+17 Nov 2018 23:34:12: Bytes received: 14
+17 Nov 2018 23:34:12: Connection terminated
+17 Nov 2018 23:34:12: Accepted connection, fd = 5
+17 Nov 2018 23:34:17: Created stream for input
+17 Nov 2018 23:34:17: File type is 'f4f'
+17 Nov 2018 23:34:17: Saving data to file spool/f_f4f_1542515657.930792
+17 Nov 2018 23:34:17: Created stream for output
+17 Nov 2018 23:34:17: Bytes received: 14
+17 Nov 2018 23:34:17: Connection terminated
+17 Nov 2018 23:34:17: Accepted connection, fd = 5
+17 Nov 2018 23:34:22: Created stream for input
+17 Nov 2018 23:34:22: File type is 'f4f'
+17 Nov 2018 23:34:22: Saving data to file spool/f_f4f_1542515662.944689
+17 Nov 2018 23:34:22: Created stream for output
+17 Nov 2018 23:34:22: Bytes received: 14
+17 Nov 2018 23:34:22: Connection terminated
+17 Nov 2018 23:34:22: Accepted connection, fd = 5
+17 Nov 2018 23:34:27: Created stream for input
+17 Nov 2018 23:34:27: File type is 'f4f'
+17 Nov 2018 23:34:27: Saving data to file spool/f_f4f_1542515667.957303
+17 Nov 2018 23:34:27: Created stream for output
+17 Nov 2018 23:34:27: Bytes received: 14
+17 Nov 2018 23:34:27: Connection terminated
+17 Nov 2018 23:34:27: Accepted connection, fd = 5
+17 Nov 2018 23:34:32: Created stream for input
+17 Nov 2018 23:34:32: File type is 'f4f'
+17 Nov 2018 23:34:32: Saving data to file spool/f_f4f_1542515672.967354
+17 Nov 2018 23:34:32: Created stream for output
+17 Nov 2018 23:34:32: Bytes received: 14
+17 Nov 2018 23:34:32: Connection terminated
+17 Nov 2018 23:34:32: Accepted connection, fd = 5
+17 Nov 2018 23:34:37: Created stream for input
+17 Nov 2018 23:34:37: File type is 'f4f'
+17 Nov 2018 23:34:37: Saving data to file spool/f_f4f_1542515677.977503
+17 Nov 2018 23:34:37: Created stream for output
+17 Nov 2018 23:34:37: Bytes received: 14
+17 Nov 2018 23:34:37: Connection terminated
+17 Nov 2018 23:34:37: Accepted connection, fd = 5
+17 Nov 2018 23:34:42: Created stream for input
+17 Nov 2018 23:34:42: File type is 'f4f'
+17 Nov 2018 23:34:42: Saving data to file spool/f_f4f_1542515682.990065
+17 Nov 2018 23:34:42: Created stream for output
+17 Nov 2018 23:34:42: Bytes received: 14
+17 Nov 2018 23:34:42: Connection terminated
+17 Nov 2018 23:34:42: Accepted connection, fd = 5
+17 Nov 2018 23:34:47: Created stream for input
+17 Nov 2018 23:34:48: File type is 'f4f'
+17 Nov 2018 23:34:48: Saving data to file spool/f_f4f_1542515688.2132
+17 Nov 2018 23:34:48: Created stream for output
+17 Nov 2018 23:34:48: Bytes received: 14
+17 Nov 2018 23:34:48: Connection terminated
+17 Nov 2018 23:34:48: Accepted connection, fd = 5
+17 Nov 2018 23:34:53: Created stream for input
+17 Nov 2018 23:34:53: File type is 'f4f'
+17 Nov 2018 23:34:53: Saving data to file spool/f_f4f_1542515693.15007
+17 Nov 2018 23:34:53: Created stream for output
+17 Nov 2018 23:34:53: Bytes received: 14
+17 Nov 2018 23:34:53: Connection terminated
+17 Nov 2018 23:34:53: Accepted connection, fd = 5
+17 Nov 2018 23:34:58: Created stream for input
+17 Nov 2018 23:34:58: File type is 'f4f'
+17 Nov 2018 23:34:58: Saving data to file spool/f_f4f_1542515698.27478
+17 Nov 2018 23:34:58: Created stream for output
+17 Nov 2018 23:34:58: Bytes received: 14
+17 Nov 2018 23:34:58: Connection terminated
+17 Nov 2018 23:34:58: Accepted connection, fd = 5
+17 Nov 2018 23:35:03: Created stream for input
+17 Nov 2018 23:35:03: File type is 'f4f'
+17 Nov 2018 23:35:03: Saving data to file spool/f_f4f_1542515703.41411
+17 Nov 2018 23:35:03: Created stream for output
+17 Nov 2018 23:35:03: Bytes received: 14
+17 Nov 2018 23:35:03: Connection terminated
+17 Nov 2018 23:35:03: Accepted connection, fd = 5
+17 Nov 2018 23:35:08: Created stream for input
+17 Nov 2018 23:35:08: File type is 'f4f'
+17 Nov 2018 23:35:08: Saving data to file spool/f_f4f_1542515708.51868
+17 Nov 2018 23:35:08: Created stream for output
+17 Nov 2018 23:35:08: Bytes received: 14
+17 Nov 2018 23:35:08: Connection terminated
+17 Nov 2018 23:35:08: Accepted connection, fd = 5
+17 Nov 2018 23:35:13: Created stream for input
+17 Nov 2018 23:35:13: File type is 'f4f'
+17 Nov 2018 23:35:13: Saving data to file spool/f_f4f_1542515713.62064
+17 Nov 2018 23:35:13: Created stream for output
+17 Nov 2018 23:35:13: Bytes received: 14
+17 Nov 2018 23:35:13: Connection terminated
+17 Nov 2018 23:38:03: Accepted connection, fd = 5
+17 Nov 2018 23:38:08: Created stream for input
+17 Nov 2018 23:38:08: File type is 'f4f'
+17 Nov 2018 23:38:08: Saving data to file spool/f_f4f_1542515888.871065
+17 Nov 2018 23:38:08: Created stream for output
+17 Nov 2018 23:38:08: Bytes received: 14
+17 Nov 2018 23:38:08: Connection terminated
+17 Nov 2018 23:39:58: Accepted connection, fd = 5
+17 Nov 2018 23:40:03: Created stream for input
+17 Nov 2018 23:40:03: File type is 'f4f'
+17 Nov 2018 23:40:03: Saving data to file spool/f_f4f_1542516003.332753
+17 Nov 2018 23:40:03: Created stream for output
+17 Nov 2018 23:40:03: Bytes received: 14
+17 Nov 2018 23:40:03: Connection terminated
+17 Nov 2018 23:40:04: Accepted connection, fd = 5
+17 Nov 2018 23:40:09: Created stream for input
+17 Nov 2018 23:40:09: File type is 'f4f'
+17 Nov 2018 23:40:09: Saving data to file spool/f_f4f_1542516009.26712
+17 Nov 2018 23:40:09: Created stream for output
+17 Nov 2018 23:40:09: Bytes received: 14
+17 Nov 2018 23:40:09: Connection terminated
+17 Nov 2018 23:41:53: Accepted connection, fd = 5
+17 Nov 2018 23:41:58: Created stream for input
+17 Nov 2018 23:41:58: File type is 'f4f'
+17 Nov 2018 23:41:58: Saving data to file spool/f_f4f_1542516118.195084
+17 Nov 2018 23:41:58: Created stream for output
+17 Nov 2018 23:41:58: Bytes received: 14
+17 Nov 2018 23:41:58: Connection terminated
+17 Nov 2018 23:41:58: Accepted connection, fd = 5
+17 Nov 2018 23:42:03: Created stream for input
+17 Nov 2018 23:42:03: File type is 'f4f'
+17 Nov 2018 23:42:03: Saving data to file spool/f_f4f_1542516123.220290
+17 Nov 2018 23:42:03: Created stream for output
+17 Nov 2018 23:42:03: Bytes received: 14
+17 Nov 2018 23:42:03: Connection terminated
+17 Nov 2018 23:42:03: Accepted connection, fd = 5
+17 Nov 2018 23:42:08: Created stream for input
+17 Nov 2018 23:42:08: File type is 'f4f'
+17 Nov 2018 23:42:08: Saving data to file spool/f_f4f_1542516128.246081
+17 Nov 2018 23:42:08: Created stream for output
+17 Nov 2018 23:42:08: Bytes received: 14
+17 Nov 2018 23:42:08: Connection terminated
+17 Nov 2018 23:42:08: Accepted connection, fd = 5
+17 Nov 2018 23:42:13: Created stream for input
+17 Nov 2018 23:42:13: File type is 'f4f'
+17 Nov 2018 23:42:13: Saving data to file spool/f_f4f_1542516133.272700
+17 Nov 2018 23:42:13: Created stream for output
+17 Nov 2018 23:42:13: Bytes received: 14
+17 Nov 2018 23:42:13: Connection terminated
+17 Nov 2018 23:42:13: Accepted connection, fd = 5
+17 Nov 2018 23:42:18: Created stream for input
+17 Nov 2018 23:42:18: File type is 'f4f'
+17 Nov 2018 23:42:18: Saving data to file spool/f_f4f_1542516138.296568
+17 Nov 2018 23:42:18: Created stream for output
+17 Nov 2018 23:42:18: Bytes received: 14
+17 Nov 2018 23:42:18: Connection terminated
+17 Nov 2018 23:42:18: Accepted connection, fd = 5
+17 Nov 2018 23:42:23: Created stream for input
+17 Nov 2018 23:42:23: File type is 'f4f'
+17 Nov 2018 23:42:23: Saving data to file spool/f_f4f_1542516143.327602
+17 Nov 2018 23:42:23: Created stream for output
+17 Nov 2018 23:42:23: Bytes received: 14
+17 Nov 2018 23:42:23: Connection terminated
+17 Nov 2018 23:42:23: Accepted connection, fd = 5
+17 Nov 2018 23:42:28: Created stream for input
+17 Nov 2018 23:42:28: File type is 'f4f'
+17 Nov 2018 23:42:28: Saving data to file spool/f_f4f_1542516148.355664
+17 Nov 2018 23:42:28: Created stream for output
+17 Nov 2018 23:42:28: Bytes received: 14
+17 Nov 2018 23:42:28: Connection terminated
+17 Nov 2018 23:42:28: Accepted connection, fd = 5
+17 Nov 2018 23:42:33: Created stream for input
+17 Nov 2018 23:42:33: File type is 'f4f'
+17 Nov 2018 23:42:33: Saving data to file spool/f_f4f_1542516153.389428
+17 Nov 2018 23:42:33: Created stream for output
+17 Nov 2018 23:42:33: Bytes received: 14
+17 Nov 2018 23:42:33: Connection terminated
+17 Nov 2018 23:42:33: Accepted connection, fd = 5
+17 Nov 2018 23:42:38: Created stream for input
+17 Nov 2018 23:42:38: File type is 'f4f'
+17 Nov 2018 23:42:38: Saving data to file spool/f_f4f_1542516158.415990
+17 Nov 2018 23:42:38: Created stream for output
+17 Nov 2018 23:42:38: Bytes received: 14
+17 Nov 2018 23:42:38: Connection terminated
+17 Nov 2018 23:42:38: Accepted connection, fd = 5
+17 Nov 2018 23:42:43: Created stream for input
+17 Nov 2018 23:42:43: File type is 'f4f'
+17 Nov 2018 23:42:43: Saving data to file spool/f_f4f_1542516163.447953
+17 Nov 2018 23:42:43: Created stream for output
+17 Nov 2018 23:42:43: Bytes received: 14
+17 Nov 2018 23:42:43: Connection terminated
+17 Nov 2018 23:42:43: Accepted connection, fd = 5
+17 Nov 2018 23:42:48: Created stream for input
+17 Nov 2018 23:42:48: File type is 'f4f'
+17 Nov 2018 23:42:48: Saving data to file spool/f_f4f_1542516168.463367
+17 Nov 2018 23:42:48: Created stream for output
+17 Nov 2018 23:42:48: Bytes received: 14
+17 Nov 2018 23:42:48: Connection terminated
+17 Nov 2018 23:42:48: Accepted connection, fd = 5
+17 Nov 2018 23:42:53: Created stream for input
+17 Nov 2018 23:42:53: File type is 'f4f'
+17 Nov 2018 23:42:53: Saving data to file spool/f_f4f_1542516173.480346
+17 Nov 2018 23:42:53: Created stream for output
+17 Nov 2018 23:42:53: Bytes received: 14
+17 Nov 2018 23:42:53: Connection terminated
+17 Nov 2018 23:42:53: Accepted connection, fd = 5
+17 Nov 2018 23:42:58: Created stream for input
+17 Nov 2018 23:42:58: File type is 'f4f'
+17 Nov 2018 23:42:58: Saving data to file spool/f_f4f_1542516178.499401
+17 Nov 2018 23:42:58: Created stream for output
+17 Nov 2018 23:42:58: Bytes received: 14
+17 Nov 2018 23:42:58: Connection terminated
+17 Nov 2018 23:44:27: Accepted connection, fd = 5
+17 Nov 2018 23:44:32: Created stream for input
+17 Nov 2018 23:44:32: File type is 'f4f'
+17 Nov 2018 23:44:32: Saving data to file spool/f_f4f_1542516272.184347
+17 Nov 2018 23:44:32: Created stream for output
+17 Nov 2018 23:44:32: Bytes received: 14
+17 Nov 2018 23:44:32: Connection terminated
+17 Nov 2018 23:44:32: Accepted connection, fd = 5
+17 Nov 2018 23:44:37: Created stream for input
+17 Nov 2018 23:44:37: File type is 'f4f'
+17 Nov 2018 23:44:37: Saving data to file spool/f_f4f_1542516277.206624
+17 Nov 2018 23:44:37: Created stream for output
+17 Nov 2018 23:44:37: Bytes received: 14
+17 Nov 2018 23:44:37: Connection terminated
+17 Nov 2018 23:44:37: Accepted connection, fd = 5
+17 Nov 2018 23:44:42: Created stream for input
+17 Nov 2018 23:44:42: File type is 'f4f'
+17 Nov 2018 23:44:42: Saving data to file spool/f_f4f_1542516282.232268
+17 Nov 2018 23:44:42: Created stream for output
+17 Nov 2018 23:44:42: Bytes received: 14
+17 Nov 2018 23:44:42: Connection terminated
+17 Nov 2018 23:44:42: Accepted connection, fd = 5
+17 Nov 2018 23:44:47: Created stream for input
+17 Nov 2018 23:44:47: File type is 'f4f'
+17 Nov 2018 23:44:47: Saving data to file spool/f_f4f_1542516287.249172
+17 Nov 2018 23:44:47: Created stream for output
+17 Nov 2018 23:44:47: Bytes received: 14
+17 Nov 2018 23:44:47: Connection terminated
+17 Nov 2018 23:44:47: Accepted connection, fd = 5
+17 Nov 2018 23:44:52: Created stream for input
+17 Nov 2018 23:44:52: File type is 'f4f'
+17 Nov 2018 23:44:52: Saving data to file spool/f_f4f_1542516292.264096
+17 Nov 2018 23:44:52: Created stream for output
+17 Nov 2018 23:44:52: Bytes received: 14
+17 Nov 2018 23:44:52: Connection terminated
+17 Nov 2018 23:44:52: Accepted connection, fd = 5
+17 Nov 2018 23:44:57: Created stream for input
+17 Nov 2018 23:44:57: File type is 'f4f'
+17 Nov 2018 23:44:57: Saving data to file spool/f_f4f_1542516297.277723
+17 Nov 2018 23:44:57: Created stream for output
+17 Nov 2018 23:44:57: Bytes received: 14
+17 Nov 2018 23:44:57: Connection terminated
+17 Nov 2018 23:44:57: Accepted connection, fd = 5
+17 Nov 2018 23:45:02: Created stream for input
+17 Nov 2018 23:45:02: File type is 'f4f'
+17 Nov 2018 23:45:02: Saving data to file spool/f_f4f_1542516302.294226
+17 Nov 2018 23:45:02: Created stream for output
+17 Nov 2018 23:45:02: Bytes received: 14
+17 Nov 2018 23:45:02: Connection terminated
+17 Nov 2018 23:45:02: Accepted connection, fd = 5
+17 Nov 2018 23:45:07: Created stream for input
+17 Nov 2018 23:45:07: File type is 'f4f'
+17 Nov 2018 23:45:07: Saving data to file spool/f_f4f_1542516307.310377
+17 Nov 2018 23:45:07: Created stream for output
+17 Nov 2018 23:45:07: Bytes received: 14
+17 Nov 2018 23:45:07: Connection terminated
+17 Nov 2018 23:45:07: Accepted connection, fd = 5
+17 Nov 2018 23:45:12: Created stream for input
+17 Nov 2018 23:45:12: File type is 'f4f'
+17 Nov 2018 23:45:12: Saving data to file spool/f_f4f_1542516312.328884
+17 Nov 2018 23:45:12: Created stream for output
+17 Nov 2018 23:45:12: Bytes received: 14
+17 Nov 2018 23:45:12: Connection terminated
+17 Nov 2018 23:45:12: Accepted connection, fd = 5
+17 Nov 2018 23:45:17: Created stream for input
+17 Nov 2018 23:45:17: File type is 'f4f'
+17 Nov 2018 23:45:17: Saving data to file spool/f_f4f_1542516317.347113
+17 Nov 2018 23:45:17: Created stream for output
+17 Nov 2018 23:45:17: Bytes received: 14
+17 Nov 2018 23:45:17: Connection terminated
+17 Nov 2018 23:45:17: Accepted connection, fd = 5
+17 Nov 2018 23:45:22: Created stream for input
+17 Nov 2018 23:45:22: File type is 'f4f'
+17 Nov 2018 23:45:22: Saving data to file spool/f_f4f_1542516322.377428
+17 Nov 2018 23:45:22: Created stream for output
+17 Nov 2018 23:45:22: Bytes received: 14
+17 Nov 2018 23:45:22: Connection terminated
+17 Nov 2018 23:45:22: Accepted connection, fd = 5
+17 Nov 2018 23:45:27: Created stream for input
+17 Nov 2018 23:45:27: File type is 'f4f'
+17 Nov 2018 23:45:27: Saving data to file spool/f_f4f_1542516327.397964
+17 Nov 2018 23:45:27: Created stream for output
+17 Nov 2018 23:45:27: Bytes received: 14
+17 Nov 2018 23:45:27: Connection terminated
+17 Nov 2018 23:45:27: Accepted connection, fd = 5
+17 Nov 2018 23:45:32: Created stream for input
+17 Nov 2018 23:45:32: File type is 'f4f'
+17 Nov 2018 23:45:32: Saving data to file spool/f_f4f_1542516332.417673
+17 Nov 2018 23:45:32: Created stream for output
+17 Nov 2018 23:45:32: Bytes received: 14
+17 Nov 2018 23:45:32: Connection terminated
+17 Nov 2018 23:45:32: Accepted connection, fd = 5
+17 Nov 2018 23:45:37: Created stream for input
+17 Nov 2018 23:45:37: File type is 'f4f'
+17 Nov 2018 23:45:37: Saving data to file spool/f_f4f_1542516337.434259
+17 Nov 2018 23:45:37: Created stream for output
+17 Nov 2018 23:45:37: Bytes received: 14
+17 Nov 2018 23:45:37: Connection terminated
+17 Nov 2018 23:45:37: Accepted connection, fd = 5
+17 Nov 2018 23:45:42: Created stream for input
+17 Nov 2018 23:45:42: File type is 'f4f'
+17 Nov 2018 23:45:42: Saving data to file spool/f_f4f_1542516342.446664
+17 Nov 2018 23:45:42: Created stream for output
+17 Nov 2018 23:45:42: Bytes received: 14
+17 Nov 2018 23:45:42: Connection terminated
+17 Nov 2018 23:45:42: Accepted connection, fd = 5
+17 Nov 2018 23:45:47: Created stream for input
+17 Nov 2018 23:45:47: File type is 'f4f'
+17 Nov 2018 23:45:47: Saving data to file spool/f_f4f_1542516347.464665
+17 Nov 2018 23:45:47: Created stream for output
+17 Nov 2018 23:45:47: Bytes received: 14
+17 Nov 2018 23:45:47: Connection terminated
+17 Nov 2018 23:45:47: Accepted connection, fd = 5
+17 Nov 2018 23:45:52: Created stream for input
+17 Nov 2018 23:45:52: File type is 'f4f'
+17 Nov 2018 23:45:52: Saving data to file spool/f_f4f_1542516352.482346
+17 Nov 2018 23:45:52: Created stream for output
+17 Nov 2018 23:45:52: Bytes received: 14
+17 Nov 2018 23:45:52: Connection terminated
+17 Nov 2018 23:45:52: Accepted connection, fd = 5
+17 Nov 2018 23:45:57: Created stream for input
+17 Nov 2018 23:45:57: File type is 'f4f'
+17 Nov 2018 23:45:57: Saving data to file spool/f_f4f_1542516357.494002
+17 Nov 2018 23:45:57: Created stream for output
+17 Nov 2018 23:45:57: Bytes received: 14
+17 Nov 2018 23:45:57: Connection terminated
+17 Nov 2018 23:45:57: Accepted connection, fd = 5
+17 Nov 2018 23:46:02: Created stream for input
+17 Nov 2018 23:46:02: File type is 'f4f'
+17 Nov 2018 23:46:02: Saving data to file spool/f_f4f_1542516362.507182
+17 Nov 2018 23:46:02: Created stream for output
+17 Nov 2018 23:46:02: Bytes received: 14
+17 Nov 2018 23:46:02: Connection terminated
+17 Nov 2018 23:46:02: Accepted connection, fd = 5
+17 Nov 2018 23:46:07: Created stream for input
+17 Nov 2018 23:46:07: File type is 'f4f'
+17 Nov 2018 23:46:07: Saving data to file spool/f_f4f_1542516367.516974
+17 Nov 2018 23:46:07: Created stream for output
+17 Nov 2018 23:46:07: Bytes received: 14
+17 Nov 2018 23:46:07: Connection terminated
+17 Nov 2018 23:46:07: Accepted connection, fd = 5
+17 Nov 2018 23:46:12: Created stream for input
+17 Nov 2018 23:46:12: File type is 'f4f'
+17 Nov 2018 23:46:12: Saving data to file spool/f_f4f_1542516372.532316
+17 Nov 2018 23:46:12: Created stream for output
+17 Nov 2018 23:46:12: Bytes received: 14
+17 Nov 2018 23:46:12: Connection terminated
+17 Nov 2018 23:46:12: Accepted connection, fd = 5
+17 Nov 2018 23:46:17: Created stream for input
+17 Nov 2018 23:46:17: File type is 'f4f'
+17 Nov 2018 23:46:17: Saving data to file spool/f_f4f_1542516377.543345
+17 Nov 2018 23:46:17: Created stream for output
+17 Nov 2018 23:46:17: Bytes received: 14
+17 Nov 2018 23:46:17: Connection terminated
+17 Nov 2018 23:46:17: Accepted connection, fd = 5
+17 Nov 2018 23:46:22: Created stream for input
+17 Nov 2018 23:46:22: File type is 'f4f'
+17 Nov 2018 23:46:22: Saving data to file spool/f_f4f_1542516382.559229
+17 Nov 2018 23:46:22: Created stream for output
+17 Nov 2018 23:46:22: Bytes received: 14
+17 Nov 2018 23:46:22: Connection terminated
+17 Nov 2018 23:46:22: Accepted connection, fd = 5
+17 Nov 2018 23:46:27: Created stream for input
+17 Nov 2018 23:46:27: File type is 'f4f'
+17 Nov 2018 23:46:27: Saving data to file spool/f_f4f_1542516387.569140
+17 Nov 2018 23:46:27: Created stream for output
+17 Nov 2018 23:46:27: Bytes received: 14
+17 Nov 2018 23:46:27: Connection terminated
+17 Nov 2018 23:46:27: Accepted connection, fd = 5
+17 Nov 2018 23:46:32: Created stream for input
+17 Nov 2018 23:46:32: File type is 'f4f'
+17 Nov 2018 23:46:32: Saving data to file spool/f_f4f_1542516392.594195
+17 Nov 2018 23:46:32: Created stream for output
+17 Nov 2018 23:46:32: Bytes received: 14
+17 Nov 2018 23:46:32: Connection terminated
+17 Nov 2018 23:46:32: Accepted connection, fd = 5
+17 Nov 2018 23:46:37: Created stream for input
+17 Nov 2018 23:46:37: File type is 'f4f'
+17 Nov 2018 23:46:37: Saving data to file spool/f_f4f_1542516397.614841
+17 Nov 2018 23:46:37: Created stream for output
+17 Nov 2018 23:46:37: Bytes received: 14
+17 Nov 2018 23:46:37: Connection terminated
+17 Nov 2018 23:46:37: Accepted connection, fd = 5
+17 Nov 2018 23:46:42: Created stream for input
+17 Nov 2018 23:46:42: File type is 'f4f'
+17 Nov 2018 23:46:42: Saving data to file spool/f_f4f_1542516402.633884
+17 Nov 2018 23:46:42: Created stream for output
+17 Nov 2018 23:46:42: Bytes received: 14
+17 Nov 2018 23:46:42: Connection terminated
+17 Nov 2018 23:46:42: Accepted connection, fd = 5
+17 Nov 2018 23:46:47: Created stream for input
+17 Nov 2018 23:46:47: File type is 'f4f'
+17 Nov 2018 23:46:47: Saving data to file spool/f_f4f_1542516407.646096
+17 Nov 2018 23:46:47: Created stream for output
+17 Nov 2018 23:46:47: Bytes received: 14
+17 Nov 2018 23:46:47: Connection terminated

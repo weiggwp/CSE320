@@ -16,6 +16,11 @@ conversion c d cat
 printer bob c
 printer noob b
 print rsrc/ying.txt noob bob
+print rsrc/ying.txt noob bob
+print rsrc/ying.txt noob bob
+print rsrc/ying.txt noob bob
+print rsrc/ying.txt noob bob
+print rsrc/ying.txt
 type f1f
 type f2f
 type f3f

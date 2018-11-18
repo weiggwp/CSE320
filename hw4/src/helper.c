@@ -324,6 +324,7 @@ void jobReport(){
             fprintf(info.outfile,
                 "%s\n",
                 imp_format_job_status(j,(char*)info.buf,BUFSIZE));
+            j=j->other_info;
         }
     }
 void updateJobChange_time(JOB* j){
@@ -369,30 +370,39 @@ void build_graph(Graph *g, int directed,int nvertices)
 void child_handler(int sig) {
     pid_t pid=-1;
     int wstatus;
-    if((pid = waitpid(pid,&wstatus,WNOHANG | WUNTRACED | WUNTRACED))>0){
+    while((pid = waitpid(pid,&wstatus,WNOHANG | WUNTRACED | WCONTINUED))>0){
+        fprintf(stderr, "master %d interupted\n",pid );
         JOB* j = info.q.front;
         while(j!=NULL){
             if(j->pgid ==pid)
                 break;
             j=j->other_info;
         }
+        //paused
+         if(WIFSTOPPED(wstatus)){
+        fprintf(stderr, "master %d PAUSED\n",pid );
+
+            updateJob(j,PAUSED);
+        }
+        //resumed
+        else if(WIFCONTINUED(wstatus)){
+        fprintf(stderr, "master %d resumed\n",pid );
+
+            updateJob(j,RUNNING);
+        }
         //exited normally
-        if(WIFEXITED(wstatus)){
+        else if(WIFEXITED(wstatus)){
+        fprintf(stderr, "master %d COMPLETED\n",pid );
             updateJob(j,COMPLETED);
             j->chosen_printer->busy=0;
-            findJob(j->chosen_printer);
+            // fprintf(stderr, "%s%d\n",j->chosen_printer->name,j->chosen_printer->busy);
+            // findJob(j->chosen_printer);
         }
-        //paused
-        else if(WIFSTOPPED(wstatus))
-            updateJob(j,PAUSED);
-        //resumed
-        else if(WIFCONTINUED(wstatus))
-            updateJob(j,RUNNING);
         //terminated
         else{
             updateJob(j,ABORTED);
             j->chosen_printer->busy=0;
-            findJob(j->chosen_printer);
+            // findJob(j->chosen_printer);
 
         }
     }
@@ -494,12 +504,10 @@ void convert(char* file_name,Conversion* conversion,PRINTER* p,JOB* j){
              if(i>0)
                 readPipe =&pipeList[2*(i-1)];
             // int* writePipe = pipeList[2*(i+1)];
-
             if(pipe(writePipe) < 0) {
                 char* msg = "cannot create pipe\n";
                 errorReport(msg,1);
             }
-
             fprintf(stderr,"%d:%d\n",path[i],path[i+1] );
             c = &info.conversionMatrix[path[i]][path[i+1]];
             //pipe takes array of 2 int, [0] for reading ,[1] for writing
@@ -571,11 +579,12 @@ void convert(char* file_name,Conversion* conversion,PRINTER* p,JOB* j){
             }
 
         }
-        j->pgid = masterpid;
-        sigprocmask(SIG_SETMASK, &prev_all, NULL);
+
         _exit(0);
 
     }
+    j->pgid = masterpid;
+        sigprocmask(SIG_SETMASK, &prev_all, NULL);
 }
 void runJob(JOB *j){
 
@@ -640,7 +649,8 @@ void runJob(JOB *j){
 void findJob(PRINTER*p){
     JOB* j = info.q.front;
     while(j!=NULL){
-        if(j->eligible_printers & (0x1 << p->id)){
+        if(j->status ==QUENED && j->eligible_printers & (0x1 << p->id)){
+            fprintf(stderr, "eligible_printers%d\n",p->id );
             runJob(j);
         }
 
@@ -698,6 +708,7 @@ int jobCommand(int jobID,int command){
         errorReport(msg,0);
         return -1;
     }
+    fprintf(stderr, "pausing:%d:%s:%d\n",j->jobid,j->file_name,j->pgid );
     kill(command,j->pgid);
     return 1;
 }
@@ -793,7 +804,7 @@ int excuteCommand(char* line)
     // The jobs command prints a similar status report for the print jobs that have
     // been queued
     else if(wordCount ==1 && strcmp(wordList[0],"jobs")==0 ){
-        deqOldJob();
+        // deqOldJob();
         jobReport();
     }
     // The print command sets up a job for printing file_name.
