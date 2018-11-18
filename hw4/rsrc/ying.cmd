@@ -15,4 +15,5 @@ conversion c b cat
 conversion b a cat
 printer wei a
 printer ying a
+enable wei
 print rsrc/testBFS.bat wei

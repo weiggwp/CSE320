@@ -368,10 +368,11 @@ void build_graph(Graph *g, int directed,int nvertices)
 
 
 void child_handler(int sig) {
-    pid_t pid=-1;
+    pid_t pid;
     int wstatus;
-    while((pid = waitpid(pid,&wstatus,WNOHANG | WUNTRACED | WCONTINUED))>0){
-        fprintf(stderr, "master %d interupted\n",pid );
+    printf("signal\n");
+    while((pid = waitpid(-1,&wstatus, WNOHANG|WUNTRACED | WCONTINUED))>0){
+        fprintf(stderr, "master %d interrupted\n",pid );
         JOB* j = info.q.front;
         while(j!=NULL){
             if(j->pgid ==pid)
@@ -380,7 +381,7 @@ void child_handler(int sig) {
         }
         //paused
          if(WIFSTOPPED(wstatus)){
-        fprintf(stderr, "master %d PAUSED\n",pid );
+            fprintf(stderr, "master %d PAUSED\n",pid );
 
             updateJob(j,PAUSED);
         }
@@ -396,10 +397,12 @@ void child_handler(int sig) {
             updateJob(j,COMPLETED);
             j->chosen_printer->busy=0;
             // fprintf(stderr, "%s%d\n",j->chosen_printer->name,j->chosen_printer->busy);
-            // findJob(j->chosen_printer);
+            findJob(j->chosen_printer);
         }
         //terminated
         else{
+        fprintf(stderr, "master %d terminated\n",pid );
+
             updateJob(j,ABORTED);
             j->chosen_printer->busy=0;
             // findJob(j->chosen_printer);
@@ -432,24 +435,41 @@ void directPrint(int in_fd,int out_fd){
     execvp("cat",args);
     _exit(1);
 }
+void sig(int sig)
+{
+    printf("it went in here\n");
+}
 void convert(char* file_name,Conversion* conversion,PRINTER* p,JOB* j){
 
     //install handler
     signal(SIGCHLD, child_handler);
-
+    //signal(SIGSTOP,sig);
     //block all signals
-    sigset_t mask_all, prev_all;
-    sigfillset(&mask_all);
-    sigprocmask(SIG_BLOCK, &mask_all, &prev_all);
+    // struct  sigaction sa;
+    // sa.sa_handler = child_handler;
+    // sigemptyset(&sa.sa_mask);
+    // sigaction(SIGCHLD,&sa,0);
+    sigset_t mask_all;
+    sigemptyset(&mask_all);
+    // sigfillset(&mask_all);
+    sigaddset(&mask_all,SIGCHLD);
+    sigprocmask(SIG_BLOCK, &mask_all, NULL);
     int masterpid;
     if ((masterpid = fork()) < 0){
         char* msg = "fork master error\n";
         errorReport(msg,1);
     }
-    setpgid(getpid(),getpid());
 
     /* master Child */
     if (masterpid == 0) {
+        signal(SIGCHLD,SIG_DFL);
+        setpgid(getpid(),getpid());
+        // sigset_t empty;
+        // sigemptyset(&empty);
+        // sigprocmask(SIG_SETMASK, &empty, NULL);
+
+        fprintf(stderr, "master started:PID:%d,PGID:%d\n",getpgrp(),getpid());
+        sleep(2);
 
         int out_fd = imp_connect_to_printer(p, PRINTER_NORMAL);
         if(out_fd<0){
@@ -492,7 +512,7 @@ void convert(char* file_name,Conversion* conversion,PRINTER* p,JOB* j){
 
         //ptr to pipe for swapping purpose
 
-        fprintf(stderr, "%s%d\n","master",nchildren );
+        // fprintf(stderr, "%s%d\n","master",nchildren );
         int * path = conversion->path;
         Conversion* c;
         // pipe(pipeList);
@@ -563,28 +583,22 @@ void convert(char* file_name,Conversion* conversion,PRINTER* p,JOB* j){
             /* Parent */
             pid_t wpid;
             if((wpid=wait(&child_status))>0){
-                fprintf(stderr, "wpid:%d(should be %d:%d)\n",wpid,i,pid[i] );
+                // fprintf(stderr, "wpid:%d(should be %d:%d)\n",wpid,i,pid[i] );
                 if (WIFEXITED(child_status))
-
                     printf("Child %d terminated with exit status %d\n",
                         wpid, WEXITSTATUS(child_status));
                 else{
                     char* msg = "children terminate abnormally\n";
                     errorReport(msg,1);
                     // printf("Child %d terminate abnormally\n", wpid);
-
                 }
-
-
             }
-
         }
-
         _exit(0);
 
     }
     j->pgid = masterpid;
-        sigprocmask(SIG_SETMASK, &prev_all, NULL);
+    sigprocmask(SIG_UNBLOCK, &mask_all, NULL);
 }
 void runJob(JOB *j){
 
@@ -601,7 +615,7 @@ void runJob(JOB *j){
             PRINTER* p = &info.printerList[i];
 
             // if not busy and theres a path
-            if(!p->busy){
+            if(!p->busy && p->enabled){
                 int toTypeID = findTypeID(p->type);
                 //bfs to find path
                 Conversion *c = &info.conversionMatrix[typeID][toTypeID];
@@ -649,8 +663,8 @@ void runJob(JOB *j){
 void findJob(PRINTER*p){
     JOB* j = info.q.front;
     while(j!=NULL){
-        if(j->status ==QUENED && j->eligible_printers & (0x1 << p->id)){
-            fprintf(stderr, "eligible_printers%d\n",p->id );
+        if(j->status ==QUEUED && j->eligible_printers & (0x1 << p->id)){
+            // fprintf(stderr, "eligible_printers%d\n",p->id );
             runJob(j);
         }
 
@@ -690,12 +704,11 @@ void print(char* wordList[],int wordCount)
     runJob(j);
 
 }
-
-int jobCommand(int jobID,int command){
+JOB* getJobFromID(int jobID){
     if(jobID>=info.jobCount){
         char* msg = "invalid jobID";
         errorReport(msg,0);
-        return -1;
+        return NULL;
     }
     JOB* j = info.q.front;
     while(j!=NULL){
@@ -706,12 +719,111 @@ int jobCommand(int jobID,int command){
     if(j==NULL){
         char* msg = "invalid jobID";
         errorReport(msg,0);
+        return NULL;
+    }
+    return j;
+}
+
+int jobKill(int id){
+    JOB*j = getJobFromID(id);
+    fprintf(stderr, "Cancel job:%d\n",id );
+    char * s = imp_format_job_status(j, (char*)info.buf, BUFSIZE);
+    fprintf(stderr, "%s\n",s );
+    if(j->status==ABORTED){
+        char* msg = "job already ABORTED\n";
+        errorReport(msg,0);
         return -1;
     }
-    fprintf(stderr, "pausing:%d:%s:%d\n",j->jobid,j->file_name,j->pgid );
-    kill(command,j->pgid);
+    if(j->status==QUEUED){
+        j->status = ABORTED;
+    }
+    else if(j->status == PAUSED){
+        fprintf(stderr, "kiling paused process:pgid:%d\n",j->pgid);
+        kill(j->pgid,SIGCONT);
+        kill(j->pgid,SIGTERM);
+    }
+    else{
+        fprintf(stderr, "kiling running process:pgid:%d\n",j->pgid);
+        kill(j->pgid,SIGTERM);
+    }
     return 1;
+
 }
+int jobPause(int id){
+    JOB*j = getJobFromID(id);
+    if(j->status==QUEUED){
+        char* msg = "cannot pause a unstarted job\n";
+        errorReport(msg,0);
+        return -1;
+    }
+    if(j->status==ABORTED){
+        char* msg = "job already ABORTED\n";
+        errorReport(msg,0);
+        return -1;
+    }
+    if(j->status==PAUSED){
+        char* msg = "job already PAUSED\n";
+        errorReport(msg,0);
+        return -1;
+    }
+    else{
+        fprintf(stderr, "pausing:%d:%s:%d\n",j->jobid,j->file_name,j->pgid);
+        kill(j->pgid,SIGSTOP);
+    }
+    return 1;
+
+}
+int jobCont(int id){
+    JOB*j = getJobFromID(id);
+    if(j->status==QUEUED){
+        char* msg = "job not unstarted\n";
+        errorReport(msg,0);
+        return -1;
+    }
+    if(j->status==ABORTED){
+        char* msg = "job already ABORTED\n";
+        errorReport(msg,0);
+        return -1;
+    }
+    if(j->status==RUNNING){
+        char* msg = "job already RUNNING\n";
+        errorReport(msg,0);
+        return -1;
+    }
+    else{
+        fprintf(stderr, "resuming:%d:%s:%d\n",j->jobid,j->file_name,j->pgid);
+        kill(j->pgid,SIGCONT);
+    }
+    return 1;
+
+}
+// int jobCommand(int jobID,int command){
+//     if(jobID>=info.jobCount){
+//         char* msg = "invalid jobID";
+//         errorReport(msg,0);
+//         return -1;
+//     }
+//     JOB* j = info.q.front;
+//     while(j!=NULL){
+//         if(j->jobid==jobID)
+//             break;
+//         j=j->other_info;
+//     }
+//     if(j==NULL){
+//         char* msg = "invalid jobID";
+//         errorReport(msg,0);
+//         return -1;
+//     }
+//     if(command == SIGTERM){
+//         jobKill(j);
+//     }
+//     if(command == SIGSTOP){
+//         jobPause(j);
+//     }
+//     if(command == SIGCONT)
+//         jobCont(j);
+//     return 1;
+// }
 int printerCommand(int printerID,int enable){
     if(printerID>=info.printerCount){
         char* msg = "invalid printerID";
@@ -722,11 +834,14 @@ int printerCommand(int printerID,int enable){
     return 1;
 }
 void deqOldJob(){
+    //remove job from the queue after 1 min of completion or abortion
+    fprintf(stderr, "checking job end time\n");
     JOB* j = info.q.front;
     JOB* prev_j = NULL;
     while(j!=NULL){
-        if((j->status==COMPLETED||j->status==ABORTED)
+        if((j->status==COMPLETED || j->status==ABORTED)
          && j->change_time.tv_sec-j->creation_time.tv_sec >=60){
+            fprintf(stderr, "deqing\n" );
             if(prev_j==NULL){
                 if(info.q.front==info.q.rear)
                     info.q.front=info.q.rear=NULL;
@@ -804,7 +919,7 @@ int excuteCommand(char* line)
     // The jobs command prints a similar status report for the print jobs that have
     // been queued
     else if(wordCount ==1 && strcmp(wordList[0],"jobs")==0 ){
-        // deqOldJob();
+        deqOldJob();
         jobReport();
     }
     // The print command sets up a job for printing file_name.
@@ -820,13 +935,17 @@ int excuteCommand(char* line)
         print(wordList,wordCount);
     }
     else if(wordCount ==2 && strcmp(wordList[0],"cancel")==0  ){
-        jobCommand(atoi(wordList[1]),SIGTERM);
+        fprintf(stderr, "canceling:%d\n",atoi(wordList[1]));
+        jobKill(atoi(wordList[1]));
+        // jobCommand(atoi(wordList[1]),SIGTERM);
     }
     else if(wordCount ==2 && strcmp(wordList[0],"pause")==0  ){
-        jobCommand(atoi(wordList[1]),SIGSTOP);
+        jobPause(atoi(wordList[1]));
+        // jobCommand(atoi(wordList[1]),SIGSTOP);
     }
     else if(wordCount ==2 && strcmp(wordList[0],"resume")==0  ){
-        jobCommand(atoi(wordList[1]),SIGCONT);
+        jobCont(atoi(wordList[1]));
+        // jobCommand(atoi(wordList[1]),SIGCONT);
     }
     else if(wordCount ==2 && strcmp(wordList[0],"disable")==0  ){
         printerCommand(atoi(wordList[1]),0);
