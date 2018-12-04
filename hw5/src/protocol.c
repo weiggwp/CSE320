@@ -57,19 +57,25 @@
  // * @return  0 in case of successful transmission, -1 otherwise.  In the
  // *   latter case, errno is set to indicate the error.
 
+
 int proto_send_packet(int fd, XACTO_PACKET *pkt, void *data)
 {
+    XACTO_PACKET newPkt = {
+        pkt->type,
+        pkt->status,
+        pkt->null,
+        htonl(pkt->size),
+        htonl(pkt->timestamp_sec),
+        htonl(pkt->timestamp_nsec)
+    };
 
-    pkt->size           = htonl(pkt->size);
-    pkt->timestamp_sec  = htonl(pkt->timestamp_sec);
-    pkt->timestamp_nsec = htonl(pkt->timestamp_nsec);
 
     //errno set by rio_writen if error, no need to do it ourselves
-    if( rio_writen(fd,pkt,sizeof(XACTO_PACKET)) !=sizeof(XACTO_PACKET))
+    if( rio_writen(fd,&newPkt,sizeof(XACTO_PACKET)) !=sizeof(XACTO_PACKET))
         return -1;
 
     if(pkt->size){
-        if(rio_writen(fd,data,pkt->size) != sizeof(pkt->size))
+        if(rio_writen(fd,data,pkt->size) != pkt->size)
             return -1;
     }
     return 0;
@@ -92,6 +98,7 @@ int proto_send_packet(int fd, XACTO_PACKET *pkt, void *data)
  * responsibility for freeing the storage.
  */
 int proto_recv_packet(int fd, XACTO_PACKET *pkt, void **datap){
+
     debug("enter proto_recv_packet");
     XACTO_PACKET packet;
     if(rio_readn( fd, &packet, sizeof(XACTO_PACKET)) != sizeof(XACTO_PACKET))

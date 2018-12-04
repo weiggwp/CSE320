@@ -23,7 +23,7 @@ typedef struct client_registry {
 
 pthread_mutex_t lock;
 pthread_mutex_t lock2;
-
+//
 // volatile int empty;
 volatile int num_client;
 sem_t empty;

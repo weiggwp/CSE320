@@ -1,29 +1,76 @@
-server_suite/00_start_server
-Starting server...pid = 18031
-DEBUG: src/client_registry.c:creg_init:40 Initialize client registry
 DEBUG: src/transaction.c:trans_init:15 Initialize transaction manager
 DEBUG: src/store.c:store_init:16 Initialize object store
-server_suite/01_connect
-Connected to server localhost:9999
-DEBUG: src/server.c:xacto_client_service:40 [6] Starting client service
-DEBUG: src/client_registry.c:creg_register:68 Register client 6 (total connected: 1)
+DEBUG: src/server.c:xacto_client_service:40 [4] Starting client service
 DEBUG: src/transaction.c:trans_create:42 Create new transaction 0
 DEBUG: src/transaction.c:trans_ref:70 Increase ref count on transaction 0 (0 -> 1) for newly created transaction
-DEBUG: src/protocol.c:proto_recv_packet:88 EOF on fd: 6
-DEBUG: src/server.c:xacto_client_service:117 [6] Ending client service
-DEBUG: src/transaction.c:trans_abort:264 Try to abort transaction 0
-DEBUG: src/transaction.c:trans_abort:274 Transaction 0 has aborted
+DEBUG: src/protocol.c:proto_recv_packet:125 enter proto_recv_packet
+DEBUG: src/server.c:xacto_client_service:61 [4] PUT packet received
+DEBUG: src/protocol.c:proto_recv_packet:125 enter proto_recv_packet
+DEBUG: src/server.c:xacto_client_service:74 [4] Received key, size 1
+DEBUG: src/protocol.c:proto_recv_packet:125 enter proto_recv_packet
+DEBUG: src/server.c:xacto_client_service:91 [4] Received value, size 1
+DEBUG: src/data.c:blob_create:26 Create blob with content 0x7f9954000940, size 1 -> 0x7f9954000980
+DEBUG: src/data.c:blob_ref:52 Increase reference count on blob 0x7f9954000980 [t] (0 -> 1) for newly created blob
+DEBUG: src/data.c:key_create:123 Create key from blob 0x7f9954000980 -> 0x7f9954000a10 [t]
+DEBUG: src/data.c:blob_create:26 Create blob with content 0x7f9954000960, size 1 -> 0x7f9954000a30
+DEBUG: src/data.c:blob_ref:52 Increase reference count on blob 0x7f9954000a30 [t] (0 -> 1) for newly created blob
+DEBUG: src/store.c:store_put:208 Put mapping (key=0x7f9954000a10 [t] -> value=0x7f9954000a30 [t]) in store for transaction 0
+DEBUG: src/store.c:find_map_entry:68 Create new map entry for key 0x7f9954000a10 [t] at table index 4
+DEBUG: src/store.c:add_version:90 Trying to put version in map entry for key 0x7f9954000a10 [t]
+DEBUG: src/data.c:version_create:173 Create version of blob 0x7f9954000a30 [t] for transaction 0 -> 0x7f9954000ae0
+DEBUG: src/transaction.c:trans_ref:70 Increase ref count on transaction 0 (1 -> 2) as creator of version
+DEBUG: src/store.c:add_version:172 Add new version for key 0x7f9954000a10 [t]
+DEBUG: src/store.c:add_version:181 No previous version
+CONTENTS OF STORE:
+0:
+1:
+2:
+3:
+4:  {key: 0x7f9954000a10 [t], versions: {creator=0 (pending), blob=0x7f9954000a30 [t]}}
+5:
+6:
+7:
+TRANSACTIONS:
+[id=0, status=0, refcnt=2]
+DEBUG: src/protocol.c:proto_recv_packet:125 enter proto_recv_packet
+DEBUG: src/server.c:xacto_client_service:95 [4] GET packet received
+DEBUG: src/protocol.c:proto_recv_packet:125 enter proto_recv_packet
+DEBUG: src/server.c:xacto_client_service:108 [4] Received key, size 1
+DEBUG: src/data.c:blob_create:26 Create blob with content 0x7f9954000b10, size 1 -> 0x7f9954000b30
+DEBUG: src/data.c:blob_ref:52 Increase reference count on blob 0x7f9954000b30 [t] (0 -> 1) for newly created blob
+DEBUG: src/data.c:key_create:123 Create key from blob 0x7f9954000b30 -> 0x7f9954000bc0 [t]
+DEBUG: src/store.c:store_get:234 Get mapping of key=0x7f9954000bc0 [t] in store for transaction 0
+DEBUG: src/store.c:find_map_entry:61 Matching entry exists, disposing of redundant key 0x7f9954000bc0 [t]
+DEBUG: src/data.c:key_dispose:135 Dispose of key 0x7f9954000bc0 [t]
+DEBUG: src/data.c:blob_unref:69 Decrease reference count on blob 0x7f9954000b30 [t] (1 -> 0) for blob in key
+DEBUG: src/data.c:blob_unref:74 Free blob 0x7f9954000b30 [t]
+DEBUG: src/store.c:add_version:90 Trying to get version in map entry for key 0x7f9954000a10 [t]
+DEBUG: src/store.c:add_version:96 Examine version 0x7f9954000ae0 for key 0x7f9954000a10 [t]
+DEBUG: src/data.c:blob_ref:52 Increase reference count on blob 0x7f9954000a30 [t] (1 -> 2) for new version
+DEBUG: src/data.c:version_create:173 Create version of blob 0x7f9954000a30 [t] for transaction 0 -> 0x7f9954000be0
+DEBUG: src/transaction.c:trans_ref:70 Increase ref count on transaction 0 (2 -> 3) as creator of version
+DEBUG: src/store.c:add_version:161 Replace existing version for key 0x7f9954000a10 [t]
+DEBUG: src/store.c:add_version:162 tp=0x7f99540008c0(0), creator=0x7f99540008c0(0)
+DEBUG: src/data.c:version_dispose:188 Dispose of version 0x7f9954000ae0
+DEBUG: src/transaction.c:trans_unref:90 Decrease ref count on transaction 0 (3 -> 2) as creator of version
+DEBUG: src/data.c:blob_unref:69 Decrease reference count on blob 0x7f9954000a30 [t] (2 -> 1) for blob in version
+DEBUG: src/data.c:blob_ref:52 Increase reference count on blob 0x7f9954000a30 [t] (1 -> 2) for returning from store_get
+DEBUG: src/server.c:xacto_get:202 [4] Value is 0x7f9954000a30 [t]
+DEBUG: src/data.c:blob_unref:69 Decrease reference count on blob 0x7f9954000a30 [t] (2 -> 1) obtained from store_get
+CONTENTS OF STORE:
+0:
+1:
+2:
+3:
+4:  {key: 0x7f9954000a10 [t], versions: {creator=0 (pending), blob=0x7f9954000a30 [t]}}
+5:
+6:
+7:
+TRANSACTIONS:
+[id=0, status=0, refcnt=2]
+DEBUG: src/protocol.c:proto_recv_packet:125 enter proto_recv_packet
+DEBUG: src/server.c:xacto_client_service:117 [4] Ending client service
+DEBUG: src/transaction.c:trans_abort:265 Try to abort transaction 0
+DEBUG: src/transaction.c:trans_abort:275 Transaction 0 has aborted
 DEBUG: src/transaction.c:release_dependents:174 Release 0 waiters dependent on transaction 0
-DEBUG: src/transaction.c:trans_unref:90 Decrease ref count on transaction 0 (1 -> 0) for aborting transaction
-DEBUG: src/transaction.c:trans_unref:93 Free transaction 0
-DEBUG: src/client_registry.c:creg_unregister:85 Unregister client 6 (total connected: 0)
-DEBUG: src/main.c:main:110 thread started
-Sending SIGHUP to server pid 18031
-DEBUG: src/main.c:terminate:129 Waiting for service threads to terminate...
-DEBUG: src/main.c:terminate:131 All service threads terminated.
-DEBUG: src/client_registry.c:creg_fini:55 Finalize client registry
-DEBUG: src/transaction.c:trans_fini:24 Finalize transaction manager
-DEBUG: src/store.c:store_fini:26 Finalize object store
-DEBUG: src/main.c:terminate:138 Xacto server terminating
-Server wait() returned = 0x0
-[====] Synthesis: Tested: 2 | Passing: 2 | Failing: 0 | Crashing: 0
+DEBUG: src/transaction.c:trans_unref:90 Decrease ref count on transaction 0 (2 -> 1) for aborting transaction
