@@ -1,0 +1,29 @@
+server_suite/00_start_server
+Starting server...pid =
+DEBUG: src/client_registry.c:creg_init:40 Initialize client registry
+DEBUG: src/transaction.c:trans_init:15 Initialize transaction manager
+DEBUG: src/store.c:store_init:16 Initialize object store
+server_suite/01_connect
+Connected to server localhost:9999
+DEBUG: src/main.c:main:110 thread started
+DEBUG: src/server.c:xacto_client_service:40 [6] Starting client service
+DEBUG: src/client_registry.c:creg_register:68 Register client 6 (total connected: 1)
+DEBUG: src/transaction.c:trans_create:42 Create new transaction 0
+DEBUG: src/transaction.c:trans_ref:70 Increase ref count on transaction 0 (0 -> 1) for newly created transaction
+DEBUG: src/protocol.c:proto_recv_packet:88 EOF on fd: 6
+DEBUG: src/server.c:xacto_client_service:117 [6] Ending client service
+DEBUG: src/transaction.c:trans_abort:264 Try to abort transaction 0
+DEBUG: src/transaction.c:trans_abort:274 Transaction 0 has aborted
+DEBUG: src/transaction.c:release_dependents:174 Release 0 waiters dependent on transaction 0
+DEBUG: src/transaction.c:trans_unref:90 Decrease ref count on transaction 0 (1 -> 0) for aborting transaction
+DEBUG: src/transaction.c:trans_unref:93 Free transaction 0
+DEBUG: src/client_registry.c:creg_unregister:85 Unregister client 6 (total connected: 0)
+Sending SIGHUP to server pid
+DEBUG: src/main.c:terminate:129 Waiting for service threads to terminate...
+DEBUG: src/main.c:terminate:131 All service threads terminated.
+DEBUG: src/client_registry.c:creg_fini:55 Finalize client registry
+DEBUG: src/transaction.c:trans_fini:24 Finalize transaction manager
+DEBUG: src/store.c:store_fini:26 Finalize object store
+DEBUG: src/main.c:terminate:138 Xacto server terminating
+Server wait() returned = 0x0
+[====] Synthesis: Tested: 2 | Passing: 2 | Failing: 0 | Crashing: 0

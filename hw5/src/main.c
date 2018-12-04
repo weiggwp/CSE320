@@ -106,8 +106,8 @@ int main(int argc, char* argv[]){
         clientlen=sizeof(struct sockaddr_storage);
         connfdp = Malloc(sizeof(int));
         *connfdp = Accept(listenfd,(SA *) &clientaddr, &clientlen);
+        // debug("thread started");
         Pthread_create(&tid, NULL, xacto_client_service, connfdp);
-        debug("thread started");
     }
 
 

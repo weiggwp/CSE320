@@ -65,11 +65,11 @@ int proto_send_packet(int fd, XACTO_PACKET *pkt, void *data)
     pkt->timestamp_nsec = htonl(pkt->timestamp_nsec);
 
     //errno set by rio_writen if error, no need to do it ourselves
-    if( rio_writen(fd,pkt,sizeof(XACTO_PACKET)) <0)
+    if( rio_writen(fd,pkt,sizeof(XACTO_PACKET)) !=sizeof(XACTO_PACKET))
         return -1;
 
     if(pkt->size){
-        if(rio_writen(fd,data,pkt->size) < 0)
+        if(rio_writen(fd,data,pkt->size) != sizeof(pkt->size))
             return -1;
     }
     return 0;
@@ -93,14 +93,16 @@ int proto_send_packet(int fd, XACTO_PACKET *pkt, void *data)
  */
 int proto_recv_packet(int fd, XACTO_PACKET *pkt, void **datap){
     debug("enter proto_recv_packet");
-    if(rio_readn( fd, (char*)pkt, sizeof(XACTO_PACKET)) != sizeof(XACTO_PACKET))
+    XACTO_PACKET packet;
+    if(rio_readn( fd, &packet, sizeof(XACTO_PACKET)) != sizeof(XACTO_PACKET))
         return -1;
+    *pkt = packet;
     pkt->size           = ntohl(pkt->size);
     pkt->timestamp_sec  = ntohl(pkt->timestamp_sec);
     pkt->timestamp_nsec = ntohl(pkt->timestamp_nsec);
     if(pkt->size){
         // char* buf = *(char**)datap;
-        char* buf= malloc(pkt->size+1);
+        char* buf= calloc(pkt->size+1,sizeof(char));
         if( rio_readn( fd, buf, pkt->size) !=pkt->size)
             return -1;
         *(char**)datap = buf;
