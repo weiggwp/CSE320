@@ -6,7 +6,6 @@
 #include <string.h>
 #include <math.h>
 #include "data.h"
-
 /*
  * Create a blob with given content and size.
  * The content is copied, rather than shared with the caller.
@@ -185,7 +184,9 @@ VERSION *version_create(TRANSACTION *tp, BLOB *bp)
     VERSION* version = malloc(sizeof(VERSION));
 
     version->creator = tp;
-    version->blob = bp;
+    trans_ref(tp,NULL);
+
+    version->blob = bp;//FIXME: ref?
     version->next = NULL;
     version->prev = NULL;
     return version;

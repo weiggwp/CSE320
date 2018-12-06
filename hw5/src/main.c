@@ -1,12 +1,12 @@
 #include <getopt.h>
 #include <string.h>
 
+#include "helper.h"
 #include "csapp.h"
 #include "debug.h"
 #include "client_registry.h"
 #include "transaction.h"
 #include "store.h"
-#include "helper.h"
 #include "server.h"
 
 static void terminate(int status);

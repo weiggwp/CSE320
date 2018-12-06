@@ -112,7 +112,12 @@ int proto_recv_packet(int fd, XACTO_PACKET *pkt, void **datap){
         char* buf= calloc(pkt->size+1,sizeof(char));
         if( rio_readn( fd, buf, pkt->size) !=pkt->size)
             return -1;
+
+
         *(char**)datap = buf;
+        // debug("****%s*****",buf);
+        // debug("****%p:%s*****",*datap,*(char**)datap);
+
     }
     return 0;
 }

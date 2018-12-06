@@ -1,6 +1,51 @@
-==18584== Memcheck, a memory error detector
-==18584== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
-==18584== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
-==18584== Command: bin/xacto -p 9999
-==18584== Parent PID: 18572
-==18584== 
+==30828== Memcheck, a memory error detector
+==30828== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==30828== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==30828== Command: bin/xacto -p 9999
+==30828== Parent PID: 30816
+==30828== 
+==30828== 
+==30828== FILE DESCRIPTORS: 8 open at exit.
+==30828== Open AF_INET socket 5: 0.0.0.0:9999 <-> unbound
+==30828==    at 0x515F5A7: socket (syscall-template.S:84)
+==30828==    by 0x403DDE: open_listenfd (csapp.c:1015)
+==30828==    by 0x403F30: Open_listenfd (csapp.c:1062)
+==30828==    by 0x40233B: main (main.c:102)
+==30828== 
+==30828== Open file descriptor 13: /dev/shm/bxf_arena_30814 (deleted)
+==30828==    <inherited from parent>
+==30828== 
+==30828== Open file descriptor 11: /dev/shm/bxf_arena_30814 (deleted)
+==30828==    <inherited from parent>
+==30828== 
+==30828== Open file descriptor 4:
+==30828==    <inherited from parent>
+==30828== 
+==30828== Open file descriptor 3: /home/student/weichen8/hw5/valgrind.out
+==30828==    <inherited from parent>
+==30828== 
+==30828== Open file descriptor 2: /dev/pts/4
+==30828==    <inherited from parent>
+==30828== 
+==30828== Open file descriptor 1: /dev/pts/4
+==30828==    <inherited from parent>
+==30828== 
+==30828== Open file descriptor 0:
+==30828==    <inherited from parent>
+==30828== 
+==30828== 
+==30828== HEAP SUMMARY:
+==30828==     in use at exit: 4 bytes in 1 blocks
+==30828==   total heap usage: 20 allocs, 19 frees, 8,978 bytes allocated
+==30828== 
+==30828== LEAK SUMMARY:
+==30828==    definitely lost: 0 bytes in 0 blocks
+==30828==    indirectly lost: 0 bytes in 0 blocks
+==30828==      possibly lost: 0 bytes in 0 blocks
+==30828==    still reachable: 4 bytes in 1 blocks
+==30828==         suppressed: 0 bytes in 0 blocks
+==30828== Reachable blocks (those to which a pointer was found) are not shown.
+==30828== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==30828== 
+==30828== For counts of detected and suppressed errors, rerun with: -v
+==30828== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
