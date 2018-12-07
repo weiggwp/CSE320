@@ -28,6 +28,13 @@ int Proto_recv_packet(int fd,XACTO_PACKET* pkt,char** key){
  * the client connection.  This pointer must be freed once the file
  * descriptor has been retrieved.
  */
+BLOB* create_blob(char* key,XACTO_PACKET* pkt){
+    return blob_create(key,pkt->size);
+}
+KEY* create_key(char* key,XACTO_PACKET* pkt){
+    BLOB* blob = create_blob(key,pkt);
+    return key_create(blob);
+}
 void *xacto_client_service(void *arg)
 {
     // arg is a pointer to the integer file descriptor to be used
@@ -71,14 +78,19 @@ void *xacto_client_service(void *arg)
             //get key
             if(!Proto_recv_packet(fd, pkt, key)) break;
             //get value
-            if(!Proto_recv_packet(fd, pkt, value)) break;
             //create key
-            key[strlen(*key)] = '\0';
-            BLOB* blob = blob_create(*key,strlen(*key)+1);
-            KEY* k = key_create(blob);
+            //(*key)[pkt->size] = '\0';
+
+            KEY* k = create_key(*key,pkt);
+            // BLOB* blob = blob_create(*key,pkt->size);
+            // KEY* k = key_create(blob);
+
+            if(!Proto_recv_packet(fd, pkt, value)) break;
             //create content
-            key[strlen(*key)] = '\0';
-            BLOB* content = blob_create(*value,strlen(*value)+1);
+            // value[strlen(*value)] = '\0';
+            BLOB* content = create_blob(*value,pkt);
+            // blob_create(*value,pkt->size);
+
             TRANS_STATUS transtatus = store_put(transaction,k,content);
             store_show();
             if(!content)
@@ -97,12 +109,11 @@ void *xacto_client_service(void *arg)
 
             //get key
             if(!Proto_recv_packet(fd, pkt, key)) break;
-            debug("****key:%s********",*key);
 
             //create KEY
-            key[strlen(*key)] = '\0';
-            BLOB* blob =blob_create(*key,strlen(*key)+1);
-            KEY* k = key_create(blob);
+            // (*key)[strlen(*key)] = '\0';
+            // BLOB* blob =blob_create(*key,strlen(*key)+1);
+            KEY* k = create_key(*key,pkt);
             // char value2[1024];
             // content storage
             BLOB* content =NULL;
@@ -121,14 +132,18 @@ void *xacto_client_service(void *arg)
             else{
                 //reply with good status
                 if(!reply(XACTO_REPLY_PKT,transtatus,0,fd,pkt,NULL)) break;
+
                 if(content){
-                    if(!reply(XACTO_DATA_PKT,transtatus,content->size-1,fd,pkt,content->content)) break;
+                    if(!reply(XACTO_DATA_PKT,transtatus,content->size,fd,pkt,content->content)) break;
                 }
-                else
+                else{
+                    debug("****status:%d",transtatus);
                     if(!reply(XACTO_DATA_PKT,transtatus,0,fd,pkt,NULL)) break;
+                }
             }
-            if(!content)
+            if(content)
                 blob_unref(content,"send to client done");//FIXME
+
         }
         else if(pkt->type ==XACTO_COMMIT_PKT){
             TRANS_STATUS transtatus =trans_commit(transaction);
@@ -188,12 +203,20 @@ int send_success(int res)
     return 0;
 
 }
+
 int reply(XACTO_PACKET_TYPE type,TRANS_STATUS transtatus,size_t payload_size,int fd, XACTO_PACKET* pkt,char* content)
 {
+
+    struct timespec current_time;
+    clock_gettime(CLOCK_MONOTONIC,&current_time);
+    pkt->timestamp_sec = current_time.tv_sec;
+    pkt->timestamp_nsec = current_time.tv_nsec;
+
     pkt->type = type;
     pkt->status = transtatus;
     pkt->null = (payload_size==0)?1:0;
     pkt->size = payload_size;
+    debug("payload_size:%d,NULL:%d",pkt->size,pkt->null);
     int res = proto_send_packet(fd,pkt,content);
 
     if(send_success(res))

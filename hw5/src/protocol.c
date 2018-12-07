@@ -60,23 +60,26 @@
 
 int proto_send_packet(int fd, XACTO_PACKET *pkt, void *data)
 {
-    XACTO_PACKET newPkt = {
-        pkt->type,
-        pkt->status,
-        pkt->null,
-        htonl(pkt->size),
-        htonl(pkt->timestamp_sec),
-        htonl(pkt->timestamp_nsec)
-    };
+    debug("sending packets");
+    int size = pkt->size;
+    pkt->size = htonl(pkt->size);
+    pkt->timestamp_sec = htonl(pkt->timestamp_sec);
+    pkt->timestamp_nsec = htonl(pkt->timestamp_nsec);
 
+    // XACTO_PACKET newPkt = {
+    //     pkt->type,
+    //     pkt->status,
+    //     pkt->null,
+    // };
 
     //errno set by rio_writen if error, no need to do it ourselves
-    if( rio_writen(fd,&newPkt,sizeof(XACTO_PACKET)) !=sizeof(XACTO_PACKET))
+    if( rio_writen(fd,pkt,sizeof(XACTO_PACKET)) !=sizeof(XACTO_PACKET))
         return -1;
 
-    if(pkt->size){
-        if(rio_writen(fd,data,pkt->size) != pkt->size)
+    if(size){
+        if(rio_writen(fd,data,size) != size)
             return -1;
+        free(data);
     }
     return 0;
 }
@@ -109,9 +112,10 @@ int proto_recv_packet(int fd, XACTO_PACKET *pkt, void **datap){
     pkt->timestamp_nsec = ntohl(pkt->timestamp_nsec);
     if(pkt->size){
         // char* buf = *(char**)datap;
-        char* buf= calloc(pkt->size+1,sizeof(char));
-        if( rio_readn( fd, buf, pkt->size) !=pkt->size)
+        char* buf= calloc(1,pkt->size+1);
+        if( rio_readn(fd, buf, pkt->size) !=pkt->size)
             return -1;
+        buf[pkt->size]= '\0';
 
 
         *(char**)datap = buf;

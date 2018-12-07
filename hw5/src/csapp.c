@@ -750,10 +750,11 @@ ssize_t rio_readn(int fd, void *usrbuf, size_t n)
 {
     size_t nleft = n;
     ssize_t nread;
+    size_t totalread = 0;
     char *bufp = usrbuf;
 
     while (nleft > 0) {
-    if ((nread = read(fd, bufp, nleft)) < 0) {
+    if ((nread = read(fd, bufp+totalread, nleft)) < 0) {
         if (errno == EINTR) /* Interrupted by sig handler return */
         nread = 0;      /* and call read() again */
         else
@@ -762,7 +763,7 @@ ssize_t rio_readn(int fd, void *usrbuf, size_t n)
     else if (nread == 0)
         break;              /* EOF */
     nleft -= nread;
-    bufp += nread;
+    totalread += nread;
     }
     return (n - nleft);         /* Return >= 0 */
 }
@@ -775,18 +776,21 @@ ssize_t rio_readn(int fd, void *usrbuf, size_t n)
 ssize_t rio_writen(int fd, void *usrbuf, size_t n)
 {
     size_t nleft = n;
-    ssize_t nwritten;
+    size_t totalwritten = 0;
+    size_t nwritten = 0;
     char *bufp = usrbuf;
 
     while (nleft > 0) {
-    if ((nwritten = write(fd, bufp, nleft)) <= 0) {
+    if ((nwritten = write(fd, bufp+totalwritten, nleft)) <= 0) {
         if (errno == EINTR)  /* Interrupted by sig handler return */
         nwritten = 0;    /* and call write() again */
         else
         return -1;       /* errno set by write() */
     }
     nleft -= nwritten;
-    bufp += nwritten;
+    totalwritten+=nwritten;
+
+    // bufp += nwritten;
     }
     return n;
 }
