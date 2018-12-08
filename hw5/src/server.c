@@ -121,7 +121,7 @@ void *xacto_client_service(void *arg)
 
             //conetent might be null
             TRANS_STATUS transtatus = store_get(transaction, k, &content);
-            store_show();
+
             // debug("****%s********",content->content);
 
             if(transtatus == TRANS_ABORTED){
@@ -157,7 +157,7 @@ void *xacto_client_service(void *arg)
             fprintf(stderr, "Invalid type:%d\n",pkt->type );
             break;//FIXME:?
         }
-
+        store_show();
     }
 
     free(pkt);

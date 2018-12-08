@@ -138,8 +138,8 @@ void trans_unref(TRANSACTION *tp, char *why)
 /*
  * Add a transaction to the dependency set for this transaction.
  *
- * @param tp  The transaction to which the dependency is being added.
- * @param dtp  The transaction that is being added to the dependency set.
+ * @param tp  The transaction to which the dependency is being added. (2)
+ * @param dtp  The transaction that is being added to the dependency set.(1)
  */
 void trans_add_dependency(TRANSACTION *tp, TRANSACTION *dtp)
 {
@@ -166,7 +166,7 @@ void trans_add_dependency(TRANSACTION *tp, TRANSACTION *dtp)
   }
   tp->depends = depends;
 
-  tp->waitcnt++;
+  dtp->waitcnt++;
 
   trans_ref(dtp,"transaction in dependency");
 }
@@ -191,9 +191,9 @@ TRANS_STATUS trans_commit(TRANSACTION *tp)
   if(!tp)
     return TRANS_ABORTED;
 
-
-
   debug("Transaction %d trying to commit",tp->id);
+
+  // wait for dependencies
   DEPENDENCY* cursor = tp->depends;
   while(cursor){
     TRANSACTION* cursor_trans = cursor->trans;
@@ -206,16 +206,16 @@ TRANS_STATUS trans_commit(TRANSACTION *tp)
     debug("Transaction %d waiting for dependency %d",tp->id,cursor_trans->id);
     P(&cursor_trans->sem); //wait
     if(cursor_trans->status == TRANS_ABORTED){
-
       return trans_abort(cursor_trans);//FIXME: do I need to check for commited status
     }
-
     cursor = cursor->next;
   }
+  //commit
+  tp->status = TRANS_COMMITTED;
   for(int i=0;i<tp->waitcnt;i++)
     V(&tp->sem);
 
-  release_dependents(tp);
+  // release_dependents(tp);
   trans_unref(tp, "committing transaction");
   return TRANS_COMMITTED;
 }
@@ -241,7 +241,8 @@ TRANS_STATUS trans_abort(TRANSACTION *tp)
   if(trans_get_status(tp)==TRANS_COMMITTED)
     exit(1);
   tp->status = TRANS_ABORTED;
-  release_dependents(tp);
+  // release_dependents(tp);
+
   for(int i=0;i<tp->waitcnt;i++)
     V(&tp->sem);
   trans_unref(tp,"aborting transaction");

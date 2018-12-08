@@ -182,6 +182,7 @@ void remove_abort_version_before(VERSION* v,MAP_ENTRY* entry){
         if(cursor==NULL) return;
         if(cursor->creator->status!=TRANS_ABORTED)
             trans_abort(cursor->creator);
+            //ref transa?
         cursor=cursor->next;
     }
     //remove from list by setting head to v->next
@@ -198,20 +199,14 @@ VERSION* findFirstCommited(MAP_ENTRY* entry){
 }
 void remove_version_after(VERSION* v,MAP_ENTRY* entry){
     if(v==NULL) return;
-    if(entry->versions==v){
-        v->next = NULL;
-    }
-    VERSION* cursor = entry->versions;
 
-    //abort all version before v
-    while(cursor!=v){
-        if(cursor==NULL) return;
-        if(cursor->creator->status!=TRANS_ABORTED)
-            trans_abort(cursor->creator);
+    VERSION* cursor = v->next;
+
+    while(cursor!=NULL){
+        version_dispose(cursor);
         cursor=cursor->next;
     }
-    //remove from list by setting head to v->next
-    entry->versions = v->next;
+    v->next = NULL;
 }
 void remove_garbage(MAP_ENTRY* entry){
     if(entry==NULL) return;
@@ -247,7 +242,6 @@ TRANS_STATUS store_get(TRANSACTION *tp, KEY *key, BLOB **valuep)
         ,key,
         key->blob->content,
         tp->id);
-
     //find the map entry, if entry is new, create new version and add to it.
     //return the Blob either way
     pthread_mutex_lock(&m.mutex);
