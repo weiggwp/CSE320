@@ -118,7 +118,7 @@ int blob_hash(BLOB *bp)
         /* code */
         sum += str[i] *(i+1);
     }
-    return sum % 8;
+    return sum ;
 
 }
 

@@ -1,51 +1,61 @@
-==25480== Memcheck, a memory error detector
-==25480== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
-==25480== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
-==25480== Command: bin/xacto -p 9999
-==25480== Parent PID: 25470
-==25480== 
-==25480== 
-==25480== FILE DESCRIPTORS: 8 open at exit.
-==25480== Open AF_INET socket 5: 0.0.0.0:9999 <-> unbound
-==25480==    at 0x515F5A7: socket (syscall-template.S:84)
-==25480==    by 0x403EA6: open_listenfd (csapp.c:1019)
-==25480==    by 0x403FF8: Open_listenfd (csapp.c:1066)
-==25480==    by 0x4023EB: main (main.c:102)
-==25480== 
-==25480== Open file descriptor 13: /dev/shm/bxf_arena_25468 (deleted)
-==25480==    <inherited from parent>
-==25480== 
-==25480== Open file descriptor 11: /dev/shm/bxf_arena_25468 (deleted)
-==25480==    <inherited from parent>
-==25480== 
-==25480== Open file descriptor 4:
-==25480==    <inherited from parent>
-==25480== 
-==25480== Open file descriptor 3: /home/student/weichen8/hw5/valgrind.out
-==25480==    <inherited from parent>
-==25480== 
-==25480== Open file descriptor 2: /dev/pts/0
-==25480==    <inherited from parent>
-==25480== 
-==25480== Open file descriptor 1: /dev/pts/0
-==25480==    <inherited from parent>
-==25480== 
-==25480== Open file descriptor 0:
-==25480==    <inherited from parent>
-==25480== 
-==25480== 
-==25480== HEAP SUMMARY:
-==25480==     in use at exit: 4 bytes in 1 blocks
-==25480==   total heap usage: 12 allocs, 11 frees, 7,276 bytes allocated
-==25480== 
-==25480== LEAK SUMMARY:
-==25480==    definitely lost: 0 bytes in 0 blocks
-==25480==    indirectly lost: 0 bytes in 0 blocks
-==25480==      possibly lost: 0 bytes in 0 blocks
-==25480==    still reachable: 4 bytes in 1 blocks
-==25480==         suppressed: 0 bytes in 0 blocks
-==25480== Reachable blocks (those to which a pointer was found) are not shown.
-==25480== To see them, rerun with: --leak-check=full --show-leak-kinds=all
-==25480== 
-==25480== For counts of detected and suppressed errors, rerun with: -v
-==25480== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==29319== Memcheck, a memory error detector
+==29319== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==29319== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==29319== Command: bin/xacto -p 9999
+==29319== Parent PID: 29307
+==29319== 
+==29319== Conditional jump or move depends on uninitialised value(s)
+==29319==    at 0x4053DA: store_fini (store.c:32)
+==29319==    by 0x40242D: terminate (main.c:136)
+==29319==    by 0x40215A: hup_handler (main.c:30)
+==29319==    by 0x4E4B38F: ??? (in /lib/x86_64-linux-gnu/libpthread-2.23.so)
+==29319==    by 0x4E4A76A: ??? (syscall-template.S:84)
+==29319==    by 0x4032C3: Accept (csapp.c:585)
+==29319==    by 0x402369: main (main.c:108)
+==29319== 
+==29319== 
+==29319== FILE DESCRIPTORS: 8 open at exit.
+==29319== Open AF_INET socket 5: 0.0.0.0:9999 <-> unbound
+==29319==    at 0x515F5A7: socket (syscall-template.S:84)
+==29319==    by 0x403DE6: open_listenfd (csapp.c:1019)
+==29319==    by 0x403F38: Open_listenfd (csapp.c:1066)
+==29319==    by 0x40231B: main (main.c:102)
+==29319== 
+==29319== Open file descriptor 13: /dev/shm/bxf_arena_29305 (deleted)
+==29319==    <inherited from parent>
+==29319== 
+==29319== Open file descriptor 11: /dev/shm/bxf_arena_29305 (deleted)
+==29319==    <inherited from parent>
+==29319== 
+==29319== Open file descriptor 4:
+==29319==    <inherited from parent>
+==29319== 
+==29319== Open file descriptor 3: /home/student/weichen8/hw5/valgrind.out
+==29319==    <inherited from parent>
+==29319== 
+==29319== Open file descriptor 2: /dev/pts/0
+==29319==    <inherited from parent>
+==29319== 
+==29319== Open file descriptor 1: /dev/pts/0
+==29319==    <inherited from parent>
+==29319== 
+==29319== Open file descriptor 0:
+==29319==    <inherited from parent>
+==29319== 
+==29319== 
+==29319== HEAP SUMMARY:
+==29319==     in use at exit: 4 bytes in 1 blocks
+==29319==   total heap usage: 20 allocs, 19 frees, 12,730 bytes allocated
+==29319== 
+==29319== LEAK SUMMARY:
+==29319==    definitely lost: 0 bytes in 0 blocks
+==29319==    indirectly lost: 0 bytes in 0 blocks
+==29319==      possibly lost: 0 bytes in 0 blocks
+==29319==    still reachable: 4 bytes in 1 blocks
+==29319==         suppressed: 0 bytes in 0 blocks
+==29319== Reachable blocks (those to which a pointer was found) are not shown.
+==29319== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==29319== 
+==29319== For counts of detected and suppressed errors, rerun with: -v
+==29319== Use --track-origins=yes to see where uninitialised values come from
+==29319== ERROR SUMMARY: 8 errors from 1 contexts (suppressed: 0 from 0)

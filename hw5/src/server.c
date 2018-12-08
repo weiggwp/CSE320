@@ -141,8 +141,8 @@ void *xacto_client_service(void *arg)
                     if(!reply(XACTO_DATA_PKT,transtatus,0,fd,pkt,NULL)) break;
                 }
             }
-            if(content)
-                blob_unref(content,"send to client done");//FIXME
+            // if(content)
+            //     blob_unref(content,"send to client done");//FIXME
 
         }
         else if(pkt->type ==XACTO_COMMIT_PKT){
