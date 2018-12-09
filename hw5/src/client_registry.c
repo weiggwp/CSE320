@@ -13,7 +13,7 @@
  */
 #include <stdlib.h>
 #include "csapp.h"
-
+#include "debug.h"
 #define FDMAX 1024
 // fd<1024 2^10
 typedef struct client_registry {
@@ -36,6 +36,7 @@ sem_t empty;
  */
 CLIENT_REGISTRY *creg_init()
 {
+    debug("Initialize client registry");
     if (pthread_mutex_init(&lock, NULL) != 0 ||pthread_mutex_init(&lock2, NULL) != 0)
     {
         printf("\n mutex init failed\n");
@@ -54,6 +55,7 @@ CLIENT_REGISTRY *creg_init()
  // * be referenced again.
 
 void creg_fini(CLIENT_REGISTRY *cr){
+    debug("Finalize client registry");
     free(cr);
     //TODO: do in need to destroy the lock
 }
@@ -66,9 +68,11 @@ void creg_fini(CLIENT_REGISTRY *cr){
  */
 void  creg_register(CLIENT_REGISTRY *cr, int fd)
 {
+
     pthread_mutex_lock(&lock);
     cr->registryset[fd] = 1;
     num_client++;
+    debug("Register client %d (total connected: %d)",fd,num_client);
     pthread_mutex_unlock(&lock);
 }
 
@@ -84,6 +88,7 @@ void creg_unregister(CLIENT_REGISTRY *cr, int fd)
     pthread_mutex_lock(&lock);
     cr->registryset[fd] = 0;
     num_client--;
+    debug("Unregister client %d (total connected: %d)", fd, num_client);
     //TODO: alert waiting bodies, use symophone
     if(num_client==0)
         V(&empty); //post
@@ -114,8 +119,10 @@ void creg_shutdown_all(CLIENT_REGISTRY *cr)
     for (int i = 0; i < FDMAX; ++i)
     {
         if(cr->registryset[i]==1){
-            shutdown(i,FDMAX);
-            creg_unregister(cr,i);
+            debug("Shutting down client %d",i);
+
+            shutdown(i,SHUT_RD);
+            // creg_unregister(cr,i);
         /* code */
         }
     }

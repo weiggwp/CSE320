@@ -7,17 +7,19 @@
 #include <stdio.h>
 #include "debug.h"
 struct map m;
+// struct map table;
+
 void store_init(void)
 {
     debug("Initialize object store");
-
+    // table=m;
     m.num_buckets = NUM_BUCKETS;
     if (pthread_mutex_init(&m.mutex, NULL) != 0)
     {
         fprintf(stderr,"\n mutex init failed\n");
         exit(EXIT_FAILURE);
     }
-    m.table = calloc(m.num_buckets,sizeof(MAP_ENTRY*));//table[num_buck][]
+    m.table = calloc(NUM_BUCKETS,sizeof(MAP_ENTRY*));//table[num_buck][]
     if(m.table==NULL)
     {
         fprintf(stderr,"\n table init failed\n");
@@ -25,13 +27,14 @@ void store_init(void)
     }
 }
 
+
 void store_fini(void)
 {
     for (int i = 0; i < m.num_buckets; ++i)
     {
         /* code */
         MAP_ENTRY* entry = m.table[i];
-        while(entry!=NULL){
+        while(entry){
             key_dispose(entry->key);
             VERSION* version = entry->versions;
             while(version!=NULL){
@@ -40,19 +43,22 @@ void store_fini(void)
                 version = tmp_v;
             }
             MAP_ENTRY* tmp_e = entry->next;
+            free(entry);
             entry = tmp_e;
         }
     }
     free(m.table);
 }
+
+
 MAP_ENTRY* create_map_entry(KEY* key){
-    MAP_ENTRY* entry = m.table[key->hash];
+    // MAP_ENTRY* entry = m.table[key->hash];
     MAP_ENTRY* new_entry = malloc(sizeof(MAP_ENTRY));
     new_entry->key = key;
     //create version
     new_entry->versions =NULL;
-    new_entry->next = entry;
-    m.table[key->hash] = new_entry;
+    // new_entry->next = entry;
+    // m.table[key->hash] = new_entry;
     return new_entry;
 }
 MAP_ENTRY* find_map_entry(KEY* key){
@@ -60,8 +66,10 @@ MAP_ENTRY* find_map_entry(KEY* key){
     MAP_ENTRY* entry = m.table[index];
     while(entry!=NULL){
         int neq = key_compare(key, entry->key);
-        if(!neq)
+        if(!neq){
+            key_dispose(key);
             break;
+        }
         entry = entry->next;
     }
     if(entry==NULL){
@@ -89,9 +97,12 @@ int add_dependencies(VERSION* vp){
 }
 VERSION* add_version(TRANSACTION *tp, BLOB *bp, MAP_ENTRY* ep)
 {
+    debug("Add new version for key %p [%s]",ep->key,ep->key->blob->content);
     VERSION *version =  version_create(tp, bp);
-    if(ep->versions==NULL)
+    if(ep->versions==NULL){
+        debug("No previous version");
         ep->versions = version;
+    }
     else{
         //if there are versions exist
         //check if the new version id vs. id on the list
@@ -260,9 +271,21 @@ TRANS_STATUS store_get(TRANSACTION *tp, KEY *key, BLOB **valuep)
 
     }
     else{
+        if(tp->id ==entry->versions->creator->id)
+            *valuep = entry->versions->blob;
+        else{
+            vp = add_version(tp, entry->versions->blob,entry);
+            if(vp==NULL){
+                *valuep = NULL;
+                pthread_mutex_unlock(&m.mutex);
+                return trans_abort(tp);
+                *valuep = vp->blob;
+        }
+        }
         // BLOB* blob = malloc
-        *valuep = entry->versions->blob;
     }
+    if(*valuep)
+        blob_ref(*valuep,"sotre get ref");
     pthread_mutex_unlock(&m.mutex);
     return TRANS_PENDING;
 }
@@ -280,10 +303,10 @@ void store_show(void)
         /* code */
         MAP_ENTRY* entry = m.table[i];
         // debug("entry is null,%d",entry==NULL);
-        while(entry!=NULL){
-            fprintf(stderr, "{key: %p [%s],versions: ",entry->key,entry->key->blob->content);
+        while(entry){
+            fprintf(stderr, "{key: %p [%s],versions: ",entry->key,entry->key->blob->prefix);
             VERSION* version = entry->versions;
-            while(version!=NULL){
+            while(version){
                 VERSION* tmp_v = version->next;
                 fprintf(stderr, "{creator=%d (%s), blob=%p [%s]}",
                     version->creator->id,
@@ -302,4 +325,3 @@ void store_show(void)
 
     }
 }
-

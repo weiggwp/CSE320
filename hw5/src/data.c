@@ -6,6 +6,7 @@
 #include <string.h>
 #include <math.h>
 #include "data.h"
+#include "debug.h"
 /*
  * Create a blob with given content and size.
  * The content is copied, rather than shared with the caller.
@@ -25,14 +26,14 @@ BLOB *blob_create(char *content, size_t size)
         exit(EXIT_FAILURE);
     }
     BLOB* blob = malloc(sizeof(BLOB));
+    debug("Create blob with content %p, size %lu -> %p",content,size,blob);
     if (pthread_mutex_init(& blob->mutex, NULL) != 0)
     {
         printf("\n mutex init failed\n");
         exit(EXIT_FAILURE);
     }
-    blob->refcnt = 1;
+    blob->refcnt = 0;
     blob->size = size;
-
     //FIXME: might not need to malloc
     blob->content = malloc(size+1);
     strncpy(blob->content,content,size);
@@ -42,6 +43,7 @@ BLOB *blob_create(char *content, size_t size)
     strncpy(blob->prefix,content,size);
     blob->prefix[size]='\0'; //to ensure string end with null terminator
 
+    blob_ref(blob,"newly created blob");
     return blob;
 
 }
@@ -55,9 +57,11 @@ BLOB *blob_create(char *content, size_t size)
  */
 BLOB *blob_ref(BLOB *bp, char *why)
 {
-    if(!bp)
+    if(bp==NULL)
         return bp;
     pthread_mutex_lock(&bp->mutex);
+    debug("Increase reference count on blob %p [%s] (%d -> %d) for newly created blob",
+        bp,bp->content,bp->refcnt,bp->refcnt+1);
     bp->refcnt +=1; //increase refcnt
 
     //TODO: how to use why?
@@ -132,6 +136,7 @@ int blob_hash(BLOB *bp)
 KEY *key_create(BLOB *bp)
 {
     KEY* k = malloc(sizeof(KEY));
+    debug("Create key from blob %p -> %p [%s]",bp,k,bp->content);
     k->hash = blob_hash(bp);
     k->blob = bp;
     return k;
@@ -182,9 +187,10 @@ VERSION *version_create(TRANSACTION *tp, BLOB *bp)
 {
     //FIXME:copy tp? if so, dont foget dispose
     VERSION* version = malloc(sizeof(VERSION));
-
+    debug("Create version of blob %p [%s] for transaction %d -> %p ",
+        bp,(bp==NULL)?"null":bp->content,tp->id,tp);
     version->creator = tp;
-    trans_ref(tp,NULL);
+    trans_ref(tp,"creator of version");
 
     version->blob = bp;//FIXME: ref?
     version->next = NULL;
@@ -204,6 +210,7 @@ void version_dispose(VERSION *vp)
 {
     if(!vp)
         return;
+    debug("Dispose of version %p",vp);
     if(!vp->creator)
         trans_unref(vp->creator,NULL);
     if(!vp->blob)

@@ -31,7 +31,7 @@ void hup_handler(int sig) {
 }
 
 CLIENT_REGISTRY *client_registry;
-
+int listenfd;
 int main(int argc, char* argv[]){
     // Option processing should be performed here.
     // Option '-p <port>' is required in order to specify the port number
@@ -95,7 +95,7 @@ int main(int argc, char* argv[]){
     // shutdown of the server.
 
 
-    int listenfd, *connfdp;
+    int*connfdp;
     socklen_t clientlen;
     struct sockaddr_storage clientaddr;
     pthread_t tid;
@@ -135,6 +135,8 @@ void terminate(int status) {
     trans_fini();
     store_fini();
 
+    shutdown(listenfd,SHUT_RD);
+    close(listenfd);
     debug("Xacto server terminating");
     exit(status);
 }

@@ -37,16 +37,17 @@ KEY* create_key(char* key,XACTO_PACKET* pkt){
 }
 void *xacto_client_service(void *arg)
 {
+    debug("Starting client service");
     // arg is a pointer to the integer file descriptor to be used
     // to communicate with the client.
     int fd = *(int*)arg;
+    creg_register(client_registry, fd);
 
     //free arg storage
     free(arg);
     // The thread must then become detached, so that it does not have to be explicitly reaped,
     Pthread_detach(pthread_self());
     // register the client file descriptor with the client registry.
-    creg_register(client_registry, fd);
 
     // a transaction created to be used as the context for carrying out client requests.
     TRANSACTION* transaction =  trans_create();
@@ -65,12 +66,12 @@ void *xacto_client_service(void *arg)
     char** key = malloc(sizeof(char*));
     char** value = malloc(sizeof(char*));
     while(1){
-        debug("****loop********");
         //get type of request, either GET or PUT or COMMIT
         int res =  proto_recv_packet(fd, pkt,(void**) &buff);
         if(!recv_success(res)) break;
         if(pkt->type ==XACTO_PUT_PKT)
         {
+            debug("PUT packet received");
             // Put a key/value mapping in the store
             // (sends key, value, and transaction ID)
             // (reply returns status)
@@ -81,6 +82,7 @@ void *xacto_client_service(void *arg)
             //create key
             //(*key)[pkt->size] = '\0';
 
+            debug("Received key, size %d",pkt->size);
             KEY* k = create_key(*key,pkt);
             // BLOB* blob = blob_create(*key,pkt->size);
             // KEY* k = key_create(blob);
@@ -88,13 +90,14 @@ void *xacto_client_service(void *arg)
             if(!Proto_recv_packet(fd, pkt, value)) break;
             //create content
             // value[strlen(*value)] = '\0';
+            debug("Received value, size %d",pkt->size);
             BLOB* content = create_blob(*value,pkt);
             // blob_create(*value,pkt->size);
 
             TRANS_STATUS transtatus = store_put(transaction,k,content);
-            store_show();
-            if(!content)
-                blob_unref(content,"put in store done");
+            // store_show();
+            // if(content)
+            //     blob_unref(content,"put in store done");
 
             if(!reply(XACTO_REPLY_PKT,transtatus,0,fd,pkt,NULL))
                 break;
@@ -102,13 +105,14 @@ void *xacto_client_service(void *arg)
             if(transtatus ==TRANS_ABORTED) break;
         }
         else if(pkt->type ==XACTO_GET_PKT){
-            debug("****getting********");
+            debug("GET packet received");
 
             // Get the store value corresponding to a key
             // (sends key and transaction ID)
 
             //get key
             if(!Proto_recv_packet(fd, pkt, key)) break;
+            debug("Received key, size %d",pkt->size);
 
             //create KEY
             // (*key)[strlen(*key)] = '\0';
@@ -125,7 +129,6 @@ void *xacto_client_service(void *arg)
             // debug("****%s********",content->content);
 
             if(transtatus == TRANS_ABORTED){
-            debug("****%s********","TRANS_ABORTED");
                 reply(XACTO_REPLY_PKT,transtatus,0,fd,pkt,NULL);
                 break;
             }
@@ -137,7 +140,6 @@ void *xacto_client_service(void *arg)
                     if(!reply(XACTO_DATA_PKT,transtatus,content->size,fd,pkt,content->content)) break;
                 }
                 else{
-                    debug("****status:%d",transtatus);
                     if(!reply(XACTO_DATA_PKT,transtatus,0,fd,pkt,NULL)) break;
                 }
             }
@@ -146,6 +148,8 @@ void *xacto_client_service(void *arg)
 
         }
         else if(pkt->type ==XACTO_COMMIT_PKT){
+            debug("COMMIT packet received");
+
             TRANS_STATUS transtatus =trans_commit(transaction);
             if(transtatus==TRANS_COMMITTED)
                 commit=1;
@@ -160,9 +164,6 @@ void *xacto_client_service(void *arg)
         store_show();
     }
 
-    free(pkt);
-    free(key);
-    free(value);
     // If as a result of carrying
     // out any of the requests, the transaction commits or aborts, then
     // (after sending the required reply to the current request) the service
@@ -171,10 +172,14 @@ void *xacto_client_service(void *arg)
     if(!commit){
         trans_abort(transaction);
     }
+    free(pkt);
+    free(key);
+    free(value);
+    debug("Ending client service");
     creg_unregister(client_registry,fd);
     Close(fd);
-    Pthread_exit(0);
-    return NULL;
+    // Pthread_exit(0);
+    return 0;
 
 }
 
@@ -216,7 +221,7 @@ int reply(XACTO_PACKET_TYPE type,TRANS_STATUS transtatus,size_t payload_size,int
     pkt->status = transtatus;
     pkt->null = (payload_size==0)?1:0;
     pkt->size = payload_size;
-    debug("payload_size:%d,NULL:%d",pkt->size,pkt->null);
+    // debug("payload_size:%d,NULL:%d",pkt->size,pkt->null);
     int res = proto_send_packet(fd,pkt,content);
 
     if(send_success(res))
